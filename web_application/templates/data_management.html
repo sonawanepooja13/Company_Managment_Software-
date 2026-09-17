@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Data Management</h2>
+    <div>
+        <button class="btn btn-primary" onclick="refreshDataManagement()">
+            <i class="bi bi-arrow-clockwise"></i> Refresh
+        </button>
+    </div>
+</div>
+
+<!-- Data Storage Overview -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">Data Storage Overview</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="text-center p-3 border rounded">
+                    <h4 class="text-primary">web_data/</h4>
+                    <p class="text-muted">Total Data Folder</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center p-3 border rounded">
+                    <h4 class="text-success">databases/</h4>
+                    <p class="text-muted">Database Files</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center p-3 border rounded">
+                    <h4 class="text-info">exports/</h4>
+                    <p class="text-muted">Exported Data</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Data Operations -->
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Backup & Restore</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <button class="btn btn-primary" onclick="createBackup()">
+                        <i class="bi bi-database-down"></i> Create Full Backup
+                    </button>
+                    <button class="btn btn-warning" onclick="restoreBackup()">
+                        <i class="bi bi-database-up"></i> Restore from Backup
+                    </button>
+                    <button class="btn btn-info" onclick="scheduleBackup()">
+                        <i class="bi bi-calendar"></i> Schedule Backup
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Data Export</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <button class="btn btn-success" onclick="exportCustomers()">
+                        <i class="bi bi-people"></i> Export Customers
+                    </button>
+                    <button class="btn btn-success" onclick="exportProduction()">
+                        <i class="bi bi-gear"></i> Export Production Data
+                    </button>
+                    <button class="btn btn-success" onclick="exportAll()">
+                        <i class="bi bi-download"></i> Export All Data
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Data Statistics -->
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Data Statistics</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <h3 class="text-primary" id="customer-count">-</h3>
+                            <p class="text-muted">Customers</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <h3 class="text-success" id="production-count">-</h3>
+                            <p class="text-muted">Production Batches</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <h3 class="text-warning" id="employee-count">-</h3>
+                            <p class="text-muted">Employees</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <h3 class="text-info" id="project-count">-</h3>
+                            <p class="text-muted">Projects</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function loadDataStats() {
+        const stats = await apiCall('/api/data/stats');
+        
+        if (stats.success !== false) {
+            document.getElementById('customer-count').textContent = stats.customers;
+            document.getElementById('production-count').textContent = stats.production_batches;
+            document.getElementById('employee-count').textContent = stats.employees;
+            document.getElementById('project-count').textContent = stats.projects;
+        }
+    }
+    
+    function createBackup() {
+        showNotification('Creating full backup of web_data/ folder...');
+    }
+    
+    function restoreBackup() {
+        showNotification('Select backup file to restore');
+    }
+    
+    function scheduleBackup() {
+        showNotification('Configure backup schedule');
+    }
+    
+    function exportCustomers() {
+        window.location.href = '/api/export/customers';
+    }
+    
+    function exportProduction() {
+        window.location.href = '/api/export/production';
+    }
+    
+    function exportAll() {
+        showNotification('Exporting all data...');
+    }
+    
+    function refreshDataManagement() {
+        loadDataStats();
+        showNotification('Data management refreshed');
+    }
+    
+    document.addEventListener('DOMContentLoaded', loadDataStats);
+</script>
+{% endblock %}

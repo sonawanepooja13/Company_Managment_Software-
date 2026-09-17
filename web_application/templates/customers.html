@@ -1,0 +1,373 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Customer Management</h2>
+    <div>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCustomerModal">
+            <i class="bi bi-person-plus"></i> Add Customer
+        </button>
+        <button class="btn btn-outline-secondary ms-2" onclick="exportCustomers()">
+            <i class="bi bi-download"></i> Export
+        </button>
+    </div>
+</div>
+
+<!-- Customer Statistics -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3 class="text-primary" id="total-customers">-</h3>
+                <p class="text-muted">Total Customers</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3 class="text-success" id="enquiry-customers">-</h3>
+                <p class="text-muted">With Enquiries</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3 class="text-warning" id="pending-customers">-</h3>
+                <p class="text-muted">Pending Status</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3 class="text-info" id="new-customers">-</h3>
+                <p class="text-muted">Added This Month</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Customer Table -->
+<div class="card">
+    <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Complete Customer List</h5>
+            <input type="text" class="form-control form-control-sm" style="width: 300px;" 
+                   placeholder="Search customers..." id="customerSearch" onkeyup="searchCustomers()">
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover table-sm">
+                <thead>
+                    <tr>
+                        <th>Company Name</th>
+                        <th>GST Number</th>
+                        <th>Contact Person</th>
+                        <th>Designation</th>
+                        <th>Contact Number</th>
+                        <th>Email</th>
+                        <th>State</th>
+                        <th>District</th>
+                        <th>Location</th>
+                        <th>Owner Name</th>
+                        <th>Company Turnover</th>
+                        <th>Staff Count</th>
+                        <th>Products Selected</th>
+                        <th>Valuation</th>
+                        <th>Enquiry</th>
+                        <th>Meeting Status</th>
+                        <th>Notes</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="customerTableBody">
+                    <tr>
+                        <td colspan="18" class="text-center">Loading customers...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Add Customer Modal -->
+<div class="modal fade" id="addCustomerModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Customer (Complete Details)</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="customerForm">
+                    <h6 class="mb-3">Basic Information</h6>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Company Name *</label>
+                            <input type="text" class="form-control" name="company_name" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">GST Number</label>
+                            <input type="text" class="form-control" name="gst_number">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Contact Person *</label>
+                            <input type="text" class="form-control" name="contact_person" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Designation</label>
+                            <input type="text" class="form-control" name="designation">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Contact Number *</label>
+                            <input type="text" class="form-control" name="contact_number" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" name="email">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Website</label>
+                            <input type="url" class="form-control" name="website">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Company Turnover</label>
+                            <input type="text" class="form-control" name="company_turnover">
+                        </div>
+                    </div>
+                    
+                    <h6 class="mb-3 mt-4">Address Information</h6>
+                    <div class="mb-3">
+                        <label class="form-label">Address</label>
+                        <textarea class="form-control" name="address" rows="2"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">State</label>
+                            <input type="text" class="form-control" name="state">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">District</label>
+                            <input type="text" class="form-control" name="district">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Location</label>
+                            <input type="text" class="form-control" name="location">
+                        </div>
+                    </div>
+                    
+                    <h6 class="mb-3 mt-4">Company Details</h6>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Owner Name</label>
+                            <input type="text" class="form-control" name="owner_name">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Number of Staff</label>
+                            <input type="text" class="form-control" name="number_of_staff">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Products Selected</label>
+                            <input type="text" class="form-control" name="products_selected">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Company Valuation</label>
+                            <input type="text" class="form-control" name="company_valuation">
+                        </div>
+                    </div>
+                    
+                    <h6 class="mb-3 mt-4">Enquiry & Communication</h6>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Enquiry Received</label>
+                            <select class="form-select" name="enquiry_received">
+                                <option value="No">No</option>
+                                <option value="Yes">Yes</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Call Conversion Time</label>
+                            <input type="text" class="form-control" name="call_conversion_time">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Company Data Sent</label>
+                            <input type="text" class="form-control" name="company_data_sent">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Communication Details</label>
+                            <input type="text" class="form-control" name="communication_details">
+                        </div>
+                    </div>
+                    
+                    <h6 class="mb-3 mt-4">Meeting Information</h6>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Meeting Schedule Time</label>
+                            <input type="datetime-local" class="form-control" name="meeting_schedule_time">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Meeting Agenda</label>
+                            <input type="text" class="form-control" name="meeting_agenda">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Meeting Completed Details</label>
+                        <textarea class="form-control" name="meeting_completed_details" rows="2"></textarea>
+                    </div>
+                    
+                    <h6 class="mb-3 mt-4">Additional Information</h6>
+                    <div class="mb-3">
+                        <label class="form-label">Notes</label>
+                        <textarea class="form-control" name="note" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Photo Files</label>
+                        <input type="text" class="form-control" name="photo_files" placeholder="Comma-separated file paths">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveCustomer()">Save Customer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Load customers on page load
+    async function loadCustomers() {
+        const customers = await apiCall('/api/customers');
+        
+        if (customers.success !== false) {
+            renderCustomerTable(customers);
+            updateCustomerStats(customers);
+        } else {
+            document.getElementById('customerTableBody').innerHTML = 
+                '<tr><td colspan="18" class="text-center text-danger">Failed to load customers</td></tr>';
+        }
+    }
+
+    function updateCustomerStats(customers) {
+        document.getElementById('total-customers').textContent = customers.length;
+        document.getElementById('enquiry-customers').textContent = customers.filter(c => c.enquiry_received === 'Yes').length;
+        document.getElementById('pending-customers').textContent = customers.filter(c => c.enquiry_received === 'No').length;
+        
+        // Calculate new customers this month
+        const currentMonth = new Date().getMonth();
+        const newCustomers = customers.filter(c => {
+            const createdDate = new Date(c.created_at);
+            return createdDate.getMonth() === currentMonth;
+        }).length;
+        document.getElementById('new-customers').textContent = newCustomers;
+    }
+
+    function renderCustomerTable(customers) {
+        const tbody = document.getElementById('customerTableBody');
+        
+        if (customers.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="18" class="text-center">No customers found</td></tr>';
+            return;
+        }
+        
+        tbody.innerHTML = customers.map(customer => `
+            <tr>
+                <td><strong>${customer.company_name}</strong></td>
+                <td>${customer.gst_number || '-'}</td>
+                <td>${customer.contact_person}</td>
+                <td>${customer.designation || '-'}</td>
+                <td>${customer.contact_number}</td>
+                <td>${customer.email || '-'}</td>
+                <td>${customer.state || '-'}</td>
+                <td>${customer.district || '-'}</td>
+                <td>${customer.location || '-'}</td>
+                <td>${customer.owner_name || '-'}</td>
+                <td>${customer.company_turnover || '-'}</td>
+                <td>${customer.number_of_staff || '-'}</td>
+                <td>${customer.products_selected || '-'}</td>
+                <td>${customer.company_valuation || '-'}</td>
+                <td><span class="badge bg-${customer.enquiry_received === 'Yes' ? 'success' : 'secondary'}">${customer.enquiry_received}</span></td>
+                <td>${customer.meeting_schedule_time ? new Date(customer.meeting_schedule_time).toLocaleDateString() : '-'}</td>
+                <td><small>${customer.note ? customer.note.substring(0, 50) + '...' : '-'}</small></td>
+                <td>
+                    <button class="btn btn-sm btn-info" onclick="viewCustomerDetails(${customer.id})">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                    <button class="btn btn-sm btn-warning" onclick="editCustomer(${customer.id})">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteCustomer(${customer.id})">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    function viewCustomerDetails(customerId) {
+        showNotification('View complete customer details - Feature coming soon');
+    }
+
+    async function saveCustomer() {
+        const form = document.getElementById('customerForm');
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+        
+        const result = await apiCall('/api/customers', 'POST', data);
+        
+        if (result.success) {
+            showNotification('Customer added successfully');
+            $('#addCustomerModal').modal('hide');
+            form.reset();
+            loadCustomers();
+        } else {
+            showNotification('Failed to add customer: ' + result.error, 'danger');
+        }
+    }
+
+    async function deleteCustomer(customerId) {
+        if (!confirm('Are you sure you want to delete this customer?')) {
+            return;
+        }
+        
+        const result = await apiCall(`/api/customers/${customerId}`, 'DELETE');
+        
+        if (result.success) {
+            showNotification('Customer deleted successfully');
+            loadCustomers();
+        } else {
+            showNotification('Failed to delete customer: ' + result.error, 'danger');
+        }
+    }
+
+    function searchCustomers() {
+        const searchTerm = document.getElementById('customerSearch').value.toLowerCase();
+        const rows = document.querySelectorAll('#customerTableBody tr');
+        
+        rows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(searchTerm) ? '' : 'none';
+        });
+    }
+
+    function exportCustomers() {
+        window.location.href = '/api/export/customers';
+    }
+
+    // Load customers on page load
+    document.addEventListener('DOMContentLoaded', loadCustomers);
+</script>
+{% endblock %}
