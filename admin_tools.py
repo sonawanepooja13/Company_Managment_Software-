@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 
 #admin files 
+=======
+>>>>>>> 6bcf3de9a2baf9d08fa409886f48ff4405bff9c8
 import tkinter as tk
 from tkinter import messagebox, ttk
 import auth_manager

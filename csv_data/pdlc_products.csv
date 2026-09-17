@@ -1,0 +1,4 @@
+﻿product_id,product_name,product_type,current_stage,stage_gate,start_date,target_date,status,priority,team_lead,completion_percentage,description
+PDLC-20260823075042,sdklfj,Firmware,Requirements,Stage 1,alksdfj,LAKSDFJ,Active,Medium,LKASDJF,ALKSDFJ,ASDFDSAF
+PDLC-20260824222841,AIPCU,Firmware,Requirements,Stage 1,2026-09-10,2026-09-10,Active,High,sunny,80,project start
+PDLC-20260825115243,defender,Firmware,Requirements,Stage 1,2026-08-25,2026-08-25,Active,Medium,shubham,10,only hardware test

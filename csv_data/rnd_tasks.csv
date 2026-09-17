@@ -1,0 +1,2 @@
+﻿task_id,task_name,task_type,product_id,assigned_to,status,priority,hardware_dependency,sprint,estimated_hours,due_date,blocked_by,sub_task,description
+TASK-20260825062755,ABC,Firmware,123,sunny,To Do,Medium,No,,,2026-08-25,,,
