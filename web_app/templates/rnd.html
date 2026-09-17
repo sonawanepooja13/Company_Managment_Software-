@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>R&D Engineering</h2>
+    <div>
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addProjectModal">
+            <i class="bi bi-plus-circle"></i> New R&D Project
+        </button>
+    </div>
+</div>
+
+<!-- R&D Projects Table -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Research & Development Projects</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Project Name</th>
+                        <th>Code</th>
+                        <th>Research Area</th>
+                        <th>Lead Researcher</th>
+                        <th>Budget</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="rndTableBody">
+                    <tr>
+                        <td colspan="7" class="text-center">Loading R&D projects...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Add R&D Project Modal -->
+<div class="modal fade" id="addProjectModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add R&D Project</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="rndForm">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Project Name *</label>
+                            <input type="text" class="form-control" name="project_name" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Project Code</label>
+                            <input type="text" class="form-control" name="project_code">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Research Area *</label>
+                            <input type="text" class="form-control" name="research_area" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Lead Researcher</label>
+                            <input type="text" class="form-control" name="lead_researcher">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Start Date</label>
+                            <input type="date" class="form-control" name="start_date">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Expected Completion</label>
+                            <input type="date" class="form-control" name="expected_completion">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Budget</label>
+                            <input type="number" class="form-control" name="budget" step="0.01">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Status</label>
+                            <select class="form-select" name="status">
+                                <option value="Research">Research</option>
+                                <option value="Development">Development</option>
+                                <option value="Testing">Testing</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-control" name="description" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveRndProject()">Save Project</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function loadRndProjects() {
+        const projects = await apiCall('/api/rnd/projects');
+        
+        if (projects.success !== false) {
+            renderRndTable(projects);
+        } else {
+            document.getElementById('rndTableBody').innerHTML = 
+                '<tr><td colspan="7" class="text-center text-danger">Failed to load R&D projects</td></tr>';
+        }
+    }
+
+    function renderRndTable(projects) {
+        const tbody = document.getElementById('rndTableBody');
+        
+        if (projects.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" class="text-center">No R&D projects found</td></tr>';
+            return;
+        }
+        
+        tbody.innerHTML = projects.map(project => `
+            <tr>
+                <td><strong>${project.project_name}</strong></td>
+                <td>${project.project_code}</td>
+                <td>${project.research_area}</td>
+                <td>${project.lead_researcher}</td>
+                <td>₹${project.budget}</td>
+                <td><span class="badge bg-${getRndStatusColor(project.status)}">${project.status}</span></td>
+                <td>
+                    <button class="btn btn-sm btn-info" onclick="editRndProject(${project.id})">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteRndProject(${project.id})">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    function getRndStatusColor(status) {
+        const colors = {
+            'Research': 'primary',
+            'Development': 'info',
+            'Testing': 'warning',
+            'Completed': 'success'
+        };
+        return colors[status] || 'secondary';
+    }
+
+    async function saveRndProject() {
+        const form = document.getElementById('rndForm');
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+        
+        const result = await apiCall('/api/rnd/projects', 'POST', data);
+        
+        if (result.success) {
+            showNotification('R&D project added successfully');
+            $('#addProjectModal').modal('hide');
+            form.reset();
+            loadRndProjects();
+        } else {
+            showNotification('Failed to add project: ' + result.error, 'danger');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadRndProjects);
+</script>
+{% endblock %}

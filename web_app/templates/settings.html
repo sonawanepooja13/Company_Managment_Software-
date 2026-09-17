@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Settings</h2>
+    <div>
+        <button class="btn btn-primary" onclick="saveSettings()">
+            <i class="bi bi-save"></i> Save Settings
+        </button>
+    </div>
+</div>
+
+<!-- User Settings -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">User Settings</h5>
+    </div>
+    <div class="card-body">
+        <form id="userSettingsForm">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-control" value="admin" readonly>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" value="admin@example.com">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-control" value="Administrator">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Department</label>
+                    <input type="text" class="form-control" value="IT">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- System Settings -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">System Settings</h5>
+    </div>
+    <div class="card-body">
+        <form id="systemSettingsForm">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Company Name</label>
+                    <input type="text" class="form-control" placeholder="Enter company name">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Timezone</label>
+                    <select class="form-select">
+                        <option value="Asia/Kolkata">Asia/Kolkata (IST)</option>
+                        <option value="UTC">UTC</option>
+                        <option value="America/New_York">America/New_York</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Default Currency</label>
+                    <select class="form-select">
+                        <option value="INR">INR (₹)</option>
+                        <option value="USD">USD ($)</option>
+                        <option value="EUR">EUR (€)</option>
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Date Format</label>
+                    <select class="form-select">
+                        <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                        <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                        <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Notification Settings -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">Notification Settings</h5>
+    </div>
+    <div class="card-body">
+        <div class="form-check form-switch mb-2">
+            <input class="form-check-input" type="checkbox" id="emailNotifications" checked>
+            <label class="form-check-label" for="emailNotifications">Email Notifications</label>
+        </div>
+        <div class="form-check form-switch mb-2">
+            <input class="form-check-input" type="checkbox" id="smsNotifications">
+            <label class="form-check-label" for="smsNotifications">SMS Notifications</label>
+        </div>
+        <div class="form-check form-switch mb-2">
+            <input class="form-check-input" type="checkbox" id="desktopNotifications" checked>
+            <label class="form-check-label" for="desktopNotifications">Desktop Notifications</label>
+        </div>
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="mqttNotifications" checked>
+            <label class="form-check-label" for="mqttNotifications">MQTT Real-time Updates</label>
+        </div>
+    </div>
+</div>
+
+<!-- Security Settings -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Security Settings</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Session Timeout (minutes)</label>
+                <input type="number" class="form-control" value="30">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Password Policy</label>
+                <select class="form-select">
+                    <option value="standard">Standard</option>
+                    <option value="strong">Strong</option>
+                    <option value="strict">Strict</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-check form-switch mb-2">
+            <input class="form-check-input" type="checkbox" id="twoFactorAuth">
+            <label class="form-check-label" for="twoFactorAuth">Two-Factor Authentication</label>
+        </div>
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="ipRestriction">
+            <label class="form-check-label" for="ipRestriction">IP Address Restriction</label>
+        </div>
+    </div>
+</div>
+
+<script>
+    function saveSettings() {
+        showNotification('Settings saved successfully');
+    }
+</script>
+{% endblock %}

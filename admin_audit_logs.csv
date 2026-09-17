@@ -1,0 +1,15 @@
+﻿timestamp,action,user,details
+2026-08-23 11:35:40,Account status changed,priti,Suspended
+2026-08-23 11:35:48,Account status changed,admin,Suspended
+2026-08-23 11:35:50,Account status changed,priti,Active
+2026-08-23 11:36:04,Account status changed,priti,Suspended
+2026-08-23 11:36:23,Account status changed,admin,Active
+2026-08-23 11:36:27,Account status changed,priti,Active
+2026-09-16 19:55:04,Password reset,a,
+2026-09-16 21:12:28,Password reset,a,
+2026-09-16 21:17:52,Account status changed,SE-0101,Suspended
+2026-09-16 21:17:57,Account status changed,SE-0101,Active
+2026-09-16 21:18:00,Account status changed,SE-0102,Active
+2026-09-16 21:18:06,Account status changed,SE-0101,Suspended
+2026-09-16 21:18:11,Account status changed,SE-0101,Active
+2026-09-16 21:18:13,Account status changed,SE-0101,Suspended

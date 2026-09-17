@@ -1,0 +1,7 @@
+# Local user data and cloud settings
+cloud_settings.json
+*.db
+__pycache__/
+.venv/
+build/
+dist/

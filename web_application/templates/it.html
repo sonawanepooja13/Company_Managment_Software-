@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>IT Workspace</h2>
+    <div>
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addAssetModal">
+            <i class="bi bi-plus-circle"></i> Add IT Asset
+        </button>
+    </div>
+</div>
+
+<!-- IT Assets Table -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">IT Asset Management</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Asset Name</th>
+                        <th>Asset Tag</th>
+                        <th>Type</th>
+                        <th>Serial Number</th>
+                        <th>Assigned To</th>
+                        <th>Department</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="itTableBody">
+                    <tr>
+                        <td colspan="8" class="text-center">Loading IT assets...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Add IT Asset Modal -->
+<div class="modal fade" id="addAssetModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add IT Asset</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="itForm">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Asset Name *</label>
+                            <input type="text" class="form-control" name="asset_name" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Asset Tag</label>
+                            <input type="text" class="form-control" name="asset_tag">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Asset Type</label>
+                            <select class="form-select" name="asset_type">
+                                <option value="Laptop">Laptop</option>
+                                <option value="Desktop">Desktop</option>
+                                <option value="Server">Server</option>
+                                <option value="Printer">Printer</option>
+                                <option value="Network Equipment">Network Equipment</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Serial Number</label>
+                            <input type="text" class="form-control" name="serial_number">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Assigned To</label>
+                            <input type="text" class="form-control" name="assigned_to">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Department</label>
+                            <input type="text" class="form-control" name="department">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Purchase Date</label>
+                            <input type="date" class="form-control" name="purchase_date">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Warranty Expiry</label>
+                            <input type="date" class="form-control" name="warranty_expiry">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Status</label>
+                            <select class="form-select" name="status">
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                                <option value="Maintenance">Maintenance</option>
+                                <option value="Retired">Retired</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Specifications</label>
+                        <textarea class="form-control" name="specifications" rows="2"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveItAsset()">Save Asset</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function loadItAssets() {
+        const assets = await apiCall('/api/it/assets');
+        
+        if (assets.success !== false) {
+            renderItTable(assets);
+        } else {
+            document.getElementById('itTableBody').innerHTML = 
+                '<tr><td colspan="8" class="text-center text-danger">Failed to load IT assets</td></tr>';
+        }
+    }
+
+    function renderItTable(assets) {
+        const tbody = document.getElementById('itTableBody');
+        
+        if (assets.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="8" class="text-center">No IT assets found</td></tr>';
+            return;
+        }
+        
+        tbody.innerHTML = assets.map(asset => `
+            <tr>
+                <td><strong>${asset.asset_name}</strong></td>
+                <td>${asset.asset_tag}</td>
+                <td>${asset.asset_type}</td>
+                <td>${asset.serial_number}</td>
+                <td>${asset.assigned_to}</td>
+                <td>${asset.department}</td>
+                <td><span class="badge bg-${asset.status === 'Active' ? 'success' : 'secondary'}">${asset.status}</span></td>
+                <td>
+                    <button class="btn btn-sm btn-info" onclick="editItAsset(${asset.id})">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteItAsset(${asset.id})">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    async function saveItAsset() {
+        const form = document.getElementById('itForm');
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+        
+        const result = await apiCall('/api/it/assets', 'POST', data);
+        
+        if (result.success) {
+            showNotification('IT asset added successfully');
+            $('#addAssetModal').modal('hide');
+            form.reset();
+            loadItAssets();
+        } else {
+            showNotification('Failed to add asset: ' + result.error, 'danger');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadItAssets);
+</script>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="text-center mb-4">Login</h3>
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" required>
+                        </div>
+                        <div class="d-grid">
+                            <button type="button" class="btn btn-primary" onclick="login()">Login</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function login() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        
+        const result = await apiCall('/api/login', 'POST', {
+            username: username,
+            password: password
+        });
+        
+        if (result.success) {
+            showNotification('Login successful! Redirecting to dashboard...');
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 1000);
+        } else {
+            showNotification('Login failed: ' + result.error, 'danger');
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,557 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Enterprise Dashboard - Complete Overview</h2>
+    <div>
+        <span class="text-muted">Welcome, a</span>
+        <button class="btn btn-outline-secondary btn-sm ms-2" onclick="refreshStats()">
+            <i class="bi bi-arrow-clockwise"></i> Refresh
+        </button>
+    </div>
+</div>
+
+<!-- Enterprise Statistics Cards - Complete Details -->
+<div class="row mb-4">
+    <div class="col-md-2">
+        <div class="card stats-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted mb-1">Customers</h6>
+                        <h3 id="customer-count">-</h3>
+                        <small class="text-muted">Total CRM records</small>
+                    </div>
+                    <div class="text-primary">
+                        <i class="bi bi-people fs-1"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-2">
+        <div class="card stats-card" style="border-left-color: #28a745;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted mb-1">Production</h6>
+                        <h3 id="batch-count">-</h3>
+                        <small class="text-muted">Active batches</small>
+                    </div>
+                    <div class="text-success">
+                        <i class="bi bi-gear fs-1"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-2">
+        <div class="card stats-card" style="border-left-color: #ffc107;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted mb-1">Employees</h6>
+                        <h3 id="employee-count">-</h3>
+                        <small class="text-muted">Total staff</small>
+                    </div>
+                    <div class="text-warning">
+                        <i class="bi bi-person-badge fs-1"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-2">
+        <div class="card stats-card" style="border-left-color: #17a2b8;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted mb-1">Projects</h6>
+                        <h3 id="project-count">-</h3>
+                        <small class="text-muted">Active projects</small>
+                    </div>
+                    <div class="text-info">
+                        <i class="bi bi-kanban fs-1"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-2">
+        <div class="card stats-card" style="border-left-color: #6610f2;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted mb-1">Warehouse</h6>
+                        <h3 id="warehouse-count">-</h3>
+                        <small class="text-muted">Inventory items</small>
+                    </div>
+                    <div class="text-primary">
+                        <i class="bi bi-box-seam fs-1"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-2">
+        <div class="card stats-card" style="border-left-color: #e83e8c;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted mb-1">Accounts</h6>
+                        <h3 id="account-count">-</h3>
+                        <small class="text-muted">Financial accounts</small>
+                    </div>
+                    <div class="text-pink">
+                        <i class="bi bi-currency-rupee fs-1"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Additional Statistics Row -->
+<div class="row mb-4">
+    <div class="col-md-2">
+        <div class="card text-center">
+            <div class="card-body">
+                <h4 class="text-primary" id="rnd-count">-</h4>
+                <p class="text-muted">R&D Projects</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-center">
+            <div class="card-body">
+                <h4 class="text-success" id="qc-count">-</h4>
+                <p class="text-muted">QC Records</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-center">
+            <div class="card-body">
+                <h4 class="text-warning" id="it-count">-</h4>
+                <p class="text-muted">IT Assets</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-center">
+            <div class="card-body">
+                <h4 class="text-info" id="legal-count">-</h4>
+                <p class="text-muted">Legal Docs</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-center">
+            <div class="card-body">
+                <h4 class="text-danger" id="maintenance-count">-</h4>
+                <p class="text-muted">Maintenance</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-center">
+            <div class="card-body">
+                <h4 class="text-secondary" id="help-count">-</h4>
+                <p class="text-muted">Help Tickets</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Quick Actions - All Modules</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <a href="/customers" class="btn btn-primary btn-block">
+                            <i class="bi bi-person-plus"></i> Add Customer
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="/production" class="btn btn-success btn-block">
+                            <i class="bi bi-plus-circle"></i> New Batch
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="/warehouse" class="btn btn-info btn-block">
+                            <i class="bi bi-box-seam"></i> Warehouse
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="/hr" class="btn btn-warning btn-block">
+                            <i class="bi bi-person-badge"></i> HR
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="/projects" class="btn btn-secondary btn-block">
+                            <i class="bi bi-kanban"></i> Projects
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="/finance" class="btn btn-danger btn-block">
+                            <i class="bi bi-currency-rupee"></i> Finance
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Enterprise Modules Grid - Complete -->
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Business Operations</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    <a href="/customers" class="list-group-item list-group-item-action">
+                        <i class="bi bi-people"></i> CRM & Sales Management
+                    </a>
+                    <a href="/production" class="list-group-item list-group-item-action">
+                        <i class="bi bi-gear"></i> Production Management
+                    </a>
+                    <a href="/warehouse" class="list-group-item list-group-item-action">
+                        <i class="bi bi-box-seam"></i> Warehouse Management
+                    </a>
+                    <a href="/supply-chain" class="list-group-item list-group-item-action">
+                        <i class="bi bi-truck"></i> Supply Chain & Logistics
+                    </a>
+                    <a href="/materials" class="list-group-item list-group-item-action">
+                        <i class="bi bi-box"></i> Materials Management
+                    </a>
+                    <a href="/pricing" class="list-group-item list-group-item-action">
+                        <i class="bi bi-tag"></i> Price List Management
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Enterprise Management</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    <a href="/hr" class="list-group-item list-group-item-action">
+                        <i class="bi bi-person-badge"></i> HR Management
+                    </a>
+                    <a href="/projects" class="list-group-item list-group-item-action">
+                        <i class="bi bi-kanban"></i> Project Management
+                    </a>
+                    <a href="/finance" class="list-group-item list-group-item-action">
+                        <i class="bi bi-currency-rupee"></i> Finance
+                    </a>
+                    <a href="/admin" class="list-group-item list-group-item-action">
+                        <i class="bi bi-gear-fill"></i> Admin Tools
+                    </a>
+                    <a href="/data-management" class="list-group-item list-group-item-action">
+                        <i class="bi bi-database"></i> Data Management
+                    </a>
+                    <a href="/settings" class="list-group-item list-group-item-action">
+                        <i class="bi bi-gear"></i> Settings
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Technical & Quality</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    <a href="/rnd" class="list-group-item list-group-item-action">
+                        <i class="bi bi-lightbulb"></i> R&D Engineering
+                    </a>
+                    <a href="/qc" class="list-group-item list-group-item-action">
+                        <i class="bi bi-check-circle"></i> QC/QA
+                    </a>
+                    <a href="/it" class="list-group-item list-group-item-action">
+                        <i class="bi bi-pc-display"></i> IT Workspace
+                    </a>
+                    <a href="/legal" class="list-group-item list-group-item-action">
+                        <i class="bi bi-file-earmark-text"></i> Legal Compliance
+                    </a>
+                    <a href="/maintenance" class="list-group-item list-group-item-action">
+                        <i class="bi bi-tools"></i> Maintenance
+                    </a>
+                    <a href="/help" class="list-group-item list-group-item-action">
+                        <i class="bi bi-question-circle"></i> Help Desk
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Manufacturing Section -->
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Manufacturing & Production</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <a href="/bom" class="btn btn-outline-primary btn-block">
+                            <i class="bi bi-diagram-3"></i> BOM Engine
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="/panel-manufacturing" class="btn btn-outline-success btn-block">
+                            <i class="bi bi-cpu"></i> Panel Manufacturing
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="/outward" class="btn btn-outline-info btn-block">
+                            <i class="bi bi-box-arrow-right"></i> Outward Management
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity - Complete Details -->
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Recent Customers (Complete Details)</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Company Name</th>
+                                <th>Contact Person</th>
+                                <th>Contact Number</th>
+                                <th>State</th>
+                                <th>Enquiry</th>
+                                <th>Meeting Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recent-customers">
+                            <tr>
+                                <td colspan="6" class="text-center">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Recent Production Batches (Complete Details)</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Batch Number</th>
+                                <th>Product</th>
+                                <th>Start Date</th>
+                                <th>Quantity</th>
+                                <th>Status</th>
+                                <th>Assigned To</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recent-batches">
+                            <tr>
+                                <td colspan="6" class="text-center">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- System Information -->
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">System Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <strong>Database:</strong> enterprise_database.db
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Data Folder:</strong> web_data/
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Total Tables:</strong> 20+
+                    </div>
+                    <div class="col-md-3">
+                        <strong>MQTT Status:</strong> Connected
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Load dashboard statistics
+    async function loadStats() {
+        const stats = await apiCall('/api/data/stats');
+        
+        if (stats.success !== false) {
+            document.getElementById('customer-count').textContent = stats.customers;
+            document.getElementById('batch-count').textContent = stats.production_batches;
+            document.getElementById('employee-count').textContent = stats.employees;
+            document.getElementById('project-count').textContent = stats.projects;
+            document.getElementById('warehouse-count').textContent = stats.warehouse_items;
+            document.getElementById('account-count').textContent = stats.accounts;
+        }
+        
+        // Load additional module statistics
+        loadAdditionalStats();
+    }
+
+    async function loadAdditionalStats() {
+        // Load R&D projects
+        const rndProjects = await apiCall('/api/rnd/projects');
+        if (rndProjects.success !== false) {
+            document.getElementById('rnd-count').textContent = rndProjects.length;
+        }
+        
+        // Load QC records
+        const qcRecords = await apiCall('/api/qc/records');
+        if (qcRecords.success !== false) {
+            document.getElementById('qc-count').textContent = qcRecords.length;
+        }
+        
+        // Load IT assets
+        const itAssets = await apiCall('/api/it/assets');
+        if (itAssets.success !== false) {
+            document.getElementById('it-count').textContent = itAssets.length;
+        }
+        
+        // Load legal documents
+        const legalDocs = await apiCall('/api/legal/documents');
+        if (legalDocs.success !== false) {
+            document.getElementById('legal-count').textContent = legalDocs.length;
+        }
+        
+        // Load maintenance requests
+        const maintenanceRequests = await apiCall('/api/maintenance/requests');
+        if (maintenanceRequests.success !== false) {
+            document.getElementById('maintenance-count').textContent = maintenanceRequests.length;
+        }
+        
+        // Load help tickets
+        const helpTickets = await apiCall('/api/help/tickets');
+        if (helpTickets.success !== false) {
+            document.getElementById('help-count').textContent = helpTickets.length;
+        }
+    }
+
+    // Load recent customers
+    async function loadRecentCustomers() {
+        const customers = await apiCall('/api/customers');
+        
+        if (customers.success !== false) {
+            const recentCustomers = customers.slice(0, 5);
+            const tbody = document.getElementById('recent-customers');
+            
+            if (recentCustomers.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center">No customers found</td></tr>';
+            } else {
+                tbody.innerHTML = recentCustomers.map(customer => `
+                    <tr>
+                        <td>${customer.company_name}</td>
+                        <td>${customer.contact_person}</td>
+                        <td>${customer.contact_number}</td>
+                        <td>${customer.state}</td>
+                        <td><span class="badge bg-${customer.enquiry_received === 'Yes' ? 'success' : 'secondary'}">${customer.enquiry_received}</span></td>
+                        <td>${customer.meeting_schedule_time ? new Date(customer.meeting_schedule_time).toLocaleDateString() : '-'}</td>
+                    </tr>
+                `).join('');
+            }
+        }
+    }
+
+    // Load recent production batches
+    async function loadRecentBatches() {
+        const batches = await apiCall('/api/production/batches');
+        
+        if (batches.success !== false) {
+            const recentBatches = batches.slice(0, 5);
+            const tbody = document.getElementById('recent-batches');
+            
+            if (recentBatches.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center">No batches found</td></tr>';
+            } else {
+                tbody.innerHTML = recentBatches.map(batch => `
+                    <tr>
+                        <td>${batch.batch_number}</td>
+                        <td>${batch.product_name}</td>
+                        <td>${batch.start_date}</td>
+                        <td>${batch.quantity}</td>
+                        <td><span class="badge bg-${getStatusColor(batch.status)}">${batch.status}</span></td>
+                        <td>${batch.assigned_personnel}</td>
+                    </tr>
+                `).join('');
+            }
+        }
+    }
+
+    function getStatusColor(status) {
+        const colors = {
+            'In Progress': 'primary',
+            'Completed': 'success',
+            'Pending': 'warning',
+            'Cancelled': 'danger'
+        };
+        return colors[status] || 'secondary';
+    }
+
+    function refreshStats() {
+        loadStats();
+        loadRecentCustomers();
+        loadRecentBatches();
+        showNotification('Dashboard refreshed successfully');
+    }
+
+    // Load data on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        loadStats();
+        loadRecentCustomers();
+        loadRecentBatches();
+    });
+</script>
+{% endblock %}
