@@ -1,0 +1,933 @@
+import csv
+import math
+import os
+import re
+import tkinter as tk
+from tkinter import messagebox, simpledialog, ttk
+
+# Dynamically locate the current folder
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+PRODUCTS_CSV = os.path.join(SCRIPT_DIR, "products.csv")
+CUSTOMERS_CSV = os.path.join(SCRIPT_DIR, "customers.csv")
+PRICE_LIST_CSV = os.path.join(SCRIPT_DIR, "price_list_clean.csv")
+
+# Standard Product Columns
+PRODUCT_COLUMNS = [
+    "pump_current",
+    "num_pumps",
+    "num_vfd",
+    "bypass",
+    "panel_type",
+    "panel_size",
+    "panel_class",
+    "main_incomer",
+    "olr_required",
+    "indicator_light",
+    "price",
+]
+
+CUSTOMER_COLUMNS = ["customer_name", "percentage"]
+
+
+class CSVViewerWindow(tk.Toplevel):
+    """Pop-up window to view and search the full price_list_clean.csv sheet."""
+
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.title("Price List CSV Sheet Viewer")
+        self.geometry("900x500")
+
+        self.transient(parent)
+        self.create_widgets()
+        self.load_csv_data()
+
+    def create_widgets(self):
+        search_frame = ttk.Frame(self, padding="10")
+        search_frame.pack(fill="x")
+
+        ttk.Label(
+            search_frame, text="Filter/Search:", font=("Helvetica", 10, "bold")
+        ).pack(side="left", padx=(0, 5))
+        self.search_entry = ttk.Entry(search_frame, width=30)
+        self.search_entry.pack(side="left", padx=5)
+        self.search_entry.bind("<KeyRelease>", self.filter_data)
+
+        refresh_btn = ttk.Button(
+            search_frame, text="Reset Search", command=self.reset_search
+        )
+        refresh_btn.pack(side="left", padx=5)
+
+        table_frame = ttk.Frame(self, padding="10")
+        table_frame.pack(fill="both", expand=True)
+
+        self.tree = ttk.Treeview(table_frame, show="headings", selectmode="browse")
+
+        vsb = ttk.Scrollbar(table_frame, orient="vertical", command=self.tree.yview)
+        hsb = ttk.Scrollbar(table_frame, orient="horizontal", command=self.tree.xview)
+        self.tree.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set)
+
+        self.tree.grid(row=0, column=0, sticky="nsew")
+        vsb.grid(row=0, column=1, sticky="ns")
+        hsb.grid(row=1, column=0, sticky="ew")
+
+        table_frame.grid_rowconfigure(0, weight=1)
+        table_frame.grid_columnconfigure(0, weight=1)
+
+    def load_csv_data(self):
+        if not os.path.exists(PRICE_LIST_CSV):
+            messagebox.showerror(
+                "File Error", f"Cannot find '{PRICE_LIST_CSV}' in script folder.", parent=self
+            )
+            return
+
+        self.all_rows = []
+        with open(PRICE_LIST_CSV, mode="r", encoding="utf-8") as f:
+            reader = csv.reader(f)
+            headers = next(reader, None)
+            if headers:
+                self.tree["columns"] = headers
+                for h in headers:
+                    self.tree.heading(h, text=h)
+                    self.tree.column(h, width=120, anchor="w")
+
+                for row in reader:
+                    self.all_rows.append(row)
+
+        self.populate_tree(self.all_rows)
+
+    def populate_tree(self, rows):
+        for item in self.tree.get_children():
+            self.tree.delete(item)
+        for row in rows:
+            self.tree.insert("", "end", values=row)
+
+    def filter_data(self, event=None):
+        query = self.search_entry.get().strip().lower()
+        if not query:
+            self.populate_tree(self.all_rows)
+            return
+
+        filtered = [
+            row for row in self.all_rows if any(query in str(val).lower() for val in row)
+        ]
+        self.populate_tree(filtered)
+
+    def reset_search(self):
+        self.search_entry.delete(0, tk.END)
+        self.populate_tree(self.all_rows)
+
+
+class AddCustomerWindow(tk.Toplevel):
+    """Pop-up window to register new customers and discounts/markups."""
+
+    def __init__(self, parent, callback_refresh_customers):
+        super().__init__(parent)
+        self.title("Add New Customer")
+        self.geometry("380x220")
+        self.resizable(False, False)
+        self.callback_refresh = callback_refresh_customers
+
+        self.transient(parent)
+        self.grab_set()
+        self.create_widgets()
+
+    def create_widgets(self):
+        ttk.Label(
+            self, text="Add New Customer Details", font=("Helvetica", 12, "bold")
+        ).pack(pady=10)
+
+        frame = ttk.Frame(self, padding="10")
+        frame.pack(fill="both", expand=True)
+
+        ttk.Label(frame, text="Customer Name:", font=("Helvetica", 10)).grid(
+            row=0, column=0, sticky="w", pady=5
+        )
+        self.name_entry = ttk.Entry(frame, width=22)
+        self.name_entry.grid(row=0, column=1, sticky="e", pady=5)
+
+        ttk.Label(
+            frame, text="Price Adjustment (%):", font=("Helvetica", 10)
+        ).grid(row=1, column=0, sticky="w", pady=5)
+        self.percent_entry = ttk.Entry(frame, width=22)
+        self.percent_entry.grid(row=1, column=1, sticky="e", pady=5)
+
+        ttk.Label(
+            frame,
+            text="(e.g. 10 for +10% markup, -5 for 5% discount)",
+            font=("Helvetica", 8, "italic"),
+        ).grid(row=2, column=0, columnspan=2, sticky="w", pady=2)
+
+        save_btn = ttk.Button(
+            self, text="Save Customer", command=self.save_customer
+        )
+        save_btn.pack(pady=15)
+
+    def save_customer(self):
+        name = self.name_entry.get().strip()
+        raw_percent = self.percent_entry.get().strip()
+
+        if not name:
+            messagebox.showwarning(
+                "Input Error", "Please enter a customer name.", parent=self
+            )
+            return
+
+        try:
+            percentage = float(raw_percent)
+        except ValueError:
+            messagebox.showwarning(
+                "Input Error",
+                "Percentage must be a valid number.",
+                parent=self,
+            )
+            return
+
+        try:
+            with open(
+                CUSTOMERS_CSV, mode="a", newline="", encoding="utf-8"
+            ) as file:
+                writer = csv.writer(file)
+                writer.writerow([name, percentage])
+
+            messagebox.showinfo(
+                "Success",
+                f"Customer '{name}' added successfully!",
+                parent=self,
+            )
+            self.callback_refresh()
+            self.destroy()
+        except Exception as e:
+            messagebox.showerror(
+                "Error", f"Could not save customer: {e}", parent=self
+            )
+
+
+class MainApp:
+
+    def __init__(self, root):
+        self.root = root
+        self.root.title(
+            "Company Manegement Software - Price & Material Estimator"
+        )
+        self.root.geometry("850x940")
+
+        self.ensure_files_exist()
+
+        self.notebook = ttk.Notebook(self.root)
+        self.notebook.pack(fill="both", expand=True)
+
+        self.tab_price = ttk.Frame(self.notebook)
+        self.notebook.add(self.tab_price, text=" Price List Search ")
+
+        self.tab_material = ttk.Frame(self.notebook)
+        self.notebook.add(
+            self.tab_material, text=" Material & Labor Calculator "
+        )
+
+        self.current_bom = []
+        self.current_labor_cost = 0.0
+        self.current_grand_total = 0.0
+
+        self.build_price_tab()
+        self.build_material_tab()
+        self.refresh_customer_list()
+
+    def ensure_files_exist(self):
+        if not os.path.exists(PRODUCTS_CSV):
+            try:
+                with open(PRODUCTS_CSV, mode="w", newline="", encoding="utf-8") as file:
+                    writer = csv.writer(file)
+                    writer.writerow(PRODUCT_COLUMNS)
+                    writer.writerow([
+                        "10.0", "2", "1", "With Bypass", "Indoor",
+                        "600x400", "Industrial", "Yes", "Yes", "Yes", "1250.00"
+                    ])
+            except Exception as e:
+                messagebox.showerror("File Error", f"Could not create products CSV: {e}")
+
+        if not os.path.exists(CUSTOMERS_CSV):
+            try:
+                with open(CUSTOMERS_CSV, mode="w", newline="", encoding="utf-8") as file:
+                    writer = csv.writer(file)
+                    writer.writerow(CUSTOMER_COLUMNS)
+                    writer.writerow(["Standard Customer", "0.0"])
+            except Exception as e:
+                messagebox.showerror("File Error", f"Could not create customers CSV: {e}")
+
+    def read_csv_data(self, file_path):
+        rows = []
+        if os.path.exists(file_path):
+            try:
+                with open(file_path, mode="r", newline="", encoding="utf-8") as file:
+                    reader = csv.DictReader(file)
+                    for row in reader:
+                        rows.append(row)
+            except Exception as e:
+                messagebox.showerror("Read Error", f"Failed to read CSV file: {e}")
+        return rows
+
+    # ==========================================
+    # TAB 1: PRICE LIST SEARCH
+    # ==========================================
+    def build_price_tab(self):
+        title = ttk.Label(
+            self.tab_price,
+            text="Product Price Lookup",
+            font=("Helvetica", 15, "bold"),
+        )
+        title.pack(pady=10)
+
+        form_frame = ttk.Frame(self.tab_price, padding="10")
+        form_frame.pack(fill="both", expand=True)
+
+        row = 0
+
+        ttk.Label(
+            form_frame, text="Select Customer:", font=("Helvetica", 10, "bold")
+        ).grid(row=row, column=0, sticky="w", pady=4)
+
+        cust_frame = ttk.Frame(form_frame)
+        cust_frame.grid(row=row, column=1, sticky="e", pady=4)
+
+        self.customer_combo = ttk.Combobox(cust_frame, width=17, state="readonly")
+        self.customer_combo.pack(side="left", padx=(0, 5))
+
+        add_cust_btn = ttk.Button(
+            cust_frame, text="+ Add Customer", command=self.open_add_customer_window
+        )
+        add_cust_btn.pack(side="left", padx=(0, 5))
+
+        open_csv_btn = ttk.Button(
+            cust_frame, text="📋 Open Price List (CSV)", command=self.open_csv_viewer
+        )
+        open_csv_btn.pack(side="left")
+
+        row += 1
+
+        ttk.Separator(form_frame, orient="horizontal").grid(
+            row=row, column=0, columnspan=2, sticky="ew", pady=8
+        )
+        row += 1
+
+        ttk.Label(form_frame, text="Pump Current (A):").grid(row=row, column=0, sticky="w", pady=4)
+        self.current_entry = ttk.Entry(form_frame, width=25)
+        self.current_entry.grid(row=row, column=1, sticky="e", pady=4)
+        row += 1
+
+        ttk.Label(form_frame, text="Number of Pumps:").grid(row=row, column=0, sticky="w", pady=4)
+        self.pumps_combo = ttk.Combobox(
+            form_frame, values=["1", "2", "3", "4", "5"], width=23, state="readonly"
+        )
+        self.pumps_combo.grid(row=row, column=1, sticky="e", pady=4)
+        self.pumps_combo.current(0)
+        row += 1
+
+        ttk.Label(form_frame, text="Number of VFD:").grid(row=row, column=0, sticky="w", pady=4)
+        self.vfd_combo = ttk.Combobox(
+            form_frame, values=["0", "1", "2", "3", "4"], width=23, state="readonly"
+        )
+        self.vfd_combo.grid(row=row, column=1, sticky="e", pady=4)
+        self.vfd_combo.current(0)
+        row += 1
+
+        ttk.Label(form_frame, text="Bypass:").grid(row=row, column=0, sticky="w", pady=4)
+        self.bypass_combo = ttk.Combobox(
+            form_frame, values=["With Bypass", "Without Bypass"], width=23, state="readonly"
+        )
+        self.bypass_combo.grid(row=row, column=1, sticky="e", pady=4)
+        self.bypass_combo.current(0)
+        row += 1
+
+        ttk.Label(form_frame, text="Panel Type:").grid(row=row, column=0, sticky="w", pady=4)
+        self.panel_type_combo = ttk.Combobox(
+            form_frame, values=["Indoor", "Outdoor"], width=23, state="readonly"
+        )
+        self.panel_type_combo.grid(row=row, column=1, sticky="e", pady=4)
+        self.panel_type_combo.current(0)
+        row += 1
+
+        ttk.Label(form_frame, text="Panel Size:").grid(row=row, column=0, sticky="w", pady=4)
+        self.size_combo = ttk.Combobox(
+            form_frame,
+            values=["400x300", "600x400", "800x600", "1000x800", "1200x800"],
+            width=23,
+            state="readonly",
+        )
+        self.size_combo.grid(row=row, column=1, sticky="e", pady=4)
+        self.size_combo.current(0)
+        row += 1
+
+        ttk.Label(form_frame, text="Panel Class:").grid(row=row, column=0, sticky="w", pady=4)
+        self.panel_class_combo = ttk.Combobox(
+            form_frame, values=["Industrial", "Domestic"], width=23, state="readonly"
+        )
+        self.panel_class_combo.grid(row=row, column=1, sticky="e", pady=4)
+        self.panel_class_combo.current(0)
+        row += 1
+
+        ttk.Label(form_frame, text="Main Incomer:").grid(row=row, column=0, sticky="w", pady=4)
+        self.main_incomer_combo = ttk.Combobox(
+            form_frame, values=["Yes", "No"], width=23, state="readonly"
+        )
+        self.main_incomer_combo.grid(row=row, column=1, sticky="e", pady=4)
+        self.main_incomer_combo.current(0)
+        row += 1
+
+        ttk.Label(form_frame, text="OLR Requirement:").grid(row=row, column=0, sticky="w", pady=4)
+        self.olr_combo = ttk.Combobox(
+            form_frame, values=["Yes", "No"], width=23, state="readonly"
+        )
+        self.olr_combo.grid(row=row, column=1, sticky="e", pady=4)
+        self.olr_combo.current(0)
+        row += 1
+
+        ttk.Label(form_frame, text="Indicator Light Required:").grid(
+            row=row, column=0, sticky="w", pady=4
+        )
+        self.light_combo = ttk.Combobox(
+            form_frame, values=["Yes", "No"], width=23, state="readonly"
+        )
+        self.light_combo.grid(row=row, column=1, sticky="e", pady=4)
+        self.light_combo.current(0)
+        row += 1
+
+        btn_frame = ttk.Frame(self.tab_price)
+        btn_frame.pack(pady=10)
+
+        search_btn = ttk.Button(btn_frame, text="Search Price", command=self.search_price)
+        search_btn.pack(side="left", padx=5)
+
+        calc_switch_btn = ttk.Button(
+            btn_frame,
+            text="Open Material Calculator ->",
+            command=lambda: self.notebook.select(self.tab_material),
+        )
+        calc_switch_btn.pack(side="left", padx=5)
+
+        self.result_label = ttk.Label(
+            self.tab_price,
+            text="Select parameters and click 'Search Price'",
+            font=("Helvetica", 12, "italic"),
+        )
+        self.result_label.pack(pady=5)
+
+        self.breakdown_label = ttk.Label(
+            self.tab_price, text="", font=("Helvetica", 9), foreground="gray"
+        )
+        self.breakdown_label.pack(pady=2)
+
+    def open_csv_viewer(self):
+        CSVViewerWindow(self.root)
+
+    def refresh_customer_list(self):
+        customers = self.read_csv_data(CUSTOMERS_CSV)
+        self.customer_data = {}
+        names = []
+
+        for c in customers:
+            name = c.get("customer_name")
+            try:
+                pct = float(c.get("percentage", 0.0))
+            except ValueError:
+                pct = 0.0
+            if name:
+                self.customer_data[name] = pct
+                names.append(name)
+
+        if names:
+            self.customer_combo["values"] = names
+            self.customer_combo.current(0)
+
+    def open_add_customer_window(self):
+        AddCustomerWindow(self.root, self.refresh_customer_list)
+
+    def search_price(self):
+        """Searches CSV for matching products with robust string and floating point comparison."""
+        raw_current = self.current_entry.get().strip()
+        if not raw_current:
+            messagebox.showwarning("Input Warning", "Please enter the Pump Current value.")
+            return
+
+        try:
+            pump_current = float(raw_current)
+        except ValueError:
+            messagebox.showwarning("Input Warning", "Pump Current must be a valid number.")
+            return
+
+        def clean_val(val, default=""):
+            return str(val).strip().lower() if val is not None else str(default).strip().lower()
+
+        num_pumps = clean_val(self.pumps_combo.get())
+        num_vfd = clean_val(self.vfd_combo.get())
+        bypass = clean_val(self.bypass_combo.get())
+        panel_type = clean_val(self.panel_type_combo.get())
+        panel_size = clean_val(self.size_combo.get())
+        panel_class = clean_val(self.panel_class_combo.get())
+        main_incomer = clean_val(self.main_incomer_combo.get())
+        olr_required = clean_val(self.olr_combo.get())
+        indicator_light = clean_val(self.light_combo.get())
+
+        rows = self.read_csv_data(PRODUCTS_CSV)
+        found_base_price = None
+
+        for r in rows:
+            try:
+                csv_current = float(r.get("pump_current", -1))
+            except (ValueError, TypeError):
+                continue
+
+            if (
+                math.isclose(csv_current, pump_current, rel_tol=1e-5)
+                and clean_val(r.get("num_pumps")) == num_pumps
+                and clean_val(r.get("num_vfd")) == num_vfd
+                and clean_val(r.get("bypass")) == bypass
+                and clean_val(r.get("panel_type")) == panel_type
+                and clean_val(r.get("panel_size")) == panel_size
+                and clean_val(r.get("panel_class", "Industrial")) == panel_class
+                and clean_val(r.get("main_incomer", "Yes")) == main_incomer
+                and clean_val(r.get("olr_required")) == olr_required
+                and clean_val(r.get("indicator_light")) == indicator_light
+            ):
+                try:
+                    found_base_price = float(r.get("price"))
+                except (ValueError, TypeError):
+                    found_base_price = None
+                break
+
+        if found_base_price is not None:
+            selected_customer = self.customer_combo.get()
+            pct_adj = self.customer_data.get(selected_customer, 0.0)
+
+            final_price = found_base_price + (found_base_price * (pct_adj / 100.0))
+
+            self.result_label.config(
+                text=f"Final Price: Rs.{final_price:,.2f}",
+                foreground="green",
+                font=("Helvetica", 14, "bold"),
+            )
+
+            sign_str = f"+{pct_adj}%" if pct_adj >= 0 else f"{pct_adj}%"
+            self.breakdown_label.config(
+                text=f"(Base Price: Rs.{found_base_price:,.2f} | Customer Adj: {sign_str})"
+            )
+        else:
+            self.result_label.config(
+                text="Product does not exist",
+                foreground="red",
+                font=("Helvetica", 13, "bold"),
+            )
+            self.breakdown_label.config(text="")
+
+            add_new = messagebox.askyesno(
+                "Product Not Found",
+                "Product does not exist in database.\nWould you like to add a base price for this configuration?",
+            )
+
+            if add_new:
+                new_price_str = simpledialog.askstring(
+                    "Enter Price",
+                    "Enter base price for this new configuration:",
+                )
+
+                if new_price_str is not None:
+                    try:
+                        new_price = float(new_price_str)
+
+                        with open(PRODUCTS_CSV, mode="a", newline="", encoding="utf-8") as file:
+                            writer = csv.writer(file)
+                            writer.writerow([
+                                str(pump_current),
+                                self.pumps_combo.get().strip(),
+                                self.vfd_combo.get().strip(),
+                                self.bypass_combo.get().strip(),
+                                self.panel_type_combo.get().strip(),
+                                self.size_combo.get().strip(),
+                                self.panel_class_combo.get().strip(),
+                                self.main_incomer_combo.get().strip(),
+                                self.olr_combo.get().strip(),
+                                self.light_combo.get().strip(),
+                                f"{new_price:.2f}"
+                            ])
+
+                        messagebox.showinfo("Success", "New product price saved to CSV!")
+                        self.search_price()
+
+                    except ValueError:
+                        messagebox.showerror(
+                            "Invalid Input", "Please enter a valid numeric price."
+                        )
+
+    # ==========================================
+    # TAB 2: MATERIAL & FORMULA ESTIMATOR
+    # ==========================================
+    def build_material_tab(self):
+        title = ttk.Label(
+            self.tab_material,
+            text="Material & Labor Calculator",
+            font=("Helvetica", 14, "bold"),
+        )
+        title.pack(pady=10)
+
+        form_frame = ttk.LabelFrame(
+            self.tab_material, text=" Inputs (Yellow Section) ", padding="10"
+        )
+        form_frame.pack(fill="x", padx=15, pady=5)
+
+        row = 0
+
+        ttk.Label(form_frame, text="Pump Current (A):").grid(row=row, column=0, sticky="w", pady=4)
+        self.m_current_entry = ttk.Entry(form_frame, width=20)
+        self.m_current_entry.grid(row=row, column=1, sticky="e", pady=4)
+        self.m_current_entry.insert(0, "15")
+        row += 1
+
+        ttk.Label(form_frame, text="Number of Pumps:").grid(row=row, column=0, sticky="w", pady=4)
+        self.m_pumps_combo = ttk.Combobox(
+            form_frame, values=["1", "2", "3", "4", "5"], width=18, state="readonly"
+        )
+        self.m_pumps_combo.grid(row=row, column=1, sticky="e", pady=4)
+        self.m_pumps_combo.set("3")
+        row += 1
+
+        ttk.Label(form_frame, text="Number of VFD:").grid(row=row, column=0, sticky="w", pady=4)
+        self.m_vfd_combo = ttk.Combobox(
+            form_frame, values=["0", "1", "2", "3", "4"], width=18, state="readonly"
+        )
+        self.m_vfd_combo.grid(row=row, column=1, sticky="e", pady=4)
+        self.m_vfd_combo.set("1")
+        row += 1
+
+        ttk.Label(form_frame, text="Main Incomer Required:").grid(row=row, column=0, sticky="w", pady=4)
+        self.m_incomer_combo = ttk.Combobox(
+            form_frame, values=["1 - Yes", "0 - No"], width=18, state="readonly"
+        )
+        self.m_incomer_combo.grid(row=row, column=1, sticky="e", pady=4)
+        self.m_incomer_combo.set("1 - Yes")
+        row += 1
+
+        ttk.Label(form_frame, text="3-Pole Door Mount Switch:").grid(row=row, column=0, sticky="w", pady=4)
+        self.m_door_mount_combo = ttk.Combobox(
+            form_frame, values=["1 - Yes", "0 - No"], width=18, state="readonly"
+        )
+        self.m_door_mount_combo.grid(row=row, column=1, sticky="e", pady=4)
+        self.m_door_mount_combo.set("1 - Yes")
+        row += 1
+
+        ttk.Label(form_frame, text="Panel Size Level (1-5):").grid(row=row, column=0, sticky="w", pady=4)
+        self.m_panel_size_combo = ttk.Combobox(
+            form_frame, values=["1", "2", "3", "4", "5"], width=18, state="readonly"
+        )
+        self.m_panel_size_combo.grid(row=row, column=1, sticky="e", pady=4)
+        self.m_panel_size_combo.set("4")
+        row += 1
+
+        ttk.Label(form_frame, text="OLR Requirement:").grid(row=row, column=0, sticky="w", pady=4)
+        self.m_olr_combo = ttk.Combobox(
+            form_frame, values=["0 - No", "1 - Yes"], width=18, state="readonly"
+        )
+        self.m_olr_combo.grid(row=row, column=1, sticky="e", pady=4)
+        self.m_olr_combo.set("0 - No")
+        row += 1
+
+        ttk.Label(form_frame, text="Indicator Light Required:").grid(row=row, column=0, sticky="w", pady=4)
+        self.m_light_combo = ttk.Combobox(
+            form_frame, values=["0 - No", "1 - Yes"], width=18, state="readonly"
+        )
+        self.m_light_combo.grid(row=row, column=1, sticky="e", pady=4)
+        self.m_light_combo.set("0 - No")
+        row += 1
+
+        action_frame = ttk.Frame(self.tab_material)
+        action_frame.pack(pady=5)
+
+        calc_btn = ttk.Button(
+            action_frame,
+            text="Calculate Material List & BOM",
+            command=self.calculate_materials,
+        )
+        calc_btn.pack(side="left", padx=5)
+
+        export_btn = ttk.Button(
+            action_frame,
+            text="💾 Export BOM to CSV",
+            command=self.export_bom_to_csv,
+        )
+        export_btn.pack(side="left", padx=5)
+
+        output_frame = ttk.LabelFrame(
+            self.tab_material, text=" Material Breakdown & BOM ", padding="10"
+        )
+        output_frame.pack(fill="both", expand=True, padx=15, pady=5)
+
+        self.output_text = tk.Text(
+            output_frame, wrap="none", width=85, height=16, font=("Consolas", 9)
+        )
+
+        vsb = ttk.Scrollbar(output_frame, orient="vertical", command=self.output_text.yview)
+        hsb = ttk.Scrollbar(output_frame, orient="horizontal", command=self.output_text.xview)
+        self.output_text.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set)
+
+        self.output_text.grid(row=0, column=0, sticky="nsew")
+        vsb.grid(row=0, column=1, sticky="ns")
+        hsb.grid(row=1, column=0, sticky="ew")
+
+        output_frame.grid_rowconfigure(0, weight=1)
+        output_frame.grid_columnconfigure(0, weight=1)
+
+    def fetch_item_dp(self, category, sub_cat=None, capacity=None):
+        """Dynamically finds Item Name and Dealer Price (DP) from price_list_clean.csv."""
+        if not os.path.exists(PRICE_LIST_CSV):
+            return f"{category} {sub_cat or ''}".strip(), 0.0
+
+        with open(PRICE_LIST_CSV, mode="r", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                cat_match = str(row.get("Category", "")).strip().lower() == str(category).strip().lower()
+
+                sub_match = True
+                if sub_cat is not None:
+                    sub_match = str(row.get("SUB Category", "")).strip().lower() == str(sub_cat).strip().lower()
+
+                if cat_match and sub_match:
+                    if capacity is not None and row.get("CAPACITY"):
+                        try:
+                            if float(row.get("CAPACITY")) != float(capacity):
+                                continue
+                        except ValueError:
+                            if str(row.get("CAPACITY")).strip() != str(capacity).strip():
+                                continue
+
+                    csv_item_name = str(row.get("Item Name", "") or row.get("ITEM NAME", "") or row.get("Item_Name", "")).strip()
+                    if not csv_item_name:
+                        csv_item_name = f"{category} {sub_cat or ''}".strip()
+
+                    try:
+                        dp_val = float(row.get("DP", 0))
+                    except (ValueError, TypeError):
+                        dp_val = 0.0
+
+                    return csv_item_name, dp_val
+
+        return f"{category} {sub_cat or ''}".strip(), 0.0
+
+    def fetch_next_capacity_dp(self, category, sub_category, target_capacity):
+        """Searches price_list_clean.csv for components matching target capacity or next available size."""
+        if not os.path.exists(PRICE_LIST_CSV):
+            return f"{category} {sub_category}".strip(), str(target_capacity), 0.0
+
+        candidates = []
+        with open(PRICE_LIST_CSV, mode="r", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                cat_match = str(row.get("Category", "")).strip().lower() == str(category).strip().lower()
+                sub_match = str(row.get("SUB Category", "")).strip().lower() == str(sub_category).strip().lower()
+
+                if cat_match and sub_match:
+                    cap_str = str(row.get("CAPACITY", "")).strip()
+                    csv_item_name = str(row.get("Item Name", "") or row.get("ITEM NAME", "") or row.get("Item_Name", "")).strip()
+                    if not csv_item_name:
+                        csv_item_name = f"{category} {sub_category}".strip()
+
+                    try:
+                        cap_val = float(cap_str)
+                        dp_val = float(row.get("DP", 0))
+                        candidates.append((cap_val, csv_item_name, cap_str, dp_val))
+                    except ValueError:
+                        continue
+
+        if not candidates:
+            return f"{category} {sub_category}".strip(), str(target_capacity), 0.0
+
+        candidates.sort(key=lambda x: x[0])
+
+        for cap_val, item_name, cap_str, dp_val in candidates:
+            if cap_val >= target_capacity:
+                return item_name, cap_str, dp_val
+
+        highest = candidates[-1]
+        return highest[1], highest[2], highest[3]
+
+    def generate_bom(self, controller_type, num_pumps, num_vfd, pump_hp, olr_req, light_req, 
+                     fan_qty, filter_qty, endlock_qty, mcb_mccb_type, breaker_qty, 
+                     raw_breaker_rating, incomer_req, door_mount_req, total_panel_current):
+        """Builds step-by-step Bill of Materials (BOM) dynamically pulling Item Name & DP from CSV."""
+        bom = []
+
+        # Step 1: Controller Lookup
+        if controller_type == "AIPCU OR HMI":
+            item_name, dp = self.fetch_item_dp("Controller", 1, capacity=1)
+            bom.append({
+                "Item_Name": item_name, "Category": "Controller", "SUB Category": "1",
+                "Capacity": "1 Unit", "Qty": 1, "DP": dp
+            })
+        else:
+            item_name, dp = self.fetch_item_dp("Controller", 2)
+            bom.append({
+                "Item_Name": item_name, "Category": "Controller", "SUB Category": "2",
+                "Capacity": "N/A", "Qty": 1, "DP": dp
+            })
+
+        # Step 2: Power Supply
+        item_name, ps_dp = self.fetch_item_dp("POWER SUPPLY", 1)
+        bom.append({
+            "Item_Name": item_name, "Category": "POWER SUPPLY", "SUB Category": "1",
+            "Capacity": "12V/24V", "Qty": 1, "DP": ps_dp
+        })
+
+        # Step 3: Main Switch / Load Breaker Switch
+        if incomer_req == 1 and total_panel_current <= 63:
+            lb_item_name, lb_cap_str, lb_dp = self.fetch_next_capacity_dp("switch", "LOAD BREAKER", total_panel_current)
+            bom.append({
+                "Item_Name": lb_item_name, "Category": "switch", "SUB Category": "LOAD BREAKER",
+                "Capacity": f"{lb_cap_str}A", "Qty": 1, "DP": lb_dp
+            })
+
+        # Step 4: 3-Pole Door Mount Switch (Yellow)
+        if door_mount_req == 1:
+            dm_item_name, dm_cap_str, dm_dp = self.fetch_next_capacity_dp("switch", "DOOR MOUNT", total_panel_current)
+            if dm_item_name == "switch DOOR MOUNT":
+                dm_item_name = "3 POLE SWITCH DOOR MOUNT (YELLOW) 63A"
+            bom.append({
+                "Item_Name": dm_item_name, "Category": "switch", "SUB Category": "DOOR MOUNT",
+                "Capacity": f"{dm_cap_str}A", "Qty": 1, "DP": dm_dp
+            })
+
+        # Step 5: Circuit Breaker
+        breaker_cat = "MCCB" if "MCCB" in mcb_mccb_type.upper() else "MCB"
+        breaker_sub_cat = "MCCB 3P" if breaker_cat == "MCCB" else "3P"
+        b_item_name, selected_cap_str, breaker_dp = self.fetch_next_capacity_dp(breaker_cat, breaker_sub_cat, raw_breaker_rating)
+        
+        bom.append({
+            "Item_Name": b_item_name, "Category": breaker_cat, "SUB Category": breaker_sub_cat,
+            "Capacity": f"{selected_cap_str}A", "Qty": breaker_qty, "DP": breaker_dp
+        })
+
+        # Step 6: VFD Drive Lookup
+        if num_vfd > 0:
+            vfd_name, vfd_cap, vfd_dp = self.fetch_next_capacity_dp("VFD", "VFD 3 PHASE", pump_hp)
+            bom.append({
+                "Item_Name": vfd_name, "Category": "VFD", "SUB Category": "VFD 3 PHASE",
+                "Capacity": f"{vfd_cap} HP", "Qty": num_vfd, "DP": vfd_dp
+            })
+
+        # Step 7: Contactors (Power & Bypass)
+        contactor_qty = num_pumps * 2 if num_vfd > 0 else num_pumps
+        c_name, c_cap, c_dp = self.fetch_next_capacity_dp("CONTACTOR", "3 POLE", total_panel_current / max(1, num_pumps))
+        bom.append({
+            "Item_Name": c_name, "Category": "CONTACTOR", "SUB Category": "3 POLE",
+            "Capacity": f"{c_cap}A", "Qty": contactor_qty, "DP": c_dp
+        })
+
+        # Step 8: Overload Relays (OLR)
+        if olr_req == 1:
+            olr_name, olr_cap, olr_dp = self.fetch_next_capacity_dp("OLR", "THERMAL", total_panel_current / max(1, num_pumps))
+            bom.append({
+                "Item_Name": olr_name, "Category": "OLR", "SUB Category": "THERMAL",
+                "Capacity": f"{olr_cap}A", "Qty": num_pumps, "DP": olr_dp
+            })
+
+        # Step 9: Cooling Fans & Filters
+        if fan_qty > 0:
+            fan_name, fan_dp = self.fetch_item_dp("FAN", "COOLING")
+            bom.append({
+                "Item_Name": fan_name, "Category": "FAN", "SUB Category": "COOLING",
+                "Capacity": "Standard", "Qty": fan_qty, "DP": fan_dp
+            })
+        if filter_qty > 0:
+            flt_name, flt_dp = self.fetch_item_dp("FILTER", "FAN FILTER")
+            bom.append({
+                "Item_Name": flt_name, "Category": "FILTER", "SUB Category": "FAN FILTER",
+                "Capacity": "Standard", "Qty": filter_qty, "DP": flt_dp
+            })
+
+        # Step 10: Indicator Lights & Terminals
+        if light_req == 1:
+            ind_name, ind_dp = self.fetch_item_dp("INDICATOR", "LED")
+            bom.append({
+                "Item_Name": ind_name, "Category": "INDICATOR", "SUB Category": "LED",
+                "Capacity": "24V DC", "Qty": 3, "DP": ind_dp
+            })
+
+        if endlock_qty > 0:
+            el_name, el_dp = self.fetch_item_dp("ACCESSORIES", "ENDLOCK")
+            bom.append({
+                "Item_Name": el_name, "Category": "ACCESSORIES", "SUB Category": "ENDLOCK",
+                "Capacity": "DIN Rail", "Qty": endlock_qty, "DP": el_dp
+            })
+
+        return bom
+
+    def calculate_materials(self):
+        try:
+            pump_current = float(self.m_current_entry.get().strip())
+            num_pumps = int(self.m_pumps_combo.get().strip())
+            num_vfd = int(self.m_vfd_combo.get().strip())
+            incomer_req = 1 if "1" in self.m_incomer_combo.get() else 0
+            door_mount_req = 1 if "1" in self.m_door_mount_combo.get() else 0
+            panel_size_lvl = int(self.m_panel_size_combo.get().strip())
+            olr_req = 1 if "1" in self.m_olr_combo.get() else 0
+            light_req = 1 if "1" in self.m_light_combo.get() else 0
+        except ValueError:
+            messagebox.showerror("Input Error", "Please ensure all numerical input fields contain valid values.")
+            return
+
+        # Estimations / Assumptions
+        pump_hp = (pump_current * 1.732 * 415 * 0.85) / 746
+        total_panel_current = pump_current * num_pumps
+        controller_type = "AIPCU OR HMI" if num_vfd > 0 else "DOL/STAR-DELTA"
+        mcb_mccb_type = "MCCB" if total_panel_current > 63 else "MCB"
+        breaker_qty = 1
+        raw_breaker_rating = total_panel_current * 1.25
+
+        fan_qty = 2 if num_vfd > 1 else (1 if num_vfd == 1 else 0)
+        filter_qty = fan_qty
+        endlock_qty = 4
+
+        self.current_bom = self.generate_bom(
+            controller_type, num_pumps, num_vfd, pump_hp, olr_req, light_req,
+            fan_qty, filter_qty, endlock_qty, mcb_mccb_type, breaker_qty,
+            raw_breaker_rating, incomer_req, door_mount_req, total_panel_current
+        )
+
+        total_material_dp = sum(item["Qty"] * item["DP"] for item in self.current_bom)
+        self.current_labor_cost = 500.0 + (num_pumps * 250.0) + (panel_size_lvl * 150.0)
+        self.current_grand_total = total_material_dp + self.current_labor_cost
+
+        # Display Formatted Text
+        self.output_text.delete("1.0", tk.END)
+        out = []
+        out.append(f"{'ITEM NAME':<42} | {'QTY':<4} | {'UNIT DP (Rs.)':<13} | {'TOTAL DP (Rs.)':<13}")
+        out.append("-" * 80)
+
+        for item in self.current_bom:
+            tot_dp = item["Qty"] * item["DP"]
+            out.append(f"{item['Item_Name'][:40]:<42} | {item['Qty']:<4} | {item['DP']:<13,.2f} | {tot_dp:<13,.2f}")
+
+        out.append("-" * 80)
+        out.append(f"{'TOTAL MATERIAL COST (DP):':<62} Rs.{total_material_dp:,.2f}")
+        out.append(f"{'LABOR & ASSEMBLY COST:':<62} Rs.{self.current_labor_cost:,.2f}")
+        out.append(f"{'GRAND TOTAL ESTIMATED COST:':<62} Rs.{self.current_grand_total:,.2f}")
+
+        self.output_text.insert(tk.END, "\n".join(out))
+
+    def export_bom_to_csv(self):
+        if not self.current_bom:
+            messagebox.showwarning("Export Warning", "No BOM generated to export. Please calculate first.")
+            return
+
+        export_file = os.path.join(SCRIPT_DIR, "generated_bom_export.csv")
+        try:
+            with open(export_file, mode="w", newline="", encoding="utf-8") as f:
+                writer = csv.DictWriter(f, fieldnames=["Item_Name", "Category", "SUB Category", "Capacity", "Qty", "DP"])
+                writer.writeheader()
+                for item in self.current_bom:
+                    writer.writerow(item)
+            messagebox.showinfo("Export Success", f"BOM export saved successfully to:\n{export_file}")
+        except Exception as e:
+            messagebox.showerror("Export Error", f"Could not export BOM CSV: {e}")
+
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = MainApp(root)
+    root.mainloop()

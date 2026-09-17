@@ -1,0 +1,12 @@
+date,supplier,invoice_no,department,item_description,quantity,rate,amount,payment_status,payment_method,cheque_date,cheque_number,cheque_photo,notes
+2026-08-22,abc,123,,slkdf,10,12,120.00,Partial,,,,,
+2026-08-22,satyam,123,Panel Department,5kw VFD,1,1000.00,1000.00,Partial,,,,,
+2026-08-22,satyam,234,Panel Department,AIPCU  HMI CONTROLLER MULTIVFD 3 Nos,1,40000.00,40000.00,Pending,,,,,
+2026-08-22,satyam,234,Panel Department,5.5KW-ND7.5HP380-480V (186.6X116.6X175) Nos,1,14163.84,14163.84,Pending,,,,,
+2026-08-22,satyam,234,Panel Department,DLC VFD T SURESH 14 Nos,1,9500.00,9500.00,Pending,,,,,
+2026-08-22,satyam,234,Panel Department,DLC VFD 13 Nos,1,15000.00,15000.00,Pending,,,,,
+2026-08-22,SATYAM,234,Panel Department,AIPCU  HMI CONTROLLER MULTIVFD 3 Nos,1,40000.00,40000.00,Pending,Cheque,2026-08-25,123,D:\python code\porduct selector\cheque_photos\SATYAM\SATYAM_123_2026-08-25_20260822_113027.jpeg,
+2026-08-22,aa,345,R&D,AIPCU WITH HMI DISPLAY - STP Nos,1,25000.00,25000.00,Pending,Cheque,2026-08-22,123,D:\python code\porduct selector\cheque_photos\aa\aa_123_2026-08-22_20260822_115105.png,
+2026-08-22,satyam,234,Panel Department,AIPCU  HMI CONTROLLER MULTIVFD 4 Nos,1,30000.00,30000.00,Pending,Hard Cash,,,,abc
+2026-08-22,kjh,23984y`,Other,AI-PCU02 WITH HMI DISPLAY 2 Nos,1,19500.00,19500.00,Pending,Hard Cash,,,,
+2026-08-27,kjh,123,Panel Department,CONTACTOR 1201 M7 12 Nos,1,1100.00,1100.00,Pending,Cheque,2026-08-28,5454,D:\python code\porduct selector\cheque_photos\kjh\kjh_5454_2026-08-28_20260827_162942.png,

@@ -1,0 +1,4 @@
+asset_tag,device_name,type,assigned_to,purchase_date,maintenance_due,status,retirement_date
+IT-1001,Dell Latitude 7440,Laptop,Aisha Verma,2025-06-10,2026-09-10,Assigned,
+IT-1028,Cisco Catalyst 9300,Server,Infrastructure Team,2024-02-20,2026-08-28,Operational,
+IT-1094,Samsung Galaxy S24,Mobile,Daniel Lee,2025-01-15,2026-10-01,Assigned,

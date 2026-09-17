@@ -1,0 +1,13 @@
+S.No,Item Name,Category,SUB Category,Capacity,Unit Quantity,Unit Price (Rs),Total Price (Rs)
+1,Main System Controller (AIPCU/HMI),Controller,1,1 Unit,1,25000.0,25000.0
+2,Power Supply Module (24V DC),POWER SUPPLY,1,12V/24V,1,585.0,585.0
+3,Circuit Breaker (MCB 3P),MCB,3P,40A,4,1407.3,5629.2
+4,Variable Frequency Drive (11 HP),VFD,1,11 HP,1,0.0,0.0
+5,Power Contactor (11 HP Rated),Contactor,1,11 HP,9,0.0,0.0
+6,Panel Cooling Fan Unit,Fan,1,Standard,1,370.0,370.0
+7,Panel Exhaust Air Filter Unit,Filter,1,Standard,2,32.9,65.8
+8,Endlock End Plate (Terminal GREY),Terminal,GREY,1,15,10.5,157.5
+
+,SUBTOTAL (MATERIALS),,,,34,,31807.5
+,ESTIMATED LABOR COST,,,,1,,6600
+,FINAL GRAND TOTAL PRICE,,,,,,38407.5

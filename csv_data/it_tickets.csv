@@ -1,0 +1,4 @@
+ticket_id,employee,issue,priority,status,assigned_to,sla_hours
+IT-1042,Nina Foster,VPN connection issue,High,Open,A. Patel,4
+IT-1045,Martin Cruz,Software upgrade request,Medium,In Progress,K. Singh,8
+IT-1051,Sarah Ahmed,Laptop battery replacement,Low,Resolved,R. Shah,2

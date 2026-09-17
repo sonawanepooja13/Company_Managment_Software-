@@ -1,0 +1,4 @@
+control,owner,policy,status,next_review,risk_level
+MFA Enforcement,Identity Team,Require MFA for all remote and admin access,Active,2026-09-15,Low
+Password Expiration,IAM Team,60-day rotation for privileged users,Monitoring,2026-08-30,Medium
+File Sharing Restrictions,Security Team,Block external sharing outside approved groups,Active,2026-09-05,Low

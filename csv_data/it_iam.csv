@@ -1,0 +1,4 @@
+username,employee_name,role,department,access_scope,last_review,status
+averma,Aisha Verma,Engineer,Engineering,"ERP, GitHub, Jira",2026-08-20,Active
+dlee,Daniel Lee,Sales Manager,Sales,"Salesforce, CRM",2026-08-18,Active
+rshah,Rohit Shah,IT Admin,IT,"AD, VPN, Monitoring",2026-08-22,Active

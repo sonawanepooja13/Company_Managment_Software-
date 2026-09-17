@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Legal Compliance</h2>
+    <div>
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addDocumentModal">
+            <i class="bi bi-plus-circle"></i> Add Document
+        </button>
+    </div>
+</div>
+
+<!-- Legal Documents Table -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Legal Documents</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Document Name</th>
+                        <th>Type</th>
+                        <th>Document Number</th>
+                        <th>Issue Date</th>
+                        <th>Expiry Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="legalTableBody">
+                    <tr>
+                        <td colspan="7" class="text-center">Loading legal documents...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Add Legal Document Modal -->
+<div class="modal fade" id="addDocumentModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Legal Document</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="legalForm">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Document Name *</label>
+                            <input type="text" class="form-control" name="document_name" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Document Type</label>
+                            <select class="form-select" name="document_type">
+                                <option value="License">License</option>
+                                <option value="Permit">Permit</option>
+                                <option value="Certificate">Certificate</option>
+                                <option value="Contract">Contract</option>
+                                <option value="Insurance">Insurance</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Document Number</label>
+                            <input type="text" class="form-control" name="document_number">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Issue Date</label>
+                            <input type="date" class="form-control" name="issue_date">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Expiry Date</label>
+                            <input type="date" class="form-control" name="expiry_date">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Status</label>
+                            <select class="form-select" name="status">
+                                <option value="Active">Active</option>
+                                <option value="Expiring Soon">Expiring Soon</option>
+                                <option value="Expired">Expired</option>
+                                <option value="Renewal Required">Renewal Required</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-control" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">File Path</label>
+                        <input type="text" class="form-control" name="file_path">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveLegalDocument()">Save Document</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function loadLegalDocuments() {
+        const documents = await apiCall('/api/legal/documents');
+        
+        if (documents.success !== false) {
+            renderLegalTable(documents);
+        } else {
+            document.getElementById('legalTableBody').innerHTML = 
+                '<tr><td colspan="7" class="text-center text-danger">Failed to load legal documents</td></tr>';
+        }
+    }
+
+    function renderLegalTable(documents) {
+        const tbody = document.getElementById('legalTableBody');
+        
+        if (documents.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" class="text-center">No legal documents found</td></tr>';
+            return;
+        }
+        
+        tbody.innerHTML = documents.map(doc => `
+            <tr>
+                <td><strong>${doc.document_name}</strong></td>
+                <td>${doc.document_type}</td>
+                <td>${doc.document_number}</td>
+                <td>${doc.issue_date}</td>
+                <td>${doc.expiry_date}</td>
+                <td><span class="badge bg-${getLegalStatusColor(doc.status)}">${doc.status}</span></td>
+                <td>
+                    <button class="btn btn-sm btn-info" onclick="editLegalDocument(${doc.id})">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteLegalDocument(${doc.id})">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    function getLegalStatusColor(status) {
+        const colors = {
+            'Active': 'success',
+            'Expiring Soon': 'warning',
+            'Expired': 'danger',
+            'Renewal Required': 'info'
+        };
+        return colors[status] || 'secondary';
+    }
+
+    async function saveLegalDocument() {
+        const form = document.getElementById('legalForm');
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+        
+        const result = await apiCall('/api/legal/documents', 'POST', data);
+        
+        if (result.success) {
+            showNotification('Legal document added successfully');
+            $('#addDocumentModal').modal('hide');
+            form.reset();
+            loadLegalDocuments();
+        } else {
+            showNotification('Failed to add document: ' + result.error, 'danger');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadLegalDocuments);
+</script>
+{% endblock %}
