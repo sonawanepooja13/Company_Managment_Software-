@@ -1,3 +1,5 @@
+
+#auth manager file
 import csv
 import hashlib
 import os
