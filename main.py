@@ -721,6 +721,11 @@ class MainApp:
             if hasattr(self, "login_frame"):
                 self.login_frame.destroy()
             self.build_main_dashboard()
+            if os.environ.get("APP_OPEN_BOOSTER_PANEL") == "1":
+                self.root.after(
+                    250,
+                    lambda: self.show_category_content("Booster Pump Control Panel"),
+                )
         else:
             messagebox.showerror(
                 "Access Denied",
@@ -735,6 +740,45 @@ class MainApp:
 
         self.content_frame = ttk.Frame(self.root)
         self.content_frame.pack(fill="both", expand=True)
+
+    def create_welcome_button(self, parent, text, command):
+        button = tk.Button(
+            parent,
+            text=text,
+            command=command,
+            width=34,
+            font=("Helvetica", 11, "bold"),
+            foreground="#17324d",
+            background="#e8f3f8",
+            activeforeground="#ffffff",
+            activebackground="#1f6f9f",
+            relief="flat",
+            borderwidth=0,
+            highlightthickness=1,
+            highlightbackground="#7aa8bf",
+            highlightcolor="#2f789f",
+            padx=16,
+            pady=12,
+                justify="center",
+                anchor="center",
+                wraplength=280,
+            cursor="hand2",
+        )
+        button.bind(
+            "<Enter>",
+            lambda event: event.widget.configure(
+                background="#d9eef9",
+                highlightbackground="#2f789f",
+            ),
+        )
+        button.bind(
+            "<Leave>",
+            lambda event: event.widget.configure(
+                background="#e8f3f8",
+                highlightbackground="#7aa8bf",
+            ),
+        )
+        return button
 
     def build_main_dashboard(self):
         self.center_window(1050, 780)
@@ -817,20 +861,25 @@ class MainApp:
 
             row = index // 2
             col = index % 2
-            ttk.Button(
-                module_grid,
-                text=label,
-                width=34,
-                command=cmd,
-            ).grid(row=row, column=col, padx=10, pady=6, sticky="e")
+            self.create_welcome_button(module_grid, label, cmd).grid(
+                row=row, column=col, padx=10, pady=6, sticky="ew"
+            )
+
+        module_grid.columnconfigure(0, weight=1)
+        module_grid.columnconfigure(1, weight=1)
 
         if is_admin or self.user_data.get("allow_admin", False):
-            ttk.Button(
+            self.create_welcome_button(
                 module_grid,
-                text="⚙️ Admin Settings",
-                width=34,
-                command=self.show_admin_settings_view,
-            ).grid(row=(len(all_modules) // 2) + 1, column=0, padx=10, pady=6, sticky="e")
+                "⚙️ Admin Settings",
+                self.show_admin_settings_view,
+            ).grid(
+                row=(len(all_modules) // 2) + 1,
+                column=0,
+                padx=10,
+                pady=6,
+                sticky="ew",
+            )
 
     def create_back_header(self, title_text, back_command=None, back_text="⬅ Back to Menu"):
         header_frame = ttk.Frame(self.content_frame, padding=8)
@@ -939,11 +988,15 @@ class MainApp:
         ]
 
         for category in categories:
-            btn = ttk.Button(
+            button_label = (
+                "Booster Pump Control Panel Desing,Materil & Price Calculator"
+                if category == "Booster Pump Control Panel"
+                else category
+            )
+            btn = self.create_welcome_button(
                 category_frame,
-                text=category,
-                width=30,
-                command=lambda cat=category: self.show_category_content(cat)
+                button_label,
+                lambda cat=category: self.show_category_content(cat),
             )
             btn.pack(pady=10)
 

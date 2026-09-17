@@ -436,9 +436,13 @@ class TaskManagerView(ttk.Frame):
         self.manager.load_tasks()
 
     def _load_employee_users(self):
-        path = os.path.join(config.CSV_DIR, "employee record.csv")
+        path = os.path.join(config.HR_DIR, "employee record.csv")
         if not os.path.exists(path):
-            return []
+            legacy_path = os.path.join(config.CSV_DIR, "employee record.csv")
+            if os.path.exists(legacy_path):
+                path = legacy_path
+            else:
+                return []
 
         self._employee_users_by_record_id = {}
         loaded_users = []
@@ -467,9 +471,13 @@ class TaskManagerView(ttk.Frame):
         return loaded_users
 
     def _employee_names_for_department(self, department_name):
-        path = os.path.join(config.CSV_DIR, "employee record.csv")
+        path = os.path.join(config.HR_DIR, "employee record.csv")
         if not os.path.exists(path):
-            return []
+            legacy_path = os.path.join(config.CSV_DIR, "employee record.csv")
+            if os.path.exists(legacy_path):
+                path = legacy_path
+            else:
+                return []
 
         names = []
         with open(path, newline="", encoding="utf-8") as file:
@@ -489,9 +497,13 @@ class TaskManagerView(ttk.Frame):
         return names
 
     def _employee_options_for_department(self, department_name):
-        path = os.path.join(config.CSV_DIR, "employee record.csv")
+        path = os.path.join(config.HR_DIR, "employee record.csv")
         if not os.path.exists(path):
-            return []
+            legacy_path = os.path.join(config.CSV_DIR, "employee record.csv")
+            if os.path.exists(legacy_path):
+                path = legacy_path
+            else:
+                return []
 
         options = []
         with open(path, newline="", encoding="utf-8") as file:

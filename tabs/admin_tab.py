@@ -240,9 +240,13 @@ class UserPermissionsWindow(tk.Toplevel):
 
     def _load_employee_access_records(self):
         auth_users = auth_manager.load_users()
-        employee_path = os.path.join(config.CSV_DIR, "employee record.csv")
+        employee_path = os.path.join(config.HR_DIR, "employee record.csv")
         if not os.path.exists(employee_path):
-            return auth_users
+            legacy_path = os.path.join(config.CSV_DIR, "employee record.csv")
+            if os.path.exists(legacy_path):
+                employee_path = legacy_path
+            else:
+                return auth_users
 
         records = []
         with open(employee_path, newline="", encoding="utf-8") as file:
@@ -362,9 +366,13 @@ class AdminTab(ttk.Frame):
 
     def _load_employee_access_records(self):
         auth_users = auth_manager.load_users()
-        employee_path = os.path.join(config.CSV_DIR, "employee record.csv")
+        employee_path = os.path.join(config.HR_DIR, "employee record.csv")
         if not os.path.exists(employee_path):
-            return auth_users
+            legacy_path = os.path.join(config.CSV_DIR, "employee record.csv")
+            if os.path.exists(legacy_path):
+                employee_path = legacy_path
+            else:
+                return auth_users
 
         records = []
         with open(employee_path, newline="", encoding="utf-8") as file:

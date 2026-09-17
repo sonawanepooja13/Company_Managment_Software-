@@ -5,9 +5,11 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Dedicated folder path for CSV storage
 CSV_DIR = os.path.join(SCRIPT_DIR, "csv_data")
+HR_DIR = os.path.join(CSV_DIR, "HR")
 
-# Ensure the 'csv_data' folder exists on startup
+# Ensure the 'csv_data' and 'csv_data/HR' folders exist on startup
 os.makedirs(CSV_DIR, exist_ok=True)
+os.makedirs(HR_DIR, exist_ok=True)
 
 # CSV File Absolute Paths inside 'csv_data'
 PRODUCTS_CSV = os.path.join(CSV_DIR, "products.csv")
@@ -16,6 +18,10 @@ CUSTOMERS_DETAILED_CSV = os.path.join(CSV_DIR, "customers_detailed.csv")
 CUSTOMER_SERVICES_CSV = os.path.join(CSV_DIR, "customer_services.csv")
 BOM_EXPORT_CSV = os.path.join(CSV_DIR, "generated_bom_export.csv")
 MATERIAL_COMPANIES_CSV = os.path.join(CSV_DIR, "material_companies.csv")
+PRODUCT_PRICE_CALCULATOR_CSV = os.path.join(
+    CSV_DIR, "Product Price Calculator", "price_list.csv"
+)
+PRICE_LIST_CSV = PRODUCT_PRICE_CALCULATOR_CSV
 
 # Supply Chain & Logistics CSV Files
 SUPPLIERS_CSV = os.path.join(CSV_DIR, "suppliers.csv")

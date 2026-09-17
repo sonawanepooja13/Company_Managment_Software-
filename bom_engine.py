@@ -1,4 +1,5 @@
 import csv
+import re
 from datetime import datetime
 import os
 import openpyxl
@@ -120,10 +121,14 @@ def fetch_item_dp(category, sub_cat=None, capacity=None):
                 )
                 sub_match = True
                 if sub_cat is not None:
-                    sub_match = (
-                        str(row.get("SUB Category", "")).strip().lower()
-                        == str(sub_cat).strip().lower()
-                    )
+                    row_sub_category = row.get("SUB Category") or row.get("SUB Category Type 1")
+                    try:
+                        sub_match = float(row_sub_category) == float(sub_cat)
+                    except (TypeError, ValueError):
+                        sub_match = (
+                            str(row_sub_category or "").strip().lower()
+                            == str(sub_cat).strip().lower()
+                        )
 
                 if cat_match and sub_match:
                     if capacity is not None and row.get("CAPACITY"):
@@ -172,10 +177,14 @@ def fetch_next_capacity_dp(category, sub_category, target_capacity):
                     str(row.get("Category", "")).strip().lower()
                     == str(category).strip().lower()
                 )
-                sub_match = (
-                    str(row.get("SUB Category", "")).strip().lower()
-                    == str(sub_category).strip().lower()
-                )
+                row_sub_category = row.get("SUB Category") or row.get("SUB Category Type 1")
+                try:
+                    sub_match = float(row_sub_category) == float(sub_category)
+                except (TypeError, ValueError):
+                    sub_match = (
+                        str(row_sub_category or "").strip().lower()
+                        == str(sub_category).strip().lower()
+                    )
 
                 if cat_match and sub_match:
                     cap_str = str(row.get("CAPACITY", "")).strip()
@@ -186,6 +195,10 @@ def fetch_next_capacity_dp(category, sub_category, target_capacity):
                     ).strip()
                     if not csv_item_name:
                         csv_item_name = f"{category} {sub_category}".strip()
+                    if not cap_str:
+                        capacity_match = re.search(r"(\d+(?:\.\d+)?)\s*A\b", csv_item_name, re.IGNORECASE)
+                        if capacity_match:
+                            cap_str = capacity_match.group(1)
 
                     try:
                         cap_val = float(cap_str)
@@ -211,6 +224,40 @@ def fetch_next_capacity_dp(category, sub_category, target_capacity):
     return highest[1], highest[2], highest[3]
 
 
+def fetch_vfd_dp(make, target_hp):
+    """Find the smallest VFD price for the selected make at or above target HP."""
+    price_list_path = getattr(config, "PRICE_LIST_CSV", config.PRODUCTS_CSV)
+    candidates = []
+    try:
+        with open(price_list_path, mode="r", encoding="utf-8-sig") as file:
+            for row in csv.DictReader(file):
+                if str(row.get("Category", "")).strip().lower() != "vfd":
+                    continue
+                row_make = str(row.get("SUB Category Type 1", "")).strip()
+                if make and row_make.lower() != make.strip().lower():
+                    continue
+                item_name = str(row.get("Item Name", "")).strip()
+                capacity_text = str(row.get("CAPACITY", "")).strip()
+                match = re.search(r"(\d+(?:\.\d+)?)\s*(?:HP|hp)", item_name)
+                hp_text = match.group(1) if match else capacity_text
+                try:
+                    hp_value = float(hp_text)
+                    dp_value = float(row.get("DP", 0) or 0)
+                except (TypeError, ValueError):
+                    continue
+                candidates.append((hp_value, item_name, hp_text, dp_value))
+    except (OSError, csv.Error):
+        return f"VFD {make or ''}".strip(), str(target_hp), 0.0
+
+    if not candidates:
+        return f"VFD {make or ''}".strip(), str(target_hp), 0.0
+    candidates.sort(key=lambda item: item[0])
+    for candidate in candidates:
+        if candidate[0] >= target_hp:
+            return candidate[1], candidate[2], candidate[3]
+    return candidates[-1][1], candidates[-1][2], candidates[-1][3]
+
+
 def generate_bom(
     controller_type,
     num_pumps,
@@ -227,6 +274,8 @@ def generate_bom(
     incomer_req,
     door_mount_req,
     total_panel_current,
+    vfd_make=None,
+    switch_gear="3P",
 ):
     """Builds step-by-step Bill of Materials (BOM)."""
     bom = []
@@ -296,7 +345,7 @@ def generate_bom(
 
     # Step 5: Circuit Breaker
     breaker_cat = "MCCB" if "MCCB" in mcb_mccb_type.upper() else "MCB"
-    breaker_sub_cat = "MCCB 3P" if breaker_cat == "MCCB" else "3P"
+    breaker_sub_cat = "MCCB 3P" if breaker_cat == "MCCB" else (switch_gear or "3P")
     b_item_name, selected_cap_str, breaker_dp = fetch_next_capacity_dp(
         breaker_cat, breaker_sub_cat, raw_breaker_rating
     )
@@ -311,9 +360,7 @@ def generate_bom(
 
     # Step 6: VFD Drive Lookup
     if num_vfd > 0:
-        vfd_name, vfd_cap, vfd_dp = fetch_next_capacity_dp(
-            "VFD", "VFD 3 PHASE", pump_hp
-        )
+        vfd_name, vfd_cap, vfd_dp = fetch_vfd_dp(vfd_make, pump_hp)
         bom.append({
             "Item_Name": vfd_name,
             "Category": "VFD",

@@ -3,12 +3,11 @@ import math
 import os
 import re
 import tkinter as tk
-from tkinter import messagebox, simpledialog, ttk
+from tkinter import messagebox, ttk
 
 import bom_engine
 import config
 import views
-from csv_product_manager import CSVProductManagerWindow
 
 
 class PriceTab(ttk.Frame):
@@ -19,6 +18,11 @@ class PriceTab(ttk.Frame):
         self.customers_csv_path = config.CUSTOMERS_CSV
         self.customer_data = {}
         self.current_search_params = {}  # Store current search parameters
+        self.product_price_csv = os.path.join(
+            config.CSV_DIR, "Product Price Calculator", "price_list.csv"
+        )
+        self.vfd_make_values = self.load_price_list_makes("VFD", use_subcategory=True)
+        self.switch_gear_make_values = self.load_price_list_makes("MCB")
 
         self.build_ui()
         self.refresh_customer_list()
@@ -54,22 +58,6 @@ class PriceTab(ttk.Frame):
 
         row = 0
 
-        # Material Company Selection
-        ttk.Label(form_frame, text="Select Material Company:", font=("Helvetica", 10, "bold")).grid(row=row, column=0, sticky="w", pady=4)
-        company_frame = ttk.Frame(form_frame)
-        company_frame.grid(row=row, column=1, sticky="e", pady=4)
-
-        self.company_combo = ttk.Combobox(company_frame, width=17, state="readonly")
-        self.company_combo.pack(side="left", padx=(0, 5))
-
-        add_company_btn = ttk.Button(company_frame, text="+ Add Company", command=self.add_material_company)
-        add_company_btn.pack(side="left", padx=(0, 5))
-
-        remove_company_btn = ttk.Button(company_frame, text="- Remove Company", command=self.remove_material_company)
-        remove_company_btn.pack(side="left", padx=(0, 5))
-        
-        row += 1
-
         ttk.Label(form_frame, text="Select Customer:", font=("Helvetica", 10, "bold")).grid(row=row, column=0, sticky="w", pady=4)
         cust_frame = ttk.Frame(form_frame)
         cust_frame.grid(row=row, column=1, sticky="e", pady=4)
@@ -82,9 +70,6 @@ class PriceTab(ttk.Frame):
 
         open_csv_btn = ttk.Button(cust_frame, text="📊 Open Price List", command=self.open_csv_viewer)
         open_csv_btn.pack(side="left")
-
-        edit_csv_btn = ttk.Button(cust_frame, text="Upload / Edit CSV", command=self.open_csv_manager)
-        edit_csv_btn.pack(side="left", padx=(5, 0))
 
         row += 1
         ttk.Separator(form_frame, orient="horizontal").grid(row=row, column=0, columnspan=2, sticky="ew", pady=8)
@@ -99,6 +84,13 @@ class PriceTab(ttk.Frame):
         ttk.Label(form_frame, text="Pump Current (A):").grid(row=row, column=0, sticky="w", pady=4)
         self.current_entry = ttk.Entry(form_frame, width=25)
         self.current_entry.grid(row=row, column=1, sticky="e", pady=4)
+        ttk.Label(form_frame, text="Switch Gear Make:").grid(row=row, column=2, sticky="w", padx=(30, 0), pady=4)
+        self.switch_gear_make_combo = ttk.Combobox(
+            form_frame, values=self.switch_gear_make_values, width=23, state="readonly"
+        )
+        self.switch_gear_make_combo.grid(row=row, column=3, sticky="e", pady=4)
+        if self.switch_gear_make_values:
+            self.switch_gear_make_combo.current(0)
         row += 1
 
         ttk.Label(form_frame, text="Number of Pumps:").grid(row=row, column=0, sticky="w", pady=4)
@@ -111,6 +103,13 @@ class PriceTab(ttk.Frame):
         self.vfd_combo = ttk.Combobox(form_frame, values=["0", "1", "2", "3", "4"], width=23, state="readonly")
         self.vfd_combo.grid(row=row, column=1, sticky="e", pady=4)
         self.vfd_combo.current(0)
+        ttk.Label(form_frame, text="VFD Make:").grid(row=row, column=2, sticky="w", padx=(30, 0), pady=4)
+        self.vfd_make_combo = ttk.Combobox(
+            form_frame, values=self.vfd_make_values, width=23, state="readonly"
+        )
+        self.vfd_make_combo.grid(row=row, column=3, sticky="e", pady=4)
+        if self.vfd_make_values:
+            self.vfd_make_combo.current(0)
         row += 1
 
         ttk.Label(form_frame, text="Bypass:").grid(row=row, column=0, sticky="w", pady=4)
@@ -180,11 +179,24 @@ class PriceTab(ttk.Frame):
             f"Active Products CSV:\n{self.products_csv_path}"
         )
 
+    def load_price_list_makes(self, category, use_subcategory=False):
+        makes = []
+        try:
+            with open(self.product_price_csv, newline="", encoding="utf-8-sig") as file:
+                for row in csv.DictReader(file):
+                    if str(row.get("Category", "")).strip().lower() != category.lower():
+                        continue
+                    make = str(row.get("make", "")).strip()
+                    if not make and use_subcategory:
+                        make = str(row.get("SUB Category Type 1", "")).strip()
+                    if make and make.lower() not in {value.lower() for value in makes}:
+                        makes.append(make)
+        except (OSError, csv.Error):
+            pass
+        return makes or ["Not specified"]
+
     def open_csv_viewer(self):
         views.CSVViewerWindow(self.winfo_toplevel())
-
-    def open_csv_manager(self):
-        CSVProductManagerWindow(self.winfo_toplevel())
 
     def refresh_customer_list(self):
         customers = bom_engine.read_csv_data(self.customers_csv_path)
@@ -205,95 +217,8 @@ class PriceTab(ttk.Frame):
             self.customer_combo["values"] = names
             self.customer_combo.current(0)
         
-        # Load material companies
-        self.load_material_companies()
-
     def open_add_customer_window(self):
         views.AddCustomerWindow(self.winfo_toplevel(), self.refresh_customer_list)
-    
-    def load_material_companies(self):
-        """Load material companies from CSV file."""
-        companies_csv = config.MATERIAL_COMPANIES_CSV
-        companies = []
-        
-        if os.path.exists(companies_csv):
-            try:
-                with open(companies_csv, mode="r", encoding="utf-8-sig") as f:
-                    reader = csv.reader(f)
-                    next(reader, None)  # Skip header
-                    for row in reader:
-                        if row and row[0].strip():
-                            companies.append(row[0].strip())
-            except Exception as e:
-                print(f"Error loading companies: {e}")
-        
-        # Add default companies if none exist
-        if not companies:
-            companies = ["Default", "Company A", "Company B", "Company C"]
-            self.save_material_companies()
-        
-        self.company_combo["values"] = companies
-        if companies:
-            self.company_combo.current(0)
-    
-    def save_material_companies(self):
-        """Save material companies to CSV file."""
-        companies_csv = config.MATERIAL_COMPANIES_CSV
-        try:
-            with open(companies_csv, mode="w", newline="", encoding="utf-8-sig") as f:
-                writer = csv.writer(f)
-                writer.writerow(["company_name"])
-                for company in self.company_combo["values"]:
-                    writer.writerow([company])
-        except Exception as e:
-            messagebox.showerror("Error", f"Could not save companies: {e}")
-    
-    def add_material_company(self):
-        """Add a new material company."""
-        new_company = simpledialog.askstring(
-            "Add Material Company",
-            "Enter company name:",
-            parent=self.winfo_toplevel()
-        )
-        
-        if new_company and new_company.strip():
-            new_company = new_company.strip()
-            current_companies = list(self.company_combo["values"])
-            
-            if new_company in current_companies:
-                messagebox.showwarning("Duplicate", "Company already exists!")
-                return
-            
-            current_companies.append(new_company)
-            self.company_combo["values"] = current_companies
-            self.company_combo.set(new_company)
-            self.save_material_companies()
-            messagebox.showinfo("Success", f"Company '{new_company}' added successfully!")
-    
-    def remove_material_company(self):
-        """Remove selected material company."""
-        selected_company = self.company_combo.get()
-        if not selected_company:
-            messagebox.showwarning("Selection Required", "Please select a company to remove.")
-            return
-        
-        if messagebox.askyesno(
-            "Confirm Removal",
-            f"Are you sure you want to remove '{selected_company}'?",
-            parent=self.winfo_toplevel()
-        ):
-            current_companies = list(self.company_combo["values"])
-            if selected_company in current_companies:
-                current_companies.remove(selected_company)
-                self.company_combo["values"] = current_companies
-                
-                if current_companies:
-                    self.company_combo.current(0)
-                else:
-                    self.company_combo.set("")
-                
-                self.save_material_companies()
-                messagebox.showinfo("Success", f"Company '{selected_company}' removed successfully!")
 
     def search_price(self):
         raw_current = self.current_entry.get().strip()
@@ -336,8 +261,10 @@ class PriceTab(ttk.Frame):
         self.current_search_params = {
             'pump_type': self.pump_type_combo.get(),
             'pump_current': pump_current,
+            'switch_gear_make': self.switch_gear_make_combo.get(),
             'num_pumps': self.pumps_combo.get(),
             'num_vfd': self.vfd_combo.get(),
+            'vfd_make': self.vfd_make_combo.get(),
             'bypass': self.bypass_combo.get(),
             'panel_type': self.panel_type_combo.get(),
             'panel_size': self.size_combo.get(),
@@ -493,7 +420,6 @@ class PriceTab(ttk.Frame):
 
         if found_base_price is not None:
             selected_customer = self.customer_combo.get()
-            selected_company = self.company_combo.get()
             pct_adj = self.customer_data.get(selected_customer, 0.0)
             final_price = found_base_price + (found_base_price * (pct_adj / 100.0))
 
@@ -504,7 +430,7 @@ class PriceTab(ttk.Frame):
             )
             sign_str = f"+{pct_adj}%" if pct_adj >= 0 else f"{pct_adj}%"
             self.breakdown_label.config(
-                text=f"(Company: {selected_company} | Base Price: Rs.{found_base_price:,.2f} | Customer Adj: {sign_str})"
+                text=f"(Base Price: Rs.{found_base_price:,.2f} | Customer Adj: {sign_str})"
             )
         else:
             self.result_label.config(

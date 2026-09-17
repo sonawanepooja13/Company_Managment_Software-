@@ -64,12 +64,13 @@ class DateTimePicker(ttk.Frame):
 class CSVViewerWindow(tk.Toplevel):
     """Simple CSV viewer for product/customer tables."""
 
-    def __init__(self, parent, csv_path=None, title="CSV Viewer"):
+    def __init__(self, parent, csv_path=None, title="CSV Viewer", edit_callback=None):
         super().__init__(parent)
         self.title(title)
         self.geometry("900x520")
         self.transient(parent)
         self.grab_set()
+        self.edit_callback = edit_callback
 
         csv_path = csv_path or config.PRODUCTS_CSV
         self.csv_path = csv_path
@@ -80,6 +81,12 @@ class CSVViewerWindow(tk.Toplevel):
         toolbar = ttk.Frame(self, padding=(10, 10, 10, 5))
         toolbar.pack(fill="x")
         ttk.Button(toolbar, text="Refresh", command=self.load_csv_data).pack(side="left")
+        if self.edit_callback:
+            ttk.Button(
+                toolbar,
+                text="Edit in Panel Price List Manager",
+                command=self.edit_callback,
+            ).pack(side="left", padx=8)
 
         table = ttk.Frame(self)
         table.pack(fill="both", expand=True, padx=10, pady=(0, 10))

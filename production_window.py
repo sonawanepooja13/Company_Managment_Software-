@@ -108,6 +108,25 @@ def collect_tested_ok_records(root_dir):
     return records
 
 
+def get_csv_data_production_dir(base_dir=None):
+    """Return the shared csv_data/production folder used for saved CSV exports."""
+    target_dir = base_dir or os.path.join(os.getcwd(), "csv_data", "production")
+    os.makedirs(target_dir, exist_ok=True)
+    return target_dir
+
+
+def get_dispatch_log_path(base_dir=None):
+    """Return the default location for the Tested OK dispatch CSV."""
+    target_dir = get_csv_data_production_dir(base_dir)
+    return os.path.join(target_dir, "tested_ok_dispatch_log.csv")
+
+
+def get_products_list_path(base_dir=None):
+    """Return the default location for the production product list CSV."""
+    target_dir = get_csv_data_production_dir(base_dir)
+    return os.path.join(target_dir, "products_list.csv")
+
+
 def export_dispatch_rows_to_excel(rows, save_path):
     """Save a dispatch list to an Excel file when openpyxl is available."""
     if not HAS_OPENPYXL:
@@ -771,9 +790,9 @@ class ProductionView(ttk.Frame):
         # Keep the authenticated user available to all Production screens.
         self.user_data = user_data if isinstance(user_data, dict) else {}
 
-        self.prod_dir = os.path.join(os.getcwd(), "Production")
+        self.prod_dir = get_csv_data_production_dir()
         self.new_prod_dir = os.path.join(self.prod_dir, "New Production Start")
-        self.csv_path = os.path.join(self.prod_dir, "products_list.csv")
+        self.csv_path = get_products_list_path(self.prod_dir)
 
         self.products = []
         self.attached_file_path = None
@@ -793,6 +812,10 @@ class ProductionView(ttk.Frame):
     def ensure_production_storage(self):
         os.makedirs(self.prod_dir, exist_ok=True)
         os.makedirs(self.new_prod_dir, exist_ok=True)
+
+        legacy_csv_path = os.path.join(os.getcwd(), "Production", "products_list.csv")
+        if not os.path.exists(self.csv_path) and os.path.exists(legacy_csv_path):
+            shutil.copy2(legacy_csv_path, self.csv_path)
 
         if not os.path.exists(self.csv_path):
             with open(
@@ -887,8 +910,10 @@ class ProductionView(ttk.Frame):
         ).pack(pady=10)
 
     def get_dispatch_log_rows(self):
-        dispatch_dir = os.path.join(os.getcwd(), "Production", "Dispatch_Records")
-        dispatch_log = os.path.join(dispatch_dir, "tested_ok_dispatch_log.csv")
+        dispatch_log = get_dispatch_log_path()
+        legacy_dispatch_log = os.path.join(os.getcwd(), "Production", "Dispatch_Records", "tested_ok_dispatch_log.csv")
+        if not os.path.exists(dispatch_log) and os.path.exists(legacy_dispatch_log):
+            dispatch_log = legacy_dispatch_log
         if not os.path.exists(dispatch_log):
             return []
         try:
@@ -1275,9 +1300,7 @@ class ProductionView(ttk.Frame):
 
     def dispatch_tested_ok_product(self, record, department, dialog):
         department = department.strip() if department else "Panel Department"
-        dispatch_dir = os.path.join(os.getcwd(), "Production", "Dispatch_Records")
-        os.makedirs(dispatch_dir, exist_ok=True)
-        dispatch_log = os.path.join(dispatch_dir, "tested_ok_dispatch_log.csv")
+        dispatch_log = get_dispatch_log_path()
 
         dispatch_row = {
             "Product_ID": record["Product_ID"],

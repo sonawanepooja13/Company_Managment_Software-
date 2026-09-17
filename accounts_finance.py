@@ -2225,10 +2225,16 @@ class EmployeeSalaryView(ttk.Frame):
 
     @staticmethod
     def _load_employees():
-        hr_csv = os.path.join(config.CSV_DIR, "employee record.csv")
+        hr_csv = os.path.join(config.HR_DIR, "employee record.csv")
+        if not os.path.exists(hr_csv):
+            legacy_hr_csv = os.path.join(config.CSV_DIR, "employee record.csv")
+            if os.path.exists(legacy_hr_csv):
+                hr_csv = legacy_hr_csv
+            else:
+                return []
+
         names = []
-        if os.path.exists(hr_csv):
-            with open(hr_csv, newline="", encoding="utf-8") as f:
+        with open(hr_csv, newline="", encoding="utf-8") as f:
                 for row in csv.DictReader(f):
                     n = (row.get("name") or row.get("employee_name") or
                          row.get("full_name") or "").strip()

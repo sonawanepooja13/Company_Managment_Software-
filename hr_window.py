@@ -126,9 +126,22 @@ HR_TABS = (
 
 
 def csv_path(register):
+    os.makedirs(config.HR_DIR, exist_ok=True)
+    legacy_dir = config.CSV_DIR
+
     if register == "employees":
-        return os.path.join(config.CSV_DIR, "employee record.csv")
-    return os.path.join(config.CSV_DIR, f"hr_{register}.csv")
+        target = os.path.join(config.HR_DIR, "employee record.csv")
+        legacy = os.path.join(legacy_dir, "employee record.csv")
+    else:
+        target = os.path.join(config.HR_DIR, f"hr_{register}.csv")
+        legacy = os.path.join(legacy_dir, f"hr_{register}.csv")
+
+    if not os.path.exists(target) and os.path.exists(legacy):
+        try:
+            shutil.copy2(legacy, target)
+        except Exception:
+            pass
+    return target
 
 
 class SearchableCombobox(ttk.Combobox):

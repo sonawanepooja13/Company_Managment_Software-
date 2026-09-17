@@ -2,10 +2,14 @@ import csv
 import os
 
 import tkinter as tk
-from tkinter import messagebox, simpledialog, ttk
+from tkinter import filedialog, messagebox, ttk
+
+import openpyxl
 
 import bom_engine
 import config
+import views
+from csv_product_manager import CSVProductManagerWindow
 
 
 class MaterialTab(ttk.Frame):
@@ -15,6 +19,13 @@ class MaterialTab(ttk.Frame):
         self.current_labor_cost = 0.0
         self.current_grand_total = 0.0
         self.price_tab_data = price_tab_data or {}
+        self.product_price_csv = os.path.join(
+            config.CSV_DIR,
+            "Product Price Calculator",
+            "price_list.csv",
+        )
+        self.vfd_make_values = self.load_vfd_makes()
+        self.switch_gear_make_values = self.load_switch_gear_makes()
 
         self.build_ui()
         
@@ -28,8 +39,17 @@ class MaterialTab(ttk.Frame):
         self.populate_from_price_list()
 
     def build_ui(self):
-        title = ttk.Label(self, text="Material & Labor Calculator", font=("Helvetica", 14, "bold"))
-        title.pack(pady=10)
+        title_frame = ttk.Frame(self)
+        title_frame.pack(fill="x", padx=15, pady=10)
+
+        title = ttk.Label(title_frame, text="Material & Labor Calculator", font=("Helvetica", 14, "bold"))
+        title.pack(side="left")
+
+        ttk.Button(
+            title_frame,
+            text="Material Details Editor",
+            command=self.open_material_details_editor,
+        ).pack(side="right")
 
         # Create scrollable frame
         canvas = tk.Canvas(self)
@@ -53,26 +73,6 @@ class MaterialTab(ttk.Frame):
         
         canvas.bind_all("<MouseWheel>", _on_mousewheel)
 
-        # Material Company Selection Section
-        company_frame = ttk.LabelFrame(scrollable_frame, text=" Material Company Selection ", padding="10")
-        company_frame.pack(fill="x", padx=15, pady=5)
-        
-        company_row = ttk.Frame(company_frame)
-        company_row.pack(fill="x")
-        
-        ttk.Label(company_row, text="Select Material Company:").pack(side="left", padx=(0, 5))
-        self.company_combo = ttk.Combobox(company_row, width=25, state="readonly")
-        self.company_combo.pack(side="left", padx=(0, 5))
-        
-        add_company_btn = ttk.Button(company_row, text="+ Add Company", command=self.add_material_company)
-        add_company_btn.pack(side="left", padx=(0, 5))
-        
-        remove_company_btn = ttk.Button(company_row, text="- Remove Company", command=self.remove_material_company)
-        remove_company_btn.pack(side="left", padx=(0, 5))
-        
-        # Load companies from CSV
-        self.load_material_companies()
-
         form_frame = ttk.LabelFrame(scrollable_frame, text=" Inputs (Yellow Section) ", padding="10")
         form_frame.pack(fill="x", padx=15, pady=5)
 
@@ -88,7 +88,13 @@ class MaterialTab(ttk.Frame):
         self.m_current_entry = ttk.Entry(form_frame, width=20)
         self.m_current_entry.grid(row=row, column=1, sticky="e", pady=4)
         self.m_current_entry.insert(0, "15")
-        row += 1
+        ttk.Label(form_frame, text="Switch Gear Make:").grid(row=row, column=2, sticky="w", padx=(30, 0), pady=4)
+        self.m_switch_gear_make_combo = ttk.Combobox(
+            form_frame, values=self.switch_gear_make_values, width=18, state="readonly"
+        )
+        self.m_switch_gear_make_combo.grid(row=row, column=3, sticky="e", pady=4)
+        if self.switch_gear_make_values:
+            self.m_switch_gear_make_combo.set(self.switch_gear_make_values[0])
 
         ttk.Label(form_frame, text="Number of Pumps:").grid(row=row, column=0, sticky="w", pady=4)
         self.m_pumps_combo = ttk.Combobox(form_frame, values=["1", "2", "3", "4", "5"], width=18, state="readonly")
@@ -100,6 +106,16 @@ class MaterialTab(ttk.Frame):
         self.m_vfd_combo = ttk.Combobox(form_frame, values=["0", "1", "2", "3", "4"], width=18, state="readonly")
         self.m_vfd_combo.grid(row=row, column=1, sticky="e", pady=4)
         self.m_vfd_combo.set("1")
+        ttk.Label(form_frame, text="VFD Make:").grid(row=row, column=2, sticky="w", padx=(30, 0), pady=4)
+        self.m_vfd_make_combo = ttk.Combobox(
+            form_frame,
+            values=self.vfd_make_values,
+            width=18,
+            state="readonly",
+        )
+        self.m_vfd_make_combo.grid(row=row, column=3, sticky="e", pady=4)
+        if self.vfd_make_values:
+            self.m_vfd_make_combo.set(self.vfd_make_values[0])
         row += 1
 
         ttk.Label(form_frame, text="Main Incomer Required:").grid(row=row, column=0, sticky="w", pady=4)
@@ -199,6 +215,12 @@ class MaterialTab(ttk.Frame):
         # Copy Number of VFD
         if 'num_vfd' in self.price_tab_data:
             self.m_vfd_combo.set(self.price_tab_data['num_vfd'])
+
+        if 'vfd_make' in self.price_tab_data and self.price_tab_data['vfd_make'] in self.vfd_make_values:
+            self.m_vfd_make_combo.set(self.price_tab_data['vfd_make'])
+
+        if 'switch_gear_make' in self.price_tab_data and self.price_tab_data['switch_gear_make'] in self.switch_gear_make_values:
+            self.m_switch_gear_make_combo.set(self.price_tab_data['switch_gear_make'])
         
         # Copy Main Incomer (convert from Yes/No to 1 - Yes/0 - No)
         if 'main_incomer' in self.price_tab_data:
@@ -256,12 +278,139 @@ class MaterialTab(ttk.Frame):
         self.output_text.insert(tk.END, "✓ Click 'Calculate Material List & BOM' to get the cost breakdown\n")
         self.output_text.insert(tk.END, "✓ Then return to Price List Search to add the calculated price\n")
 
+    def open_product_price_list(self):
+        views.CSVViewerWindow(
+            self.winfo_toplevel(),
+            csv_path=self.product_price_csv,
+            title="Product Price List - Material & Labor Calculator",
+            edit_callback=self.edit_product_price_list,
+        )
+
+    def open_material_details_editor(self):
+        editor = tk.Toplevel(self.winfo_toplevel())
+        self.material_details_editor = editor
+        editor.title("Material Details Editor")
+        editor.geometry("520x260")
+        editor.minsize(460, 220)
+        editor.transient(self.winfo_toplevel())
+        editor.grab_set()
+
+        content = ttk.Frame(editor, padding=20)
+        content.pack(fill="both", expand=True)
+
+        ttk.Label(
+            content,
+            text="Material Details Editor",
+            font=("Helvetica", 14, "bold"),
+        ).pack(pady=(0, 5))
+        ttk.Label(
+            content,
+            text="Manage material and labour pricing data",
+        ).pack(pady=(0, 18))
+
+        buttons = ttk.Frame(content)
+        buttons.pack(fill="x")
+        buttons.columnconfigure(0, weight=1)
+        buttons.columnconfigure(1, weight=1)
+
+        actions = [
+            ("📊 Open Product Price List", self.open_product_price_list),
+            ("✏ Edit CSV List", self.edit_product_price_list),
+            ("⬆ Attach Excel", self.import_excel_price_list),
+            ("⬇ Download Excel", self.export_excel_price_list),
+        ]
+        for index, (label, command) in enumerate(actions):
+            ttk.Button(buttons, text=label, command=command).grid(
+                row=index // 2,
+                column=index % 2,
+                padx=6,
+                pady=6,
+                sticky="ew",
+            )
+
+    def edit_product_price_list(self):
+        parent = getattr(self, "material_details_editor", None)
+        if parent is None or not parent.winfo_exists():
+            parent = self.winfo_toplevel()
+        CSVProductManagerWindow(
+            parent,
+            default_file=self.product_price_csv,
+        )
+
+    def import_excel_price_list(self):
+        source_path = filedialog.askopenfilename(
+            parent=self.winfo_toplevel(),
+            title="Attach Excel Price List",
+            filetypes=(
+                ("Excel files", "*.xlsx *.xlsm"),
+                ("All files", "*.*"),
+            ),
+        )
+        if not source_path:
+            return
+
+        try:
+            workbook = openpyxl.load_workbook(source_path, data_only=True)
+            worksheet = workbook.active
+            rows = list(worksheet.iter_rows(values_only=True))
+            if not rows or not any(value not in (None, "") for value in rows[0]):
+                raise ValueError("The first worksheet does not contain a header row.")
+
+            os.makedirs(os.path.dirname(self.product_price_csv), exist_ok=True)
+            with open(self.product_price_csv, "w", newline="", encoding="utf-8-sig") as output:
+                csv.writer(output).writerows(rows)
+            messagebox.showinfo(
+                "Excel Attached",
+                f"The Excel price list was imported into:\n{self.product_price_csv}",
+                parent=self.winfo_toplevel(),
+            )
+        except Exception as error:
+            messagebox.showerror(
+                "Excel Import Failed",
+                f"Could not attach this Excel price list:\n{error}",
+                parent=self.winfo_toplevel(),
+            )
+
+    def export_excel_price_list(self):
+        destination = filedialog.asksaveasfilename(
+            parent=self.winfo_toplevel(),
+            title="Download Product Price List as Excel",
+            defaultextension=".xlsx",
+            initialfile="price_list.xlsx",
+            filetypes=(("Excel workbook", "*.xlsx"),),
+        )
+        if not destination:
+            return
+
+        try:
+            with open(self.product_price_csv, newline="", encoding="utf-8-sig") as source:
+                rows = list(csv.reader(source))
+            workbook = openpyxl.Workbook()
+            worksheet = workbook.active
+            worksheet.title = "Price List"
+            for row in rows:
+                worksheet.append(row)
+            workbook.save(destination)
+            messagebox.showinfo(
+                "Excel Downloaded",
+                f"The Excel price list was saved to:\n{destination}",
+                parent=self.winfo_toplevel(),
+            )
+        except Exception as error:
+            messagebox.showerror(
+                "Excel Export Failed",
+                f"Could not download the Excel price list:\n{error}",
+                parent=self.winfo_toplevel(),
+            )
+
     def calculate_materials(self):
         try:
             pump_type = self.m_pump_type_combo.get()
             pump_current = float(self.m_current_entry.get().strip())
+            switch_gear_make = self.m_switch_gear_make_combo.get().strip()
             num_pumps = int(self.m_pumps_combo.get().strip())
             num_vfd = int(self.m_vfd_combo.get().strip())
+            vfd_make = self.m_vfd_make_combo.get().strip()
             incomer_req = 1 if "1" in self.m_incomer_combo.get() else 0
             door_mount_req = 1 if "1" in self.m_door_mount_combo.get() else 0
             panel_size_lvl = int(self.m_panel_size_combo.get().strip())
@@ -288,7 +437,8 @@ class MaterialTab(ttk.Frame):
         self.current_bom = bom_engine.generate_bom(
             controller_type, num_pumps, num_vfd, pump_hp, olr_req, light_req,
             fan_qty, filter_qty, endlock_qty, mcb_mccb_type, breaker_qty,
-            raw_breaker_rating, incomer_req, door_mount_req, total_panel_current
+            raw_breaker_rating, incomer_req, door_mount_req, total_panel_current,
+            vfd_make, "3P",
         )
 
         total_material_dp = sum(item["Qty"] * item["DP"] for item in self.current_bom)
@@ -301,11 +451,12 @@ class MaterialTab(ttk.Frame):
         # Display input parameters
         out.append("=" * 80)
         out.append("INPUT PARAMETERS:")
-        out.append(f"  Material Company: {self.company_combo.get()}")
         out.append(f"  Pump Type: {pump_type}")
         out.append(f"  Pump Current: {pump_current} A")
+        out.append(f"  Switch Gear Make: {switch_gear_make or 'Not specified'}")
         out.append(f"  Number of Pumps: {num_pumps}")
         out.append(f"  Number of VFD: {num_vfd}")
+        out.append(f"  VFD Make: {vfd_make or 'Not selected'}")
         out.append(f"  Bypass: {bypass}")
         out.append(f"  Panel Type: {panel_type}")
         out.append(f"  Panel Size Level: {panel_size_lvl}")
@@ -345,87 +496,32 @@ class MaterialTab(ttk.Frame):
             messagebox.showinfo("Export Success", f"BOM export saved successfully to:\n{export_file}")
         except Exception as e:
             messagebox.showerror("Export Error", f"Could not export BOM CSV: {e}")
-    
-    def load_material_companies(self):
-        """Load material companies from CSV file."""
-        companies_csv = config.MATERIAL_COMPANIES_CSV
-        companies = []
-        
-        if os.path.exists(companies_csv):
-            try:
-                with open(companies_csv, mode="r", encoding="utf-8-sig") as f:
-                    reader = csv.reader(f)
-                    next(reader, None)  # Skip header
-                    for row in reader:
-                        if row and row[0].strip():
-                            companies.append(row[0].strip())
-            except Exception as e:
-                print(f"Error loading companies: {e}")
-        
-        # Add default companies if none exist
-        if not companies:
-            companies = ["Default", "Company A", "Company B", "Company C"]
-            self.save_material_companies()
-        
-        self.company_combo["values"] = companies
-        if companies:
-            self.company_combo.current(0)
-    
-    def save_material_companies(self):
-        """Save material companies to CSV file."""
-        companies_csv = config.MATERIAL_COMPANIES_CSV
+
+    def load_vfd_makes(self):
+        makes = []
         try:
-            with open(companies_csv, mode="w", newline="", encoding="utf-8-sig") as f:
-                writer = csv.writer(f)
-                writer.writerow(["company_name"])
-                for company in self.company_combo["values"]:
-                    writer.writerow([company])
-        except Exception as e:
-            messagebox.showerror("Error", f"Could not save companies: {e}")
+            with open(self.product_price_csv, newline="", encoding="utf-8-sig") as file:
+                for row in csv.DictReader(file):
+                    if str(row.get("Category", "")).strip().lower() != "vfd":
+                        continue
+                    make = str(row.get("SUB Category Type 1", "")).strip()
+                    if make and make.lower() not in {value.lower() for value in makes}:
+                        makes.append(make)
+        except (OSError, csv.Error):
+            pass
+        return makes
+
+    def load_switch_gear_makes(self):
+        make_values = []
+        try:
+            with open(self.product_price_csv, newline="", encoding="utf-8-sig") as file:
+                for row in csv.DictReader(file):
+                    if str(row.get("Category", "")).strip().lower() != "mcb":
+                        continue
+                    make = str(row.get("make", "")).strip()
+                    if make and make.lower() not in {value.lower() for value in make_values}:
+                        make_values.append(make)
+        except (OSError, csv.Error):
+            pass
+        return make_values or ["Not specified"]
     
-    def add_material_company(self):
-        """Add a new material company."""
-        new_company = simpledialog.askstring(
-            "Add Material Company",
-            "Enter company name:",
-            parent=self.winfo_toplevel()
-        )
-        
-        if new_company and new_company.strip():
-            new_company = new_company.strip()
-            current_companies = list(self.company_combo["values"])
-            
-            if new_company in current_companies:
-                messagebox.showwarning("Duplicate", "Company already exists!")
-                return
-            
-            current_companies.append(new_company)
-            self.company_combo["values"] = current_companies
-            self.company_combo.set(new_company)
-            self.save_material_companies()
-            messagebox.showinfo("Success", f"Company '{new_company}' added successfully!")
-    
-    def remove_material_company(self):
-        """Remove selected material company."""
-        selected_company = self.company_combo.get()
-        if not selected_company:
-            messagebox.showwarning("Selection Required", "Please select a company to remove.")
-            return
-        
-        if messagebox.askyesno(
-            "Confirm Removal",
-            f"Are you sure you want to remove '{selected_company}'?",
-            parent=self.winfo_toplevel()
-        ):
-            current_companies = list(self.company_combo["values"])
-            if selected_company in current_companies:
-                current_companies.remove(selected_company)
-                self.company_combo["values"] = current_companies
-                
-                if current_companies:
-                    self.company_combo.current(0)
-                else:
-                    self.company_combo.set("")
-                
-                self.save_material_companies()
-                messagebox.showinfo("Success", f"Company '{selected_company}' removed successfully!")
