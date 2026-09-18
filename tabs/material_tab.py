@@ -1,5 +1,6 @@
 import csv
 import os
+import re
 
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
@@ -95,6 +96,7 @@ class MaterialTab(ttk.Frame):
         self.m_switch_gear_make_combo.grid(row=row, column=3, sticky="e", pady=4)
         if self.switch_gear_make_values:
             self.m_switch_gear_make_combo.set(self.switch_gear_make_values[0])
+        row += 1
 
         ttk.Label(form_frame, text="Number of Pumps:").grid(row=row, column=0, sticky="w", pady=4)
         self.m_pumps_combo = ttk.Combobox(form_frame, values=["1", "2", "3", "4", "5"], width=18, state="readonly")
@@ -404,6 +406,292 @@ class MaterialTab(ttk.Frame):
             )
 
     def calculate_materials(self):
+        selection_window = tk.Toplevel(self.winfo_toplevel())
+        selection_window.title("Material List & BOM - Category Selection")
+        selection_window.state("zoomed")
+        selection_window.transient(self.winfo_toplevel())
+        selection_window.grab_set()
+
+        content = ttk.Frame(selection_window, padding=24)
+        content.pack(fill="both", expand=True)
+        ttk.Label(
+            content,
+            text="Material List & BOM",
+            font=("Helvetica", 18, "bold"),
+        ).pack(pady=(0, 4))
+        ttk.Label(
+            content,
+            text="Select a category and item. Add Category to include more material lines.",
+        ).pack(pady=(0, 16))
+
+        material_id = self.get_panel_material_id()
+        id_frame = ttk.Frame(content)
+        id_frame.pack(fill="x", pady=(0, 12))
+        ttk.Label(id_frame, text=f"Unique ID: {material_id}", font=("Helvetica", 10, "bold")).pack(side="left")
+        saved_ids = self.get_saved_material_ids()
+        saved_id_combo = ttk.Combobox(id_frame, values=saved_ids, state="readonly", width=26)
+        saved_id_combo.pack(side="right", padx=(8, 0))
+
+        rows = []
+
+        category_values = self.load_price_categories()
+        list_frame = ttk.Frame(content)
+        list_frame.pack(fill="both", expand=True)
+        list_frame.columnconfigure(1, weight=1)
+        list_frame.columnconfigure(2, weight=1)
+
+        def add_category_row():
+            row_index = len(rows)
+            category_combo = ttk.Combobox(
+                list_frame, values=category_values, state="readonly", width=28
+            )
+            item_combo = ttk.Combobox(list_frame, state="readonly", width=80)
+            quantity_entry = ttk.Entry(list_frame, width=10)
+            quantity_entry.insert(0, "1")
+            remove_button = ttk.Button(
+                list_frame,
+                text="Remove",
+                command=lambda: remove_category_row(row_data),
+            )
+
+            ttk.Label(list_frame, text=f"Material {row_index + 1}").grid(
+                row=row_index + 1, column=0, sticky="w", padx=(0, 12), pady=8
+            )
+            category_combo.grid(row=row_index + 1, column=1, sticky="ew", padx=4, pady=8)
+            item_combo.grid(row=row_index + 1, column=2, sticky="ew", padx=4, pady=8)
+            quantity_entry.grid(row=row_index + 1, column=3, padx=4, pady=8)
+            remove_button.grid(row=row_index + 1, column=4, padx=(8, 0), pady=8)
+
+            row_data = {
+                "label": list_frame.grid_slaves(row=row_index + 1, column=0)[0],
+                "category": category_combo,
+                "item": item_combo,
+                "quantity": quantity_entry,
+                "remove": remove_button,
+            }
+            rows.append(row_data)
+
+            def update_items(_event=None, current=row_data):
+                options = self.load_component_options(current["category"].get())
+                current["item"]["values"] = [option["label"] for option in options]
+                current["options"] = options
+                if options:
+                    current["item"].current(0)
+                else:
+                    current["item"].set("")
+
+            category_combo.bind("<<ComboboxSelected>>", update_items)
+            row_data["options"] = []
+            if category_values:
+                category_combo.current(0)
+                update_items()
+
+        def load_material_rows(material_rows):
+            for current in list(rows):
+                for widget in current.values():
+                    if isinstance(widget, tk.Widget):
+                        widget.destroy()
+            rows.clear()
+            for record in material_rows:
+                add_category_row()
+                current = rows[-1]
+                current["category"].set(record.get("category", ""))
+                options = self.load_component_options(current["category"].get())
+                current["options"] = options
+                current["item"]["values"] = [option["label"] for option in options]
+                item_label = record.get("item", "")
+                if item_label in current["item"]["values"]:
+                    current["item"].set(item_label)
+                current["quantity"].delete(0, tk.END)
+                current["quantity"].insert(0, record.get("quantity", "1"))
+            if not rows:
+                add_category_row()
+
+        def refresh_saved_ids():
+            saved_id_combo["values"] = self.get_saved_material_ids()
+
+        def open_saved_list():
+            selected_id = saved_id_combo.get().strip()
+            if not selected_id:
+                messagebox.showwarning("Select Saved List", "Select a unique ID first.", parent=selection_window)
+                return
+            loaded_rows = self.load_saved_material_rows(selected_id)
+            if loaded_rows is None:
+                messagebox.showerror("Load Failed", "The selected material list could not be opened.", parent=selection_window)
+                return
+            load_material_rows(loaded_rows)
+
+        def save_current_list():
+            material_rows = []
+            for row_data in rows:
+                category = row_data["category"].get().strip()
+                item = row_data["item"].get().strip()
+                if not category or not item:
+                    messagebox.showwarning("Required Selection", "Select a category and item for every material row.", parent=selection_window)
+                    return
+                material_rows.append({
+                    "category": category,
+                    "item": item,
+                    "quantity": row_data["quantity"].get().strip() or "1",
+                })
+            if self.save_material_rows(material_id, material_rows):
+                refresh_saved_ids()
+                messagebox.showinfo("Saved", f"Material list saved as {material_id}.", parent=selection_window)
+
+        def remove_category_row(row_data):
+            if len(rows) == 1:
+                return
+            for widget in row_data.values():
+                if isinstance(widget, tk.Widget):
+                    widget.destroy()
+            rows.remove(row_data)
+            for index, current in enumerate(rows):
+                current["label"].configure(text=f"Material {index + 1}")
+                for widget in current.values():
+                    if isinstance(widget, tk.Widget):
+                        widget.grid_configure(row=index + 1)
+
+        ttk.Label(list_frame, text="Material").grid(row=0, column=0, sticky="w")
+        ttk.Label(list_frame, text="Category").grid(row=0, column=1, sticky="w", padx=4)
+        ttk.Label(list_frame, text="Item / Price").grid(row=0, column=2, sticky="w", padx=4)
+        ttk.Label(list_frame, text="Qty").grid(row=0, column=3, sticky="w", padx=4)
+        existing_rows = self.load_saved_material_rows(material_id)
+        if existing_rows:
+            load_material_rows(existing_rows)
+        else:
+            add_category_row()
+
+        actions = ttk.Frame(content)
+        actions.pack(fill="x", pady=(18, 0))
+        ttk.Button(actions, text="+ Add Category", command=add_category_row).pack(side="left")
+        ttk.Button(actions, text="Open Saved List", command=open_saved_list).pack(side="left", padx=8)
+        ttk.Button(actions, text="Copy Selected ID", command=open_saved_list).pack(side="left")
+        ttk.Button(actions, text="Save Material List", command=save_current_list).pack(side="left")
+
+        def calculate_selected_materials():
+            selected_materials = []
+            for row_data in rows:
+                category = row_data["category"].get().strip()
+                item = row_data["item"].get().strip()
+                if not category or not item:
+                    messagebox.showwarning(
+                        "Required Selection",
+                        "Select a category and item for every material row.",
+                        parent=selection_window,
+                    )
+                    return
+                selected_materials.append(
+                    {
+                        "category": category,
+                        "item": item,
+                        "quantity": row_data["quantity"].get().strip() or "1",
+                    }
+                )
+            selection_window.destroy()
+            self.calculate_materials_now(selected_materials)
+
+        ttk.Button(
+            actions,
+            text="Calculate Material List & BOM",
+            command=calculate_selected_materials,
+        ).pack(side="right")
+
+    def get_panel_input_values(self):
+        return {
+            "pump_type": self.m_pump_type_combo.get().strip(),
+            "pump_current": self.m_current_entry.get().strip(),
+            "switch_gear_make": self.m_switch_gear_make_combo.get().strip(),
+            "num_pumps": self.m_pumps_combo.get().strip(),
+            "num_vfd": self.m_vfd_combo.get().strip(),
+            "vfd_make": self.m_vfd_make_combo.get().strip(),
+            "main_incomer": self.m_incomer_combo.get().strip(),
+            "door_mount": self.m_door_mount_combo.get().strip(),
+            "panel_size": self.m_panel_size_combo.get().strip(),
+            "bypass": self.m_bypass_combo.get().strip(),
+            "panel_type": self.m_panel_type_combo.get().strip(),
+            "panel_class": self.m_panel_class_combo.get().strip(),
+            "olr": self.m_olr_combo.get().strip(),
+            "indicator_light": self.m_light_combo.get().strip(),
+        }
+
+    def get_panel_material_id(self):
+        values = self.get_panel_input_values()
+        def numeric_value(value):
+            match = re.search(r"-?\d+(?:\.\d+)?", str(value))
+            if not match:
+                return "0"
+            number = float(match.group())
+            return str(int(number)) if number.is_integer() else str(number).replace(".", "p")
+
+        def option_code(value, options):
+            normalized = str(value).strip().lower()
+            for index, option in enumerate(options, start=1):
+                if normalized == str(option).strip().lower():
+                    return str(index)
+            return "0"
+
+        id_values = [
+            f"PT{option_code(values['pump_type'], ['3 Phase', '1 Phase'])}",
+            f"PC{numeric_value(values['pump_current'])}A",
+            f"NOP{numeric_value(values['num_pumps'])}",
+            f"NOVFD{numeric_value(values['num_vfd'])}",
+            f"VFM{option_code(values['vfd_make'], self.vfd_make_values)}",
+            f"MIR{numeric_value(values['main_incomer'])}",
+            f"3PDMS{numeric_value(values['door_mount'])}",
+            f"PS{option_code(values['panel_size'], ['1', '2', '3', '4', '5'])}",
+            f"BY{option_code(values['bypass'], ['With Bypass', 'Without Bypass'])}",
+            f"PNLT{option_code(values['panel_type'], ['Indoor', 'Outdoor'])}",
+            f"PCL{option_code(values['panel_class'], ['Industrial', 'Domestic'])}",
+            f"OLR{numeric_value(values['olr'])}",
+            f"ILR{numeric_value(values['indicator_light'])}",
+            f"SGM{option_code(values['switch_gear_make'], self.switch_gear_make_values)}",
+        ]
+        return "AD | " + " | ".join(id_values)
+
+    def get_saved_material_ids(self):
+        os.makedirs(config.PANEL_MATERIAL_LIST_DIR, exist_ok=True)
+        return sorted(
+            os.path.splitext(name)[0]
+            for name in os.listdir(config.PANEL_MATERIAL_LIST_DIR)
+            if name.lower().endswith(".csv")
+        )
+
+    def panel_material_path(self, material_id):
+        safe_id = re.sub(r"[^A-Za-z0-9_-]", "", material_id)
+        return os.path.join(config.PANEL_MATERIAL_LIST_DIR, f"{safe_id}.csv")
+
+    def save_material_rows(self, material_id, material_rows):
+        try:
+            with open(self.panel_material_path(material_id), "w", newline="", encoding="utf-8-sig") as file:
+                writer = csv.DictWriter(file, fieldnames=["unique_id", "category", "item", "quantity"])
+                writer.writeheader()
+                for row in material_rows:
+                    writer.writerow({"unique_id": material_id, **row})
+            return True
+        except OSError as error:
+            messagebox.showerror("Save Failed", f"Could not save the material list:\n{error}", parent=self.winfo_toplevel())
+            return False
+
+    def load_saved_material_rows(self, material_id):
+        try:
+            with open(self.panel_material_path(material_id), newline="", encoding="utf-8-sig") as file:
+                return list(csv.DictReader(file))
+        except (OSError, csv.Error):
+            return None
+
+    def load_price_categories(self):
+        categories = []
+        try:
+            with open(self.product_price_csv, newline="", encoding="utf-8-sig") as file:
+                for row in csv.DictReader(file):
+                    category = str(row.get("Category", "")).strip()
+                    if category and category.lower() not in {value.lower() for value in categories}:
+                        categories.append(category)
+        except (OSError, csv.Error):
+            pass
+        return categories or ["General"]
+
+    def calculate_materials_now(self, component_selections=None):
         try:
             pump_type = self.m_pump_type_combo.get()
             pump_current = float(self.m_current_entry.get().strip())
@@ -441,6 +729,56 @@ class MaterialTab(ttk.Frame):
             vfd_make, "3P",
         )
 
+        if isinstance(component_selections, dict):
+            breaker_category = "MCCB" if mcb_mccb_type == "MCCB" else "MCB"
+            selected_breaker = component_selections.get(breaker_category)
+            if selected_breaker:
+                for item in self.current_bom:
+                    if item["Category"] == breaker_category:
+                        item.update(
+                            Item_Name=selected_breaker["item_name"],
+                            **{"SUB Category": selected_breaker["sub_category"]},
+                            Capacity=f"{selected_breaker['capacity']}A",
+                            DP=selected_breaker["dp"],
+                        )
+                        break
+            selected_contactor = component_selections.get("CONTACTOR")
+            if selected_contactor:
+                for item in self.current_bom:
+                    if item["Category"] == "CONTACTOR":
+                        item.update(
+                            Item_Name=selected_contactor["item_name"],
+                            **{"SUB Category": selected_contactor["sub_category"]},
+                            Capacity=f"{selected_contactor['capacity']}A",
+                            DP=selected_contactor["dp"],
+                        )
+                        break
+            selected_main_incomer = component_selections.get("MAIN INCOMER")
+            if selected_main_incomer:
+                for item in self.current_bom:
+                    if item["Category"].lower() == "switch":
+                        item.update(
+                            Item_Name=selected_main_incomer["item_name"],
+                            **{"SUB Category": selected_main_incomer["sub_category"]},
+                            Capacity=f"{selected_main_incomer['capacity']}A",
+                            DP=selected_main_incomer["dp"],
+                        )
+                        break
+            selected_separate_breaker = component_selections.get(
+                "SEPARATE CIRCUIT BREAKER (MCB/MCCB/RCCB/RCB/MPCB)"
+            )
+            if selected_separate_breaker:
+                for item in self.current_bom:
+                    if item["Category"] in {"MCB", "MCCB"}:
+                        item.update(
+                            Item_Name=selected_separate_breaker["item_name"],
+                            Category=selected_separate_breaker["category"],
+                            **{"SUB Category": selected_separate_breaker["sub_category"]},
+                            Capacity=f"{selected_separate_breaker['capacity']}A",
+                            DP=selected_separate_breaker["dp"],
+                        )
+                        break
+
         total_material_dp = sum(item["Qty"] * item["DP"] for item in self.current_bom)
         self.current_labor_cost = 500.0 + (num_pumps * 250.0) + (panel_size_lvl * 150.0)
         self.current_grand_total = total_material_dp + self.current_labor_cost
@@ -464,6 +802,12 @@ class MaterialTab(ttk.Frame):
         out.append(f"  Main Incomer: {'Yes' if incomer_req else 'No'}")
         out.append(f"  OLR Requirement: {'Yes' if olr_req else 'No'}")
         out.append(f"  Indicator Light: {'Yes' if light_req else 'No'}")
+        if isinstance(component_selections, list):
+            out.append("  Selected Materials:")
+            for material in component_selections:
+                out.append(
+                    f"    - {material['category']}: {material['item']} (Qty {material['quantity']})"
+                )
         out.append("=" * 80)
         out.append("")
         
@@ -510,6 +854,43 @@ class MaterialTab(ttk.Frame):
         except (OSError, csv.Error):
             pass
         return makes
+
+    def load_component_options(self, categories):
+        if isinstance(categories, str):
+            categories = [categories]
+        category_names = {category.lower() for category in categories}
+        options = []
+        try:
+            with open(self.product_price_csv, newline="", encoding="utf-8-sig") as file:
+                for row in csv.DictReader(file):
+                    row_category = str(row.get("Category", "")).strip()
+                    if row_category.lower() not in category_names:
+                        continue
+                    item_name = str(row.get("Item Name", "")).strip()
+                    sub_category = str(row.get("SUB Category Type 1", "")).strip()
+                    capacity = str(row.get("CAPACITY", "")).strip()
+                    if not capacity:
+                        match = re.search(r"(\d+(?:\.\d+)?)\s*A\b", item_name, re.IGNORECASE)
+                        capacity = match.group(1) if match else ""
+                    try:
+                        dp = float(row.get("DP", 0) or 0)
+                    except (TypeError, ValueError):
+                        dp = 0.0
+                    if not item_name:
+                        continue
+                    options.append(
+                        {
+                            "label": f"{sub_category or 'Standard'} | {item_name} | {capacity or 'N/A'}A | DP Rs.{dp:,.2f}",
+                            "category": row_category,
+                            "item_name": item_name,
+                            "sub_category": sub_category,
+                            "capacity": capacity or "0",
+                            "dp": dp,
+                        }
+                    )
+        except (OSError, csv.Error):
+            pass
+        return options
 
     def load_switch_gear_makes(self):
         make_values = []

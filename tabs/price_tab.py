@@ -249,6 +249,8 @@ class PriceTab(ttk.Frame):
         pump_type = flexible_normalize(self.pump_type_combo.get())
         num_pumps = flexible_normalize(self.pumps_combo.get())
         num_vfd = flexible_normalize(self.vfd_combo.get())
+        switch_gear_make = flexible_normalize(self.switch_gear_make_combo.get())
+        vfd_make = flexible_normalize(self.vfd_make_combo.get())
         bypass = flexible_normalize(self.bypass_combo.get())
         panel_type = flexible_normalize(self.panel_type_combo.get())
         panel_size = flexible_normalize(self.size_combo.get())
@@ -321,6 +323,17 @@ class PriceTab(ttk.Frame):
                             if not r or not any(r):
                                 continue
 
+                            # Some saved rows omit pump_type even though the header includes it.
+                            # Restore the missing leading field before applying header positions.
+                            if (
+                                has_header
+                                and len(r) == len(reader[0]) - 1
+                                and "pumptype" in header_map
+                                and r
+                                and not flexible_normalize(r[0]) in {"3phase", "1phase"}
+                            ):
+                                r = [""] + r
+
                             print(f"DEBUG: Processing row: {r}")
 
                             # Handle both old format (10 columns) and new format (11+ columns with pump_type)
@@ -332,8 +345,10 @@ class PriceTab(ttk.Frame):
                                     continue
 
                                 csv_pump_type = flexible_normalize(get_val(r, ["pump_type", "type", "pump type"], 0))
+                                csv_switch_gear_make = flexible_normalize(get_val(r, ["switch_gear_make", "switch gear make"], -1))
                                 csv_pumps = flexible_normalize(get_val(r, ["num_pumps", "pumps", "num pumps"], 2))
                                 csv_vfd = flexible_normalize(get_val(r, ["num_vfd", "vfd", "num vfd"], 3))
+                                csv_vfd_make = flexible_normalize(get_val(r, ["vfd_make", "vfd make"], -1))
                                 csv_bypass = flexible_normalize(get_val(r, ["bypass"], 4))
                                 csv_type = flexible_normalize(get_val(r, ["panel_type", "type", "panel type"], 5))
                                 csv_size = flexible_normalize(get_val(r, ["panel_size", "size", "panel size"], 6))
@@ -358,6 +373,8 @@ class PriceTab(ttk.Frame):
                                     and math.isclose(csv_current, pump_current, rel_tol=1e-5)
                                     and csv_pumps == num_pumps
                                     and csv_vfd == num_vfd
+                                    and ("switchgearmake" not in header_map or csv_switch_gear_make == switch_gear_make)
+                                    and ("vfdmake" not in header_map or csv_vfd_make == vfd_make)
                                     and csv_bypass == bypass
                                     and csv_type == panel_type
                                     and csv_size == panel_size
@@ -493,9 +510,12 @@ class PriceTab(ttk.Frame):
                             new_price = float(new_price_str)
 
                             row_to_add = [
+                                self.pump_type_combo.get().strip(),
                                 f"{pump_current:g}",
+                                self.switch_gear_make_combo.get().strip(),
                                 self.pumps_combo.get().strip(),
                                 self.vfd_combo.get().strip(),
+                                self.vfd_make_combo.get().strip(),
                                 self.bypass_combo.get().strip(),
                                 self.panel_type_combo.get().strip(),
                                 self.size_combo.get().strip(),

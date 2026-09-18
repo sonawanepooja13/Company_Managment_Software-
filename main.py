@@ -726,6 +726,8 @@ class MainApp:
                     250,
                     lambda: self.show_category_content("Booster Pump Control Panel"),
                 )
+            if os.environ.get("APP_OPEN_TASK_MANAGER") == "1":
+                self.root.after(250, self.show_task_manager_view)
         else:
             messagebox.showerror(
                 "Access Denied",
