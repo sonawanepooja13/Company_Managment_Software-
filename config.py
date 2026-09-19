@@ -22,6 +22,8 @@ PRODUCT_PRICE_CALCULATOR_CSV = os.path.join(
     CSV_DIR, "Product Price Calculator", "price_list.csv"
 )
 PRICE_LIST_CSV = PRODUCT_PRICE_CALCULATOR_CSV
+PANEL_MATERIAL_LIST_DIR = os.path.join(CSV_DIR, "panel material list")
+os.makedirs(PANEL_MATERIAL_LIST_DIR, exist_ok=True)
 
 # Supply Chain & Logistics CSV Files
 SUPPLIERS_CSV = os.path.join(CSV_DIR, "suppliers.csv")
@@ -78,8 +80,10 @@ WAREHOUSE_AUDIT_CSV = os.path.join(CSV_DIR, "warehouse_audit.csv")
 PRODUCTS_HEADERS = [
     "pump_type",
     "pump_current",
+    "switch_gear_make",
     "num_pumps",
     "num_vfd",
+    "vfd_make",
     "bypass",
     "panel_type",
     "panel_size",

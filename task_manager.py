@@ -54,10 +54,37 @@ class TaskStatus(str, Enum):
 
 
 class TaskPriority(str, Enum):
+    VERY_LOW = "very_low"
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
-    URGENT = "urgent"
+    VERY_HIGH = "very_high"
+
+
+PRIORITY_LABELS = {
+    TaskPriority.VERY_LOW: "Very Low",
+    TaskPriority.LOW: "Low",
+    TaskPriority.MEDIUM: "Medium",
+    TaskPriority.HIGH: "High",
+    TaskPriority.VERY_HIGH: "Very High",
+}
+PRIORITY_BY_LABEL = {label: priority for priority, label in PRIORITY_LABELS.items()}
+PRIORITY_CHOICES = [PRIORITY_LABELS[priority] for priority in TaskPriority]
+LEGACY_PRIORITY_MAP = {"urgent": TaskPriority.VERY_HIGH}
+
+
+def parse_priority(value, default=TaskPriority.MEDIUM) -> TaskPriority:
+    if value is None:
+        return default
+    text = str(value).strip().lower()
+    if not text:
+        return default
+    if text in LEGACY_PRIORITY_MAP:
+        return LEGACY_PRIORITY_MAP[text]
+    try:
+        return TaskPriority(text)
+    except ValueError:
+        return default
 
 
 @dataclass
@@ -191,7 +218,7 @@ class TaskManager:
                     assignee_id=assignee_ids[0] if assignee_ids else None,
                     assignee_ids=assignee_ids,
                     reviewer_id=resolve_user("reviewer_id", "reviewer_name"),
-                    priority=TaskPriority((row.get("priority") or TaskPriority.MEDIUM.value).strip()),
+                    priority=parse_priority(row.get("priority")),
                     status=TaskStatus((row.get("status") or TaskStatus.CREATED.value).strip()),
                     due_date=self._parse_datetime(row.get("due_date") or ""),
                     created_at=self._parse_datetime(row.get("created_at") or "") or datetime.utcnow(),
@@ -638,11 +665,39 @@ class TaskManagerView(ttk.Frame):
             assignee_ids = task.assignee_ids or ([task.assignee_id] if task.assignee_id else [])
             assignee_names = [self.manager.users[user_id].name for user_id in assignee_ids if user_id in self.manager.users]
             assignee = ", ".join(assignee_names) if assignee_names else "Unassigned"
-            self.tree.insert("", "end", values=(task.title, department.name if department else "Unknown", assignee, task.status.value, task.priority.value, task.due_date.strftime("%Y-%m-%d") if task.due_date else "-"))
+            self.tree.insert("", "end", values=(task.title, department.name if department else "Unknown", assignee, task.status.value, PRIORITY_LABELS.get(task.priority, task.priority.value), task.due_date.strftime("%Y-%m-%d") if task.due_date else "-"))
 
     def _current_user_id(self) -> Optional[str]:
         current = self._get_current_user()
         return current.id if current else None
+
+    def _default_department_name(self, user: Optional[User]) -> str:
+        if user is not None:
+            for department in self.manager.departments.values():
+                if user.id in department.members:
+                    return department.name
+        if DEPARTMENT_NAMES:
+            return DEPARTMENT_NAMES[0]
+        first_department = next(iter(self.manager.departments.values()), None)
+        return first_department.name if first_department else ALL_DEPARTMENTS
+
+    def _resolve_target_departments(self, department_name: str, manager_id: Optional[str] = None) -> List[Department]:
+        """Resolve the department(s) a new task should be created in.
+
+        Selecting "All Departments" returns every department so the task is
+        created for each one, instead of silently defaulting to the first
+        department (e.g. "Executive / Leadership").
+        """
+        if department_name.strip().casefold() == ALL_DEPARTMENTS.casefold():
+            return list(self.manager.departments.values())
+
+        department = next(
+            (d for d in self.manager.departments.values() if d.name.casefold() == department_name.strip().casefold()),
+            None,
+        )
+        if department is None:
+            department = self.manager.add_department(department_name.strip() or "Operations", manager_id)
+        return [department]
 
     def open_new_task_window(self):
         if self.new_task_window is not None and self.new_task_window.winfo_exists():
@@ -656,8 +711,7 @@ class TaskManagerView(ttk.Frame):
 
         self.new_task_window = tk.Toplevel(self)
         self.new_task_window.title("New Task")
-        self.new_task_window.geometry("520x480")
-        self.new_task_window.minsize(420, 380)
+        self.new_task_window.state("zoomed")
         self.new_task_window.transient(self.winfo_toplevel())
         self.new_task_window.grab_set()
 
@@ -673,10 +727,9 @@ class TaskManagerView(ttk.Frame):
         assignee_var = tk.StringVar()
         due_date_var = tk.StringVar()
         due_time_var = tk.StringVar()
+        priority_var = tk.StringVar(value=PRIORITY_LABELS[TaskPriority.MEDIUM])
 
-        default_department = next(iter(self.manager.departments.values()), None)
-        if default_department is not None:
-            department_var.set(default_department.name)
+        department_var.set(self._default_department_name(current_user))
 
         rows = [
             ("Title", title_var),
@@ -748,19 +801,84 @@ class TaskManagerView(ttk.Frame):
             added_assignees[assignee.id] = assignee
             added_assignees_listbox.insert(tk.END, assignee.name)
 
+        def add_all_department_users():
+            if not assignee_users:
+                messagebox.showwarning(
+                    "No Department Users",
+                    "No users are available for the selected department.",
+                    parent=self.new_task_window,
+                )
+                return
+            for assignee in assignee_users.values():
+                if assignee.id in added_assignees:
+                    continue
+                added_assignees[assignee.id] = assignee
+                added_assignees_listbox.insert(tk.END, assignee.name)
+
+        def remove_selected_user():
+            selected_indices = list(added_assignees_listbox.curselection())
+            if not selected_indices:
+                messagebox.showwarning(
+                    "Select User",
+                    "Select a user from the Added Users list first.",
+                    parent=self.new_task_window,
+                )
+                return
+            selected_names = {
+                added_assignees_listbox.get(index)
+                for index in selected_indices
+            }
+            for user_id, user in list(added_assignees.items()):
+                if user.name in selected_names:
+                    added_assignees.pop(user_id)
+            for index in reversed(selected_indices):
+                added_assignees_listbox.delete(index)
+
+        def remove_all_department_users():
+            department_user_ids = {user.id for user in assignee_users.values()}
+            removed_indices = []
+            for index, (user_id, user) in enumerate(added_assignees.items()):
+                if user_id in department_user_ids:
+                    removed_indices.append(index)
+            for user_id in department_user_ids:
+                added_assignees.pop(user_id, None)
+            for index in reversed(removed_indices):
+                added_assignees_listbox.delete(index)
+
         ttk.Button(assignee_controls, text="Add", command=add_assignee).grid(row=0, column=1, padx=(6, 0))
+        user_management_buttons = ttk.Frame(form)
+        user_management_buttons.grid(row=5, column=1, sticky="w", pady=(0, 6))
+        ttk.Button(
+            user_management_buttons,
+            text="+ All Department Users",
+            command=add_all_department_users,
+        ).pack(side="left", padx=(0, 6))
+        ttk.Button(
+            user_management_buttons,
+            text="Remove Selected User",
+            command=remove_selected_user,
+        ).pack(side="left", padx=(0, 6))
+        ttk.Button(
+            user_management_buttons,
+            text="- All Selected Department Users",
+            command=remove_all_department_users,
+        ).pack(side="left")
 
         department_combo.bind("<<ComboboxSelected>>", refresh_assignees)
 
         selectable_dates = [(datetime.now() + timedelta(days=offset)).strftime("%Y-%m-%d") for offset in range(366)]
-        ttk.Label(form, text="Due Date:").grid(row=5, column=0, sticky="w", padx=(0, 10), pady=6)
+        ttk.Label(form, text="Due Date:").grid(row=6, column=0, sticky="w", padx=(0, 10), pady=6)
         due_date_combo = ttk.Combobox(form, textvariable=due_date_var, values=selectable_dates, state="readonly")
-        due_date_combo.grid(row=5, column=1, sticky="ew", pady=6)
+        due_date_combo.grid(row=6, column=1, sticky="ew", pady=6)
 
         selectable_times = [f"{hour:02d}:{minute:02d}" for hour in range(24) for minute in (0, 30)]
-        ttk.Label(form, text="Due Time:").grid(row=6, column=0, sticky="w", padx=(0, 10), pady=6)
+        ttk.Label(form, text="Due Time:").grid(row=7, column=0, sticky="w", padx=(0, 10), pady=6)
         due_time_combo = ttk.Combobox(form, textvariable=due_time_var, values=selectable_times, state="readonly")
-        due_time_combo.grid(row=6, column=1, sticky="ew", pady=6)
+        due_time_combo.grid(row=7, column=1, sticky="ew", pady=6)
+
+        ttk.Label(form, text="Priority:").grid(row=8, column=0, sticky="w", padx=(0, 10), pady=6)
+        priority_combo = ttk.Combobox(form, textvariable=priority_var, values=PRIORITY_CHOICES, state="readonly")
+        priority_combo.grid(row=8, column=1, sticky="ew", pady=6)
 
         def save_task():
             title = title_var.get().strip()
@@ -770,17 +888,11 @@ class TaskManagerView(ttk.Frame):
 
             description = description_var.get().strip() or "No description provided."
             department_name = department_var.get().strip() or "Operations"
-            is_all_departments = department_name.casefold() == ALL_DEPARTMENTS.casefold()
-            department = next(
-                (d for d in self.manager.departments.values() if d.name.casefold() == department_name.casefold()),
-                None,
-            ) if not is_all_departments else next(iter(self.manager.departments.values()), None)
-            if department is None:
-                department = self.manager.add_department(department_name, current_user.id)
+            target_departments = self._resolve_target_departments(department_name, current_user.id)
 
-            assignees = list(added_assignees.values())
-            for assignee in assignees:
-                self.manager.assign_user_to_department(assignee.id, department.id, "Member")
+            if not target_departments:
+                messagebox.showwarning("Validation", "No departments are available to create the task.")
+                return
 
             due_raw = due_date_var.get().strip()
             due_time_raw = due_time_var.get().strip()
@@ -789,17 +901,21 @@ class TaskManagerView(ttk.Frame):
                 return
             due_date = datetime.strptime(f"{due_raw} {due_time_raw}", "%Y-%m-%d %H:%M")
 
-            task = self.manager.create_task(
-                title=title,
-                description=description,
-                department_id=department.id,
-                created_by=current_user.id,
-                assignee_ids=[assignee.id for assignee in assignees],
-                priority=TaskPriority.MEDIUM,
-                due_date=due_date,
-            )
-            if task.assignee_id is not None:
-                self.manager.accept_task(task.id, task.assignee_id)
+            assignees = list(added_assignees.values())
+            for department in target_departments:
+                for assignee in assignees:
+                    self.manager.assign_user_to_department(assignee.id, department.id, "Member")
+                task = self.manager.create_task(
+                    title=title,
+                    description=description,
+                    department_id=department.id,
+                    created_by=current_user.id,
+                    assignee_ids=[assignee.id for assignee in assignees],
+                    priority=PRIORITY_BY_LABEL.get(priority_var.get().strip(), TaskPriority.MEDIUM),
+                    due_date=due_date,
+                )
+                if task.assignee_id is not None:
+                    self.manager.accept_task(task.id, task.assignee_id)
             self.refresh_view()
             self.new_task_window.destroy()
 
@@ -811,11 +927,11 @@ class TaskManagerView(ttk.Frame):
         self.new_task_window.protocol("WM_DELETE_WINDOW", self.new_task_window.destroy)
         self.new_task_window.bind("<Escape>", lambda event: self.new_task_window.destroy())
 
-        if current_department_names:
-            department_var.set(current_department_names[0])
+        department_var.set(self._default_department_name(current_user))
         refresh_assignees()
         due_date_var.set(selectable_dates[0])
         due_time_var.set(selectable_times[18])
+        priority_var.set(PRIORITY_LABELS[TaskPriority.MEDIUM])
 
         self.new_task_window.focus_set()
 
