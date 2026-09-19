@@ -5,10 +5,12 @@ import tkinter as tk
 from tkinter import ttk, messagebox, simpledialog
 
 import auth_manager
+import config
 
-DB_PATH = os.path.join(os.getcwd(), "projects.db")
+_DATA_DIR = getattr(config, "DATA_DIR", os.path.dirname(os.path.abspath(__file__)))
+DB_PATH = os.path.join(_DATA_DIR, "projects.db")
 # Folder to store exported task files
-EXPORT_DIR = os.path.join(os.getcwd(), "project_management_exports")
+EXPORT_DIR = os.path.join(_DATA_DIR, "project_management_exports")
 os.makedirs(EXPORT_DIR, exist_ok=True)
 
 

@@ -1,8 +1,9 @@
 import sqlite3
 import os
+import config
 from datetime import datetime
 
-DB_FILE = os.path.join(os.path.dirname(__file__), "crm_database.db")
+DB_FILE = os.path.join(config.DATA_DIR, "crm_database.db")
 
 
 def get_db():

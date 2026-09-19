@@ -6,7 +6,9 @@ from datetime import datetime
 import tkinter as tk
 from tkinter import messagebox, ttk
 
-DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "csv_data")
+import config
+
+DATA_DIR = config.CSV_DIR
 os.makedirs(DATA_DIR, exist_ok=True)
 
 LOTS_FILE = os.path.join(DATA_DIR, "qc_inspection_lots.csv")

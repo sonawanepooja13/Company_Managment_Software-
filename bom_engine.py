@@ -162,31 +162,64 @@ def fetch_item_dp(category, sub_cat=None, capacity=None):
     return f"{category} {sub_cat or ''}".strip(), 0.0
 
 
-def fetch_next_capacity_dp(category, sub_category, target_capacity):
+def _normalise_breaking_capacity(value):
+    match = re.search(r"\d+(?:\.\d+)?", str(value or ""))
+    if not match:
+        return None
+    return float(match.group())
+
+
+def fetch_next_capacity_dp(
+    category,
+    sub_category,
+    target_capacity,
+    make=None,
+    breaking_capacity=None,
+):
     """Searches price_list_clean.csv for components matching target capacity or next available size."""
     price_list_path = getattr(config, "PRICE_LIST_CSV", config.PRODUCTS_CSV)
     if not os.path.exists(price_list_path):
         return f"{category} {sub_category}".strip(), str(target_capacity), 0.0
 
-    candidates = []
-    try:
-        with open(price_list_path, mode="r", encoding="utf-8-sig") as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                cat_match = (
-                    str(row.get("Category", "")).strip().lower()
-                    == str(category).strip().lower()
-                )
-                row_sub_category = row.get("SUB Category") or row.get("SUB Category Type 1")
-                try:
-                    sub_match = float(row_sub_category) == float(sub_category)
-                except (TypeError, ValueError):
-                    sub_match = (
-                        str(row_sub_category or "").strip().lower()
-                        == str(sub_category).strip().lower()
-                    )
+    requested_make = str(make or "").strip().lower()
+    requested_breaking_capacity = _normalise_breaking_capacity(breaking_capacity)
 
-                if cat_match and sub_match:
+    def collect_candidates(apply_make_filter):
+        candidates = []
+        try:
+            with open(price_list_path, mode="r", encoding="utf-8-sig") as f:
+                reader = csv.DictReader(f)
+                for row in reader:
+                    cat_match = (
+                        str(row.get("Category", "")).strip().lower()
+                        == str(category).strip().lower()
+                    )
+                    row_sub_category = row.get("SUB Category") or row.get("SUB Category Type 1")
+                    try:
+                        sub_match = float(row_sub_category) == float(sub_category)
+                    except (TypeError, ValueError):
+                        sub_match = (
+                            str(row_sub_category or "").strip().lower()
+                            == str(sub_category).strip().lower()
+                        )
+
+                    if not cat_match or not sub_match:
+                        continue
+
+                    row_make = str(row.get("make") or "").strip()
+                    if apply_make_filter and requested_make and requested_make not in {"not specified", "any"}:
+                        if row_make.lower() != requested_make:
+                            continue
+
+                    if requested_breaking_capacity is not None:
+                        row_breaking_capacity = (
+                            row.get("SUB Category Type 2")
+                            or row.get("Breaking Capacity")
+                            or row.get("SUB Category Type 3")
+                        )
+                        if _normalise_breaking_capacity(row_breaking_capacity) != requested_breaking_capacity:
+                            continue
+
                     cap_str = str(row.get("CAPACITY", "")).strip()
                     csv_item_name = str(
                         row.get("Item Name", "")
@@ -208,8 +241,13 @@ def fetch_next_capacity_dp(category, sub_category, target_capacity):
                         )
                     except ValueError:
                         continue
-    except Exception as e:
-        print(f"Error matching capacity: {e}")
+        except Exception as e:
+            print(f"Error matching capacity: {e}")
+        return candidates
+
+    candidates = collect_candidates(True)
+    if requested_make and requested_make not in {"not specified", "any"} and not candidates:
+        candidates = collect_candidates(False)
 
     if not candidates:
         return f"{category} {sub_category}".strip(), str(target_capacity), 0.0
@@ -276,6 +314,10 @@ def generate_bom(
     total_panel_current,
     vfd_make=None,
     switch_gear="3P",
+    panel_class="Industrial",
+    mccb_make=None,
+    breaking_capacity=None,
+    mcb_make=None,
 ):
     """Builds step-by-step Bill of Materials (BOM)."""
     bom = []
@@ -345,18 +387,69 @@ def generate_bom(
 
     # Step 5: Circuit Breaker
     breaker_cat = "MCCB" if "MCCB" in mcb_mccb_type.upper() else "MCB"
-    breaker_sub_cat = "MCCB 3P" if breaker_cat == "MCCB" else (switch_gear or "3P")
+    is_industrial = str(panel_class or "Industrial").strip().lower() == "industrial"
+    if breaker_cat == "MCCB":
+        breaker_sub_cat = "MCCB 4P" if is_industrial else "MCCB 3P"
+        selected_make = str(mccb_make or "Not specified").strip()
+        selected_breaking_capacity = str(
+            breaking_capacity or ("36 kA" if is_industrial else "25 kA")
+        ).strip()
+    else:
+        breaker_sub_cat = switch_gear or "3P"
+        selected_make = str(mcb_make or "Not specified").strip()
+        selected_breaking_capacity = "N/A"
+
     b_item_name, selected_cap_str, breaker_dp = fetch_next_capacity_dp(
-        breaker_cat, breaker_sub_cat, raw_breaker_rating
+        breaker_cat,
+        breaker_sub_cat,
+        raw_breaker_rating,
+        make=selected_make,
+        breaking_capacity=selected_breaking_capacity if breaker_cat == "MCCB" else None,
     )
-    bom.append({
+    breaker_item = {
         "Item_Name": b_item_name,
         "Category": breaker_cat,
         "SUB Category": breaker_sub_cat,
         "Capacity": f"{selected_cap_str}A",
         "Qty": breaker_qty,
         "DP": breaker_dp,
-    })
+        "Make": selected_make,
+        "Breaking Capacity": selected_breaking_capacity,
+        "Application": panel_class if breaker_cat == "MCCB" else "N/A",
+        "Phase/Neutral": "R+Y+B+N" if breaker_cat == "MCCB" and is_industrial else ("R+Y+B + Neutral" if breaker_cat == "MCCB" else "R+Y+B"),
+    }
+    bom.append(breaker_item)
+
+    if breaker_cat == "MCCB" and is_industrial:
+        busbar_name, busbar_dp = fetch_item_dp("BUSBAR")
+        bom.append({
+            "Item_Name": busbar_name,
+            "Category": "BUSBAR",
+            "SUB Category": "4P",
+            "Capacity": "R+Y+B+N",
+            "Qty": 4,
+            "DP": busbar_dp,
+            "Make": "Not specified",
+            "Breaking Capacity": "N/A",
+            "Application": panel_class,
+            "Phase/Neutral": "R+Y+B+N",
+        })
+    elif breaker_cat == "MCCB":
+        neutral_name, neutral_cap_str, neutral_dp = fetch_next_capacity_dp(
+            "MCB", "1P", 6, make=mcb_make
+        )
+        bom.append({
+            "Item_Name": neutral_name,
+            "Category": "MCB",
+            "SUB Category": "1P",
+            "Capacity": f"{neutral_cap_str}A",
+            "Qty": 1,
+            "DP": neutral_dp,
+            "Make": selected_make,
+            "Breaking Capacity": "N/A",
+            "Application": panel_class,
+            "Phase/Neutral": "Neutral",
+        })
 
     # Step 6: VFD Drive Lookup
     if num_vfd > 0:

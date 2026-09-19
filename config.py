@@ -1,10 +1,72 @@
 import os
+import sys
 
-# Base directory where config.py is located
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+# ---------------------------------------------------------------------------
+# Path resolution for frozen (PyInstaller) and development environments
+# ---------------------------------------------------------------------------
 
-# Dedicated folder path for CSV storage
-CSV_DIR = os.path.join(SCRIPT_DIR, "csv_data")
+def _get_bundle_dir():
+    """Return the directory containing bundled resources.
+
+    In a PyInstaller one-file build, sys._MEIPRESS points to the temporary
+    extraction directory.  In development, it is simply the project root.
+    """
+    if getattr(sys, "frozen", False):
+        # PyInstaller sets sys._MEIPASS in onefile mode; in onedir it is
+        # not set, so fall back to the executable's directory.
+        meipass = getattr(sys, "_MEIPASS", None)
+        if meipass:
+            return meipass
+        return os.path.dirname(os.path.abspath(sys.executable))
+    return os.path.dirname(os.path.abspath(__file__))
+
+
+def _get_data_dir():
+    """Return the writable data directory.
+
+    In frozen mode we copy bundled data into a per-user directory so that
+    the temp _MEIPASS extraction (which is read-only) is never written to.
+    """
+    if getattr(sys, "frozen", False):
+        app_name = "SaarkEnterprise"
+        if sys.platform == "win32":
+            base = os.environ.get("LOCALAPPDATA", os.path.expanduser("~"))
+        else:
+            base = os.environ.get("HOME", os.path.expanduser("~"))
+        return os.path.join(base, app_name)
+    return os.path.dirname(os.path.abspath(__file__))
+
+
+def _copy_bundled_data(src, dst):
+    """Copy bundled data files from the PyInstaller temp dir to the writable
+    data directory on first launch.  Existing files are never overwritten so
+    user edits persist across runs."""
+    import shutil
+
+    for item in os.listdir(src):
+        s = os.path.join(src, item)
+        d = os.path.join(dst, item)
+        if os.path.isdir(s):
+            shutil.copytree(s, d, dirs_exist_ok=True)
+        elif os.path.isfile(s) and not os.path.exists(d):
+            os.makedirs(os.path.dirname(d), exist_ok=True)
+            shutil.copy2(s, d)
+
+
+# Base directory where config.py is located (frozen bundle in pyinstaller)
+SCRIPT_DIR = _get_bundle_dir()
+DATA_DIR = _get_data_dir()
+
+if getattr(sys, "frozen", False) and os.path.isdir(os.path.join(SCRIPT_DIR, "csv_data")):
+    _copy_bundled_data(SCRIPT_DIR, DATA_DIR)
+
+# Script directory is now also the writable data directory so that every
+# module referencing config.SCRIPT_DIR gets the writable, data-populated path.
+SCRIPT_DIR = DATA_DIR
+
+
+# Dedicated folder path for CSV storage (writable)
+CSV_DIR = os.path.join(DATA_DIR, "csv_data")
 HR_DIR = os.path.join(CSV_DIR, "HR")
 
 # Ensure the 'csv_data' and 'csv_data/HR' folders exist on startup
