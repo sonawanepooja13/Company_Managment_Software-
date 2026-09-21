@@ -1,1000 +1,1125 @@
-﻿SKU,Category,make,SUB Category Type 1,SUB Category Type 2,SUB Category Type 3,SUB Category Type 4,SUB Category Type 5,SUB Category Type 6,SUB Category Type 7,SUB Category Type 8,SUB Category Type 9,SUB Category Type 10,Item Name,CAPACITY,Unit,Supplier,List Price,Discount,DP
-1.0,Controller,SAARK,1.0,,,,,,,,,,AI-PCU02 WITH HMI DISPLAY ,1.0,Nos,Saark Exploration Pvt Ltd,50000.0,50.0,25000
-2.0,Controller,saark,2.0,,,,,,,,,,AI-PCU02 WITH HMI DISPLAY,2.0,Nos,Saark Exploration Pvt Ltd,39000.0,50.0,19500
-3.0,Controller,,3.0,,,,,,,,,,AIPCU  HMI CONTROLLER MULTIVFD,3.0,Nos,Saark Exploration Pvt Ltd,80000.0,50.0,40000
-4.0,Controller,,4.0,,,,,,,,,,AIPCU  HMI CONTROLLER MULTIVFD,4.0,Nos,Saark Exploration Pvt Ltd,60000.0,50.0,30000
-5.0,Controller,,5.0,,,,,,,,,,DEFENDER ,5.0,Nos,Saark Exploration Pvt Ltd,70000.0,50.0,35000
-6.0,Controller,,6.0,,,,,,,,,,HMI CONTROLLER STP,6.0,Nos,Saark Exploration Pvt Ltd,70000.0,50.0,35000
-7.0,Controller,,7.0,,,,,,,,,,"HMI CONTROLLER DIESEL (GPS, PRDL, FT,ROUTER)",7.0,Nos,Saark Exploration Pvt Ltd,107000.0,50.0,53500
-8.0,Controller,,8.0,,,,,,,,,,AI-PCU01,8.0,Nos,Saark Exploration Pvt Ltd,32000.0,50.0,16000
-9.0,Controller,,9.0,,,,,,,,,,DLC02,9.0,Nos,Saark Exploration Pvt Ltd,11500.0,50.0,5750
-10.0,Controller,,10.0,,,,,,,,,,DLC02 DEWATERING ,10.0,Nos,Saark Exploration Pvt Ltd,11500.0,65.0,4025
-11.0,Controller,,11.0,,,,,,,,,,DLC02 DEWATERING (THERMAL AND MOISTURE) ,11.0,Nos,Saark Exploration Pvt Ltd,9500.0,0.0,9500
-12.0,Controller,,12.0,,,,,,,,,,DLC PCB,12.0,Nos,Saark Exploration Pvt Ltd,11500.0,70.0,3450
-13.0,Controller,,13.0,,,,,,,,,,DLC VFD,13.0,Nos,Saark Exploration Pvt Ltd,30000.0,50.0,15000
-14.0,Controller,,14.0,,,,,,,,,,DLC VFD T SURESH ,14.0,Nos,Saark Exploration Pvt Ltd,9500.0,0.0,9500
-15.0,POWER SUPPLY,,1.0,,,,,,,,,,AI-PCU POWER SUPPLY,1.0,Nos,Saark Exploration Pvt Ltd,900.0,35.0,585
-16.0,POWER SUPPLY,,2.0,,,,,,,,,,DLC POWER SUPPLY ,2.0,Nos,Saark Exploration Pvt Ltd,900.0,45.0,495
-17.0,Switch ,,1.0,,,,,,,,,,RELAY CARD FOR MANUAL PROTECTION,1.0,Nos,Saark Exploration Pvt Ltd,640.0,50.0,320
-18.0,CT COIL,,30-02 HOLE,,,,,,,,,,30amp CT With Wire (2 HOLE),30.0,Nos,Saark Exploration Pvt Ltd,250.0,50.0,125
-19.0,CT COIL,,30-03 HOLE,,,,,,,,,,30amp CT With Wire (3 HOLE ) ,30.0,Nos,Saark Exploration Pvt Ltd,300.0,47.0,159
-20.0,CT COIL,,60-03 HOLE,,,,,,,,,,60amp CT With Wire (3 HOLE ) ,60.0,Nos,Saark Exploration Pvt Ltd,1500.0,47.0,795
-21.0,CT COIL,,30-02 HOLE,,,,,,,,,,100amp CT With Wire (2 HOLE ) ,10.0,Nos,Saark Exploration Pvt Ltd,2000.0,47.0,1060
-22.0,CT COIL,,600/5 HOLE,,,,,,,,,,600/5 amp CT With Wire ,600.0,Nos,Saark Exploration Pvt Ltd,4000.0,47.0,2120
-23.0,MCB,,1P,,,,,,,,,,MCB 1P 1A,1.0,Nos,Satyam,902.0,70.0,270.6
-24.0,MCB,,1P,,,,,,,,,,MCB 1P 2A,2.0,Nos,Satyam,902.0,70.0,270.6
-25.0,MCB,,1P,,,,,,,,,,MCB 1P 3A,3.0,Nos,Satyam,902.0,70.0,270.6
-26.0,MCB,,1P,,,,,,,,,,MCB 1P 4A,4.0,Nos,Satyam,902.0,70.0,270.6
-27.0,MCB,,1P,,,,,,,,,,MCB 1P 6A,6.0,Nos,Satyam,535.0,70.0,160.5
-28.0,MCB,,1P,,,,,,,,,,MCB 1P 10A,10.0,Nos,Satyam,535.0,70.0,160.5
-29.0,MCB,,1P,,,,,,,,,,MCB 1P 16A,16.0,Nos,Satyam,535.0,70.0,160.5
-30.0,MCB,,1P,,,,,,,,,,MCB 1P 20A,20.0,Nos,Satyam,535.0,70.0,160.5
-31.0,MCB,,1P,,,,,,,,,,MCB 1P 25A,,Nos,Satyam,535.0,70.0,160.5
-32.0,MCB,,1P,,,,,,,,,,MCB 1P 32A,,Nos,Satyam,535.0,70.0,160.5
-33.0,MCB,,1P,,,,,,,,,,MCB 1P 40A,,Nos,Satyam,1277.0,70.0,383.1
-34.0,MCB,,1P,,,,,,,,,,MCB 1P 50A,,Nos,Satyam,1277.0,70.0,383.1
-35.0,MCB,,1P,,,,,,,,,,MCB 1P 63A,,Nos,Satyam,1295.0,70.0,388.5
-36.0,MCB,,2P,,,,,,,,,,MCB 2P 1A,,Nos,Satyam,2570.0,70.0,771
-37.0,MCB,,2P,,,,,,,,,,MCB 2P 2A,,Nos,Satyam,2570.0,70.0,771
-38.0,MCB,,2P,,,,,,,,,,MCB 2P 3A,,Nos,Satyam,2570.0,70.0,771
-39.0,MCB,,2P,,,,,,,,,,MCB 2P 4A,,Nos,Satyam,2570.0,70.0,771
-40.0,MCB,,2P,,,,,,,,,,MCB 2P 6A,,Nos,Satyam,1857.0,70.0,557.1
-41.0,MCB,,2P,,,,,,,,,,MCB 2P 10A,,Nos,Satyam,1857.0,70.0,557.1
-42.0,MCB,,2P,,,,,,,,,,MCB 2P 16A,,Nos,Satyam,1857.0,70.0,557.1
-43.0,MCB,,2P,,,,,,,,,,MCB 2P 20A,,Nos,Satyam,1857.0,70.0,557.1
-44.0,MCB,,2P,,,,,,,,,,MCB 2P 25A,,Nos,Satyam,1857.0,70.0,557.1
-45.0,MCB,,2P,,,,,,,,,,MCB 2P 32A,,Nos,Satyam,1857.0,70.0,557.1
-46.0,MCB,,2P,,,,,,,,,,MCB 2P 40A,,Nos,Satyam,2989.0,70.0,896.7
-47.0,MCB,,2P,,,,,,,,,,MCB 2P 50A,,Nos,Satyam,2989.0,70.0,896.7
-48.0,MCB,,2P,,,,,,,,,,MCB 2P 63A,,Nos,Satyam,3014.0,70.0,904.2
-49.0,MCB,,3P,,,,,,,,,,MCB 3P 1A,,Nos,Satyam,4057.0,70.0,1217.1
-50.0,MCB,,3P,,,,,,,,,,MCB 3P 2A,,Nos,Satyam,4057.0,70.0,1217.1
-51.0,MCB,,3P,,,,,,,,,,MCB 3P 3A,,Nos,Satyam,4057.0,70.0,1217.1
-52.0,MCB,,3P,,,,,,,,,,MCB 3P 4A,,Nos,Satyam,4057.0,70.0,1217.1
-53.0,MCB,,3P,,,,,,,,,,MCB 3P 6A,,Nos,Satyam,3080.0,70.0,924
-54.0,MCB,,3P,,,,,,,,,,MCB 3P 10A,,Nos,Satyam,3080.0,70.0,924
-55.0,MCB,,3P,,,,,,,,,,MCB 3P 16A,,Nos,Satyam,3080.0,70.0,924
-56.0,MCB,,3P,,,,,,,,,,MCB 3P 20A,,Nos,Satyam,3080.0,70.0,924
-57.0,MCB,,3P,,,,,,,,,,MCB 3P 25A,,Nos,Satyam,3080.0,70.0,924
-58.0,MCB,,3P,,,,,,,,,,MCB 3P 32A,,Nos,Satyam,3080.0,70.0,924
-59.0,MCB,,3P,,,,,,,,,,MCB 3P 40A ,,Nos,Satyam,4691.0,70.0,1407.3
-60.0,MCB,,3P,,,,,,,,,,MCB 3P 50A ,,Nos,Satyam,4691.0,70.0,1407.3
-61.0,MCB,,3P,,,,,,,,,,MCB 3P 63A ,,Nos,Satyam,4846.0,70.0,1453.8
-62.0,MCB,,3P,,,,,,,,,,MCB 3P 100A ,,Nos,Satyam,15849.0,70.0,4754.7
-63.0,MCB,,4P,,,,,,,,,,MCB 4P 1A ,,Nos,Satyam,5106.0,70.0,1531.8
-64.0,MCB,,4P,,,,,,,,,,MCB 4P 2A ,,Nos,Satyam,5106.0,70.0,1531.8
-65.0,MCB,,4P,,,,,,,,,,MCB 4P 4A,,Nos,Satyam,5106.0,70.0,1531.8
-66.0,MCB,,4P,,,,,,,,,,MCB 4P 6A,,Nos,Satyam,4150.0,70.0,1245
-67.0,MCB,,4P,,,,,,,,,,MCB 4P 10A,,Nos,Satyam,4150.0,70.0,1245
-68.0,MCB,,4P,,,,,,,,,,MCB 4P 16A,,Nos,Satyam,4150.0,70.0,1245
-69.0,MCB,,4P,,,,,,,,,,MCB 4P 20A ,,Nos,Satyam,4150.0,70.0,1245
-70.0,MCB,,4P,,,,,,,,,,MCB 4P 25A,,Nos,Satyam,4150.0,70.0,1245
-71.0,MCB,,4P,,,,,,,,,,MCB 4P 32A,,Nos,Satyam,4150.0,70.0,1245
-72.0,MCB,,4P,,,,,,,,,,MCB 4P 40A,,Nos,Satyam,6029.0,70.0,1808.7
-73.0,MCB,,4P,,,,,,,,,,MCB 4P 50A,,Nos,Satyam,6029.0,70.0,1808.7
-74.0,MCB,,4P,,,,,,,,,,MCB 4P 63A,,Nos,Satyam,6279.0,70.0,1883.7
-75.0,RELAY,,1.0,,,,,,,,,,RELAY TARA ,,Nos,Satyam,550.0,35.0,357.5
-76.0,CONTACTOR,,M7,,,,,,,,,,CONTACTOR 0901 M7,9.0,Nos,Satyam,2404.0,60.0,961.6
-77.0,CONTACTOR,,M7,,,,,,,,,,CONTACTOR 1201 M7,12.0,Nos,Satyam,2750.0,60.0,1100
-78.0,CONTACTOR,,M7,,,,,,,,,,CONTACTOR 1801 M7,,Nos,Satyam,3170.0,60.0,1268
-79.0,CONTACTOR,,M7,,,,,,,,,,CONTACTOR 2501 M7,,Nos,Satyam,4315.0,60.0,1726
-80.0,CONTACTOR,,M7,,,,,,,,,,CONTACTOR 3201 M7,,Nos,Satyam,9045.0,60.0,3618
-81.0,CONTACTOR,,M7,,,,,,,,,,CONTACTOR 3801 M7,,Nos,Satyam,10550.0,60.0,4220
-82.0,CONTACTOR,,M7,,,,,,,,,,CONTACTOR 40 AMP M7,,Nos,Satyam,11405.0,60.0,4562
-83.0,CONTACTOR,,M7,,,,,,,,,,CONTACTOR 50 AMP M7,,Nos,Satyam,17230.0,60.0,6892
-84.0,CONTACTOR,,M7,,,,,,,,,,CONTACTOR 65 AMP M7,,Nos,Satyam,23345.0,60.0,9338
-85.0,CONTACTOR,,M7,,,,,,,,,,CONTACTOR 80 AMP M7,,Nos,Satyam,30365.0,60.0,12146
-86.0,CONTACTOR,,M7,,,,,,,,,,CONTACTOR 95 AMP M7,,Nos,Satyam,36385.0,60.0,14554
-87.0,Terminal,,RED,,,,,,,,,,CTS 16U RED,16.0,Nos,Anuroop,42.0,30.0,29.4
-88.0,Terminal,,YELLOW,,,,,,,,,,CTS 16U YELLOW,16.0,Nos,Anuroop,42.0,30.0,29.4
-89.0,Terminal,,BLUE,,,,,,,,,,CTS 16U BLUE,16.0,Nos,Anuroop,42.0,30.0,29.4
-90.0,Terminal,,RED,,,,,,,,,,CTS 10U RED,10.0,Nos,Anuroop,25.0,30.0,17.5
-91.0,Terminal,,YELLOW,,,,,,,,,,CTS 10U YELLOW,,Nos,Anuroop,25.0,30.0,17.5
-92.0,Terminal,,BLUE,,,,,,,,,,CTS 10U BLUE,,Nos,Anuroop,25.0,30.0,17.5
-93.0,Terminal,,BLACK,,,,,,,,,,CTS 10U BLACK,,Nos,Anuroop,25.0,30.0,17.5
-94.0,Terminal,,GREY,,,,,,,,,,CTS 10U GREY,,Nos,Anuroop,25.0,30.0,17.5
-95.0,Terminal,,GREEN ERTH,,,,,,,,,,CTS 6U GREEN ERTH,,Nos,Anuroop,93.0,30.0,65.1
-96.0,Terminal,,RED,,,,,,,,,,CTS 6U RED,,Nos,Anuroop,20.0,30.0,14
-97.0,Terminal,,YELLOW,,,,,,,,,,CTS 6U YELLOW,,Nos,Anuroop,20.0,30.0,14
-98.0,Terminal,,BLUE,,,,,,,,,,CTS 6U BLUE,,Nos,Anuroop,20.0,30.0,14
-99.0,Terminal,,BLACK,,,,,,,,,,CTS 6U BLACK,,Nos,Anuroop,20.0,30.0,14
-100.0,Terminal,,GREY,,,,,,,,,,CTS 6U GREY,,Nos,Anuroop,20.0,30.0,14
-101.0,Terminal,,RED,,,,,,,,,,CTS 4U RED,,Nos,Anuroop,11.0,7.0,10.23
-102.0,Terminal,,YELLOW,,,,,,,,,,CTS 4U YELLOW,,Nos,Anuroop,11.0,7.0,10.23
-103.0,Terminal,,BLUE,,,,,,,,,,CTS 4U BLUE,,Nos,Anuroop,11.0,7.0,10.23
-104.0,Terminal,,BLACK,,,,,,,,,,CTS 4U BLACK ,,Nos,Anuroop,11.0,7.0,10.23
-105.0,Terminal,,GREY,,,,,,,,,,CTS 4U GREY,,Nos,Anuroop,11.0,7.0,10.23
-106.0,Terminal,,GREY,,,,,,,,,,CTS - 2.5U,,Nos,Anuroop,8.0,7.0,7.44
-107.0,Terminal,,GREY,,,,,,,,,,EP - 2.5/4U,4.0,Nos,Anuroop,8.0,30.0,5.6
-108.0,Terminal,,GREY,,,,,,,,,,EP - 6/10U,10.0,Nos,Anuroop,9.0,30.0,6.3
-109.0,Terminal,,GREY,,,,,,,,,,END LOCK CA802,1.0,Nos,Anuroop,15.0,30.0,10.5
-110.0,Din Rail,,1.0,,,,,,,,,,Din Rail 35X7.5,1.0,Meter,Ajitesh,88.8,30.0,62.16
-111.0,Cable Tray,,25X60,,,,,,,,,,CABLE TREY 25X60 BTYPE,1.0,Meter,Ajitesh,185.0,40.0,111
-112.0,Cable Tray,,25X45,,,,,,,,,,CABLE TREY 25X45 BTYPE,2.0,Meter,Ajitesh,170.0,40.0,102
-113.0,Cable Tray,,45X60,,,,,,,,,,CABLE TREY 45X60 BTYPE,3.0,Meter,Ajitesh,312.0,40.0,187.2
-114.0,Metal Box,,1.0,,,,,,,,,,Metal Box 450*350*210 DLC UPTO 2 PUMP ,1.0,Nos,Anand Engineering,2500.0,0.0,2500
-115.0,Metal Box,,1.0,,,,,,,,,,Metal Box 500*400*210 DLC ,2.0,Nos,Anand Engineering,3000.0,0.0,3000
-116.0,Metal Box,,1.0,,,,,,,,,,Metal Box Dewatering,3.0,Nos,Anand Engineering,960.0,0.0,960
-117.0,Metal Box,,1.0,,,,,,,,,,Metal Box 500*400*250 DLC UPTO 4 PUMP ,4.0,Nos,Anand Engineering,3900.0,0.0,3900
-118.0,Metal Box,,1.0,,,,,,,,,,Metal Box 600*400*250 DLC UPTO 4 PUMP ,5.0,Nos,Anand Engineering,4500.0,0.0,4500
-119.0,Metal Box,,1.0,,,,,,,,,,Metal Box 600*700*250(1.6MM) ,6.0,Nos,Anand Engineering,5600.0,0.0,5600
-120.0,Metal Box,,1.0,,,,,,,,,,Metal Box 500*600*250(1.6MM) ,7.0,Nos,Anand Engineering,3500.0,0.0,3500
-121.0,Metal Box,,1.0,,,,,,,,,,Metal Box 700*500*250 (1.2mm),8.0,Nos,Anand Engineering,4700.0,0.0,4700
-122.0,Metal Box,,1.0,,,,,,,,,,Metal Box 800*600*250 (1.6mm),9.0,Nos,Anand Engineering,7500.0,0.0,7500
-123.0,Metal Box,,1.0,,,,,,,,,,Metal Box 900*700*250 (1.6mm),10.0,Nos,Anand Engineering,8500.0,0.0,8500
-124.0,Metal Box,,1.0,,,,,,,,,,Metal Box 900*700*250 (1.6mm) outdoor,11.0,Nos,Anand Engineering,12000.0,0.0,12000
-125.0,Metal Box,,1.0,,,,,,,,,,Metal Box 900*700*250 (1.6mm) OUTDOOR CONTROL PANEL ,12.0,Nos,Anand Engineering,17000.0,0.0,17000
-126.0,Metal Box,,1.0,,,,,,,,,,Metal Box 900*750*330 (1.6mm),13.0,Nos,Anand Engineering,9500.0,0.0,9500
-127.0,Metal Box,,1.0,,,,,,,,,,Metal Box 870 x 600 x 350 (1.6mm),14.0,Nos,Anand Engineering,9000.0,0.0,9000
-128.0,Metal Box,,1.0,,,,,,,,,,Metal Box 900*900*350 (1.6mm),15.0,Nos,Anand Engineering,14000.0,0.0,14000
-129.0,Metal Box,,1.0,,,,,,,,,,50HP 4PUMP 2VFD METAL BOX,16.0,Nos,Anand Engineering,40000.0,0.0,40000
-130.0,Metal Box,,1.0,,,,,,,,,,60HP 3PUMP 3VFD METAL BOX,17.0,Nos,Anand Engineering,20000.0,0.0,20000
-131.0,Metal Box,,1.0,,,,,,,,,,SOFT STARTER METAL BOX 40HP ,18.0,Nos,Anand Engineering,20000.0,0.0,20000
-132.0,Metal Box,,1.0,,,,,,,,,,SOFT STARTER METAL BOX 50HP ,19.0,Nos,Anand Engineering,35000.0,0.0,35000
-133.0,Metal Box,,1.0,,,,,,,,,,METAL BOX FOR 75HP ,20.0,Nos,Anand Engineering,40000.0,0.0,40000
-134.0,Metal Box,,1.0,,,,,,,,,,Metal Box 850*650*210 STP  UPTO 15  PUMP ,21.0,Nos,Anand Engineering,4300.0,0.0,4300
-135.0,Metal Box,,1.0,,,,,,,,,,Metal Box 900*500*250 UPTO 4 PUMP MULTY VFD ,22.0,Nos,Anand Engineering,7500.0,0.0,7500
-136.0,Metal Box,,1.0,,,,,,,,,,Metal Box 950*600*375 UPTO 4 PUMP MULTY VFD ,23.0,Nos,Anand Engineering,10700.0,0.0,10700
-137.0,Metal Box,,1.0,,,,,,,,,,Metal Box 850*550*375 UPTO 4 PUMP MULTY VFD ,24.0,Nos,Anand Engineering,9500.0,0.0,9500
-138.0,Metal Box,,1.0,,,,,,,,,,Metal Box 650*400*300 ,25.0,Nos,Anand Engineering,600.0,0.0,600
-139.0,Metal Box,,1.0,,,,,,,,,,Metal Box 700*600*300 UPTO 4 PUMP MULTY VFD ,26.0,Nos,Anand Engineering,7500.0,0.0,7500
-140.0,Metal Box,,1.0,,,,,,,,,,Metal Box 650*950*300(1.6MM) ,27.0,Nos,Anand Engineering,7600.0,0.0,7600
-141.0,Metal Box,,1.0,,,,,,,,,,METAL BOX 450*350*250MM,28.0,Nos,,3500.0,0.0,3500
-142.0,Metal Box,,1.0,,,,,,,,,,METAL BOX 2100*600*400MM,29.0,Nos,,30000.0,0.0,30000
-143.0,Metal Box,,1.0,,,,,,,,,,METAL BOX 900*900*300MM,30.0,Nos,,20000.0,0.0,20000
-144.0,Fan,,4.0,,,,,,,,,,"Exaust Fan 4"" 230VAC",4.0,Nos,Anuroop,370.0,0.0,370
-145.0,Filter,,4.0,,,,,,,,,,"FAN FILTER 4"" (AIR FILTER )",4.0,Nos,Anuroop,47.0,30.0,32.9
-146.0,Tube,,1.0,,,,,,,,,,TUBE LIGHT 1 FEET,1.0,Nos,Anuroop,130.0,0.0,130
-147.0,Switch,,1.0,,,,,,,,,,DOOR LIMIT SWITCH  1NO 1NC,1.0,Nos,Anuroop,268.0,45.0,147.4
-148.0,Wire,,RED,,,,,,,,,,WIRE 30 SQMM RED,30.0,Meter,Thakur,1275.0,50.0,637.5
-149.0,Wire,,YELLOW,,,,,,,,,,WIRE 30 SQMM YELLOW,30.0,Meter,Thakur,1275.0,50.0,637.5
-150.0,Wire,,BLUE,,,,,,,,,,WIRE 30 SQMM BLUE,,Meter,Thakur,1275.0,50.0,637.5
-151.0,Wire,,BLACK,,,,,,,,,,WIRE 30 SQMM BLACK,,Meter,Thakur,1275.0,50.0,637.5
-152.0,Wire,,RED,,,,,,,,,,WIRE 25 SQMM RED,25.0,Meter,Thakur,1175.0,50.0,587.5
-153.0,Wire,,YELLOW,,,,,,,,,,WIRE 25 SQMM YELLOW,,Meter,Thakur,1175.0,50.0,587.5
-154.0,Wire,,BLUE,,,,,,,,,,WIRE 25 SQMM BLUE,,Meter,Thakur,1175.0,50.0,587.5
-155.0,Wire,,BLACK,,,,,,,,,,WIRE 25 SQMM BLACK,,Meter,Thakur,1175.0,50.0,587.5
-156.0,Wire,,RED,,,,,,,,,,WIRE 16 SQMM RED,16.0,Meter,Thakur,975.0,50.0,487.5
-157.0,Wire,,YELLOW,,,,,,,,,,WIRE 16 SQMM YELLOW,,Meter,Thakur,975.0,50.0,487.5
-158.0,Wire,,BLUE,,,,,,,,,,WIRE 16 SQMM BLUE,,Meter,Thakur,975.0,50.0,487.5
-159.0,Wire,,BLACK,,,,,,,,,,WIRE 16 SQMM BLACK,,Meter,Thakur,975.0,50.0,487.5
-160.0,Wire,,RED,,,,,,,,,,WIRE 10 SQMM RED,,Meter,Thakur,675.0,50.0,337.5
-161.0,Wire,,YELLOW,,,,,,,,,,WIRE  10 SQMM YELLOW,,Meter,Thakur,675.0,50.0,337.5
-162.0,Wire,,BLUE,,,,,,,,,,WIRE 10 SQMM BLUE,,Meter,Thakur,675.0,50.0,337.5
-163.0,Wire,,BLACK,,,,,,,,,,WIRE 10 SQMM BLACK,,Meter,Thakur,675.0,50.0,337.5
-164.0,Wire,,RED,,,,,,,,,,WIRE 6 SQMM RED,,Meter,Thakur,576.0,50.0,288
-165.0,Wire,,YELLOW,,,,,,,,,,WIRE 6 SQMM YELLOW,,Meter,Thakur,576.0,50.0,288
-166.0,Wire,,BLUE,,,,,,,,,,WIRE 6 SQMM BLUE,,Meter,Thakur,576.0,50.0,288
-167.0,Wire,,BLACK,,,,,,,,,,WIRE 6 SQMM BLACK,,Meter,Thakur,576.0,50.0,288
-168.0,Wire,,RED,,,,,,,,,,WIRE 4 SQMM RED,,Meter,Thakur,150.0,50.0,75
-169.0,Wire,,YELLOW,,,,,,,,,,WIRE 4 SQMM YELLOW,,Meter,Thakur,150.0,50.0,75
-170.0,Wire,,BLUE,,,,,,,,,,WIRE 4 SQMM BLUE,,Meter,Thakur,150.0,50.0,75
-171.0,Wire,,BLACK,,,,,,,,,,WIRE 4 SQMM BLACK,,Meter,Thakur,150.0,50.0,75
-172.0,Wire,,RED,,,,,,,,,,WIRE 2.5 SQMM RED,,Meter,Thakur,95.0,50.0,47.5
-173.0,Wire,,YELLOW,,,,,,,,,,WIRE  2.5 SQMM YELLOW,,Meter,Thakur,95.0,50.0,47.5
-174.0,Wire,,BLUE,,,,,,,,,,WIRE 2.5 SQMM BLUE,,Meter,Thakur,95.0,50.0,47.5
-175.0,Wire,,BLACK,,,,,,,,,,WIRE 2.5 SQMM BLACK,,Meter,Thakur,95.0,50.0,47.5
-176.0,Wire,,RED,,,,,,,,,,WIRE 0.5 SQMM RED,0.5,Meter,Thakur,25.0,50.0,12.5
-177.0,Wire,,YELLOW,,,,,,,,,,WIRE 0.5 SQMM YELLOW,,Meter,Thakur,25.0,50.0,12.5
-178.0,Wire,,BLUE,,,,,,,,,,WIRE 0.5 SQMM BLUE,,Meter,Thakur,25.0,50.0,12.5
-179.0,Wire,,BLACK,,,,,,,,,,WIRE 0.5 SQMM BLACK,,Meter,Thakur,25.0,50.0,12.5
-180.0,Wire,,GREY,,,,,,,,,,WIRE 0.5 SQMM GREY,,Meter,Thakur,25.0,50.0,12.5
-181.0,Wire,,GREEN,,,,,,,,,,WIRE 0.5 SQMM YELLOW -GREEN,,Meter,Thakur,25.0,50.0,12.5
-182.0,Wire,,SHILLEDE,,,,,,,,,,2 core wire SHILLEDE,0.5,Meter,Thakur,33.3,0.0,33.3
-183.0,Wire,,SHILLEDE,,,,,,,,,,4 core wire 0.5 Sqmm poly cab ,0.5,Meter,Thakur,55.4,50.0,27.7
-184.0,Lugs,,single,,,,,,,,,,Lugs End Sleeve 0.5 Sqmm,0.5,Nos,Anuroop,1.0,50.0,0.5
-185.0,Lugs,,twin,,,,,,,,,,Lugs End Sleeve 0.5 Sqmm twin ,,Nos,Anuroop,1.0,50.0,0.5
-186.0,Lugs,,single,,,,,,,,,,Lugs End Sleeve 2.5 Sqmm,,Nos,Anuroop,1.5,50.0,0.75
-187.0,Lugs,,Twin,,,,,,,,,,Lugs End Sleeve 2.5 Sqmm Twin,,Nos,Anuroop,2.5,50.0,1.25
-188.0,Lugs,,single,,,,,,,,,,Lugs End Sleeve 4 Sqmm,4.0,Nos,Anuroop,3.0,50.0,1.5
-189.0,Lugs,,Twin,,,,,,,,,,Lugs End Sleeve 4 Sqmm Twin,,Nos,Anuroop,3.5,50.0,1.75
-190.0,Lugs,,COPPER,,,,,,,,,,LUGS 6 SQMM PIN COPPER,6.0,Nos,Anuroop,3.0,0.0,3
-191.0,Lugs,,COPPER,,,,,,,,,,LUGS 6 SQMM RING COPPER,,Nos,Anuroop,4.0,0.0,4
-192.0,Lugs,,COPPER,,,,,,,,,,LUGS 10 SQMM PIN COPPER,,Nos,Anuroop,8.0,0.0,8
-193.0,Lugs,,COPPER,,,,,,,,,,LUGS 10 SQMM RING COPPER,,Nos,Anuroop,8.0,0.0,8
-194.0,Lugs,,COPPER,,,,,,,,,,LUGS 16 SQMM PIN COPPER,,Nos,Anuroop,8.0,0.0,8
-195.0,Lugs,,COPPER,,,,,,,,,,LUGS 16 SQMM RING COPPER,,Nos,Anuroop,8.02,30.0,5.614
-196.0,Lugs,,COPPER,,,,,,,,,,LUGS 25 SQMM PIN COPPER,,Nos,Anuroop,12.0,0.0,12
-197.0,Lugs,,COPPER,,,,,,,,,,LUGS 25 SQMM RING COPPER,,Nos,Anuroop,18.0,30.0,12.6
-198.0,Lugs,,COPPER,,,,,,,,,,LUGS 30 SQMM PIN COPPER,,Nos,Anuroop,40.0,0.0,40
-199.0,Lugs,,COPPER,,,,,,,,,,LUGS 30 SQMM RING COPPER,,Nos,Anuroop,60.0,30.0,42
-200.0,Spiral,,1.0,,,,,,,,,,Spiral Sleeve 9mm,9.0,Meter,Bharat Trading Co.,7.2,0.0,7.2
-201.0,Spiral,,1.0,,,,,,,,,,Spiral Sleeve 10mm,,Meter,Bharat Trading Co.,7.2,0.0,7.2
-202.0,Spiral,,1.0,,,,,,,,,,Spiral Sleeve 6mm,,Meter,Bharat Trading Co.,6.0,0.0,6
-203.0,Spiral,,1.0,,,,,,,,,,Spiral Sleeve 3mm,,Meter,Bharat Trading Co.,5.0,0.0,5
-204.0,Cable Tie,,1.0,,,,,,,,,,Cable Tie 2.5 X 100,1.0,Nos,Anuroop,4.0,70.0,1.2
-205.0,Cable Tie,,1.0,,,,,,,,,,Cable Tie 2.5 X 150,2.0,Nos,Anuroop,5.0,70.0,1.5
-206.0,Gasket,,1.0,,,,,,,,,,Gasket 25X5,3.0,Meter,Ajitesh,10.0,10.0,9
-207.0,Screw,,Tap,,,,,,,,,,Screw 8*13 Self Tap,1.0,Nos,Mayura Traders,1.0,0.0,1
-208.0,Screw,,Tap,,,,,,,,,,Screw 8*19 Self Tap,2.0,Nos,Mayura Traders,1.0,0.0,1
-209.0,Screw,,plate,,,,,,,,,,Screw 6*12 base plate ,3.0,Nos,Mayura Traders,1.7,0.0,1.7
-210.0,Screw,,plate,,,,,,,,,,Screw M3X6,4.0,Nos,Mayura Traders,1.0,0.0,1
-211.0,Screw,,plate,,,,,,,,,,SELF TAP SCREW 6X9.5,5.0,Nos,Mayura Traders,0.5,0.0,0.5
-212.0,Switch,,TNI,,,,,,,,,,2 Pole selector switch (TNI) ,2.0,Nos,Ajitesh,96.0,30.0,67.2
-213.0,Switch,,TNI,,,,,,,,,,3 Pole selector switch (TNI) ,3.0,Nos,Ajitesh,150.0,30.0,105
-214.0,Switch,,Element,,,,,,,,,,NO Element,1.0,nos,Ajitesh,87.0,30.0,60.9
-215.0,Switch,,Element,,,,,,,,,,NC Element,2.0,Nos,Ajitesh,87.0,30.0,60.9
-216.0,Switch,,INDICATOR,,,,,,,,,,RED INDICATOR ,1.0,Nos,Ajitesh,60.0,30.0,42
-217.0,Switch,,INDICATOR,,,,,,,,,,YELLOW INDICATOR ,2.0,Nos,Ajitesh,60.0,30.0,42
-218.0,Switch,,INDICATOR,,,,,,,,,,BLUE INDICATOR ,3.0,Nos,Ajitesh,60.0,30.0,42
-219.0,Switch,,INDICATOR,,,,,,,,,,AMBER INDICATOR ,4.0,Nos,Ajitesh,60.0,30.0,42
-220.0,Switch,,INDICATOR,,,,,,,,,,GREEN INDICATOR ,5.0,Nos,Ajitesh,60.0,30.0,42
-221.0,Label,,ALUMINIUM PLATE,,,,,,,,,,ALUMINIUM PLATE 22MM ,1.0,Nos,Mrugesh Engravers,9.0,0.0,9
-222.0,Lock,,Door,,,,,,,,,,Door Lock (25MM),25.0,Nos,Anuroop,35.0,0.0,35
-223.0, Lock,,Door,,,,,,,,,,Door Lock (20MM),20.0,Nos,Siddhivinayak,30.0,0.0,30
-224.0,Key,,Door,,,,,,,,,,Door Key,1.0,Nos,Ajitesh,25.0,0.0,25
-225.0,Sticker,,Door,,,,,,,,,,Open Close Sticker,2.0,Nos,Anuroop,4.0,0.0,4
-226.0,Sticker,,Door,,,,,,,,,,HOLE CLOSER,3.0,Nos,Anuroop,24.0,0.0,24
-227.0,Ferrule,,PRINT,,,,,,,,,,FERRULE SOFT SLEEVE 3.2 MM,3.2,Nos,Anuroop,70.0,0.0,70
-228.0,Ferrule,,PRINT,,,,,,,,,,FERRULE SOFT SLEEVE 4.2 MM,,Nos,Anuroop,70.0,0.0,70
-229.0,Ferrule,,PRINT,,,,,,,,,,FERRULE SOFT SLEEVE 3.7 MM,,Nos,Anuroop,70.0,0.0,70
-230.0,Ferrule,,PRINT,,,,,,,,,,FERRULE SOFT SLEEVE 5.2 MM,,Nos,Anuroop,70.0,0.0,70
-231.0,Ferrule,,PRINT,,,,,,,,,,FERRULE SOFT SLEEVE 6.5 MM,,Nos,Anuroop,70.0,0.0,70
-232.0,Ferrule,,PRINT,,,,,,,,,,FERRULE SOFT SLEEVE 4.6 MM,,Nos,Anuroop,70.0,0.0,70
-233.0,Ferrule,,PRINT,,,,,,,,,,FERRULE COSTEBLE,,Nos,Anuroop,70.0,0.0,70
-234.0,Sensor,,FLOAT SWITCH,,,,,,,,,,FLOAT SWITCH 3 MTR ICP ,3.0,Nos,Anuroop,370.0,32.5,249.75
-235.0,Relay,,RELAY BASE,,,,,,,,,,RELAY BASE SALZER 4 POL,4.0,Nos,Anuroop,50.0,0.0,50
-236.0,Relay,,RELAY BASE,,,,,,,,,,RELAY BASE SALZER 11 POL,11.0,Nos,Anuroop,50.0,0.0,50
-237.0,Relay,,12.0,,,,,,,,,,2 changeover 12cdc relay salzer ,2.0,Nos,Anuroop,125.0,0.0,125
-238.0,Relay,,12.0,,,,,,,,,,3 pole Salzer relay (BASE PLATE MOUNT),3.0,Nos,Anuroop,375.0,37.0,236.25
-239.0,fuse,,fuse,,,,,,,,,,FUSE TB ,1.0,Nos,Anuroop,41.5,37.0,26.145
-240.0,fuse,,fuse,,,,,,,,,,GLASS FUSE (2A) ,2.0,Nos,Anuroop,5.0,37.0,3.15
-241.0,Add On Block,,schneider,,,,,,,,,,ADD ON BOLCK (1 NO 1 NC ) ,11.0,Nos,Anuroop,160.0,0.0,160
-242.0,Add On Block,,schneider,,,,,,,,,,ADD ON BOLCK  (2NO 2NC),22.0,Nos,Anuroop,190.0,0.0,190
-243.0,Sensor,,HUMIDITY SENSOR,,,,,,,,,,HUMIDITY SENSOR ,1.0,Nos,Anuroop,5480.0,37.0,3452.4
-244.0,PG Gland,,PG,,,,,,,,,,PG 7,7.0,Nos,Anuroop,6.5,70.0,1.95
-245.0,PG Gland,,PG,,,,,,,,,,PG 9,9.0,Nos,Anuroop,7.0,70.0,2.1
-246.0,PG Gland,,PG,,,,,,,,,,PG 11,,Nos,Anuroop,11.25,70.0,3.375
-247.0,PG Gland,,PG,,,,,,,,,,PG 13.5,,Nos,Anuroop,12.5,70.0,3.75
-248.0,PG Gland,,PG,,,,,,,,,,PG 16,,Nos,Anuroop,15.0,70.0,4.5
-249.0,PG Gland,,PG,,,,,,,,,,PG 21,,Nos,Anuroop,25.0,70.0,7.5
-250.0,PG Gland,,PG,,,,,,,,,,PG 25,,Nos,Anuroop,27.5,70.0,8.25
-251.0,PG Gland,,PG,,,,,,,,,,PG 29,,Nos,Anuroop,41.25,70.0,12.375
-252.0,PG Gland,,PG,,,,,,,,,,PG 36,,Nos,Anuroop,57.5,70.0,17.25
-253.0,PG Gland,,PG,,,,,,,,,,PG 42,,Nos,Anuroop,82.5,70.0,24.75
-254.0,PG Gland,,PG,,,,,,,,,,PG 48,,Nos,Anuroop,90.5,70.0,27.15
-255.0,PG Gland,,PG,,,,,,,,,,PG 63,,Nos,Anuroop,192.0,70.0,57.6
-256.0,RCCB,,RCCB 4P,,,,,,,,,,RCCB  25A  WITH 30MA  4 Pole ,25.0,Nos,Anuroop,6465.0,53.0,3038.55
-257.0,RCCB,,RCCB 4P,,,,,,,,,,RCCB  25A  WITH 100MA  4 Pole,25.0,Nos,Anuroop,6870.0,53.0,3228.9
-258.0,RCCB,,RCCB 4P,,,,,,,,,,RCCB  25A  WITH 300MA  4 Pole,,Nos,Anuroop,7072.0,53.0,3323.84
-259.0,RCCB,,RCCB 4P,,,,,,,,,,RCCB  40A  WITH 30MA  4 Pole,40.0,Nos,Anuroop,6364.0,53.0,2991.08
-260.0,RCCB,,RCCB 4P,,,,,,,,,,RCCB  40A  WITH 100MA  4 Pole,,Nos,Anuroop,6908.0,53.0,3246.76
-261.0,RCCB,,RCCB 4P,,,,,,,,,,RCCB  40A  WITH 300MA  4 Pole,,Nos,Anuroop,7175.0,53.0,3372.25
-262.0,RCCB,,RCCB 4P,,,,,,,,,,RCCB  63A  WITH 30MA  4 Pole,63.0,Nos,Anuroop,7369.0,53.0,3463.43
-263.0,RCCB,,RCCB 4P,,,,,,,,,,RCCB  63A  WITH 100MA  4 Pole,,Nos,Anuroop,8162.0,53.0,3836.14
-264.0,RCCB,,RCCB 4P,,,,,,,,,,RCCB  63A  WITH 300MA  4 Pole,,Nos,Anuroop,8200.0,53.0,3854
-265.0,RCCB,,RCCB 4P,,,,,,,,,,RCCB  80A  WITH 30MA  4 Pole,,Nos,Anuroop,12999.0,53.0,6109.53
-266.0,RCCB,,RCCB 4P,,,,,,,,,,RCCB  80A  WITH 100MA   4 Pole,,Nos,Anuroop,13209.0,53.0,6208.23
-267.0,RCCB,,RCCB 4P,,,,,,,,,,RCCB  80A  WITH 300MA  4 Pole,,Nos,Anuroop,13279.0,53.0,6241.13
-268.0,Relay,,12VRELAY,,,,,,,,,,12V Change over Relay ,,Nos,Satyam,260.0,0.0,260
-269.0,OLR,, schneider OLR,,,,,,,,,,OLR 1...1.6 AMP,1.6,Nos,Satyam,3755.0,60.0,1502
-270.0,OLR,, schneider OLR,,,,,,,,,,OLR 1.6...2.5 AMP,2.5,Nos,Satyam,3755.0,60.0,1502
-271.0,OLR,, schneider OLR,,,,,,,,,,OLR 2.5...4  AMP,4.0,Nos,Satyam,3755.0,60.0,1502
-272.0,OLR,, schneider OLR,,,,,,,,,,OLR 4...6  AMP,6.0,Nos,Satyam,3755.0,60.0,1502
-273.0,OLR,, schneider OLR,,,,,,,,,,OLR 5.5...8  AMP,8.0,Nos,Satyam,3755.0,60.0,1502
-274.0,OLR,, schneider OLR,,,,,,,,,,OLR 7...10  AMP,,Nos,Satyam,3755.0,60.0,1502
-275.0,OLR,, schneider OLR,,,,,,,,,,OLR 9...13  AMP,,Nos,Satyam,3755.0,60.0,1502
-276.0,OLR,, schneider OLR,,,,,,,,,,OLR 12-18 AMP,,Nos,Satyam,4165.0,60.0,1666
-277.0,OLR,, schneider OLR,,,,,,,,,,OLR 16-24 AMP,,Nos,Satyam,4620.0,60.0,1848
-278.0,OLR,, schneider OLR,,,,,,,,,,OLR 23-32 AMP,,Nos,Satyam,6430.0,60.0,2572
-279.0,OLR,, schneider OLR,,,,,,,,,,OLR 30-38 AMP,,Nos,Satyam,7245.0,60.0,2898
-280.0,OLR,, schneider OLR,,,,,,,,,,OLR 37...50 AMP,,Nos,Satyam,8170.0,60.0,3268
-281.0,OLR,, schneider OLR,,,,,,,,,,OLR 48...65 AMP,,Nos,Satyam,10725.0,60.0,4290
-282.0,OLR,, schneider OLR,,,,,,,,,,OLR 55...70 AMP,,Nos,Satyam,12705.0,60.0,5082
-283.0,OLR,, schneider OLR,,,,,,,,,,OLR 63...80 AMP,,Nos,Satyam,13265.0,60.0,5306
-284.0,OLR,, schneider OLR,,,,,,,,,,OLR 80...104 AMP,,Nos,Satyam,13265.0,60.0,5306
-285.0,SPP,,SPP,,,,,,,,,,SPP 022,1.0,Nos,Ajitesh,555.0,37.0,349.65
-286.0,MCCB ,,MCCB 3P,,,,,,,,,,MCCB  16A  THREE POLE ,16.0,Nos,Satyam,14460.0,60.0,5784
-287.0,MCCB ,,MCCB 3P,,,,,,,,,,MCCB  25A  THREE POLE ,25.0,Nos,Satyam,14460.0,60.0,5784
-288.0,MCCB ,,MCCB 3P,,,,,,,,,,MCCB  32A  THREE POLE ,32.0,Nos,Satyam,14460.0,60.0,5784
-289.0,MCCB ,,MCCB 3P,,,,,,,,,,MCCB  40A  THREE POLE ,,Nos,Satyam,14460.0,60.0,5784
-290.0,MCCB ,,MCCB 3P,,,,,,,,,,MCCB  50A  THREE POLE ,,Nos,Satyam,14460.0,60.0,5784
-291.0,MCCB ,,MCCB 3P,,,,,,,,,,MCCB  63A  THREE POLE ,,Nos,Satyam,14460.0,60.0,5784
-292.0,MCCB ,,MCCB 3P,,,,,,,,,,MCCB  80A  THREE POLE ,,Nos,Satyam,14460.0,60.0,5784
-293.0,MCCB ,,MCCB 3P,,,,,,,,,,MCCB  100A  THREE POLE ,,Nos,Satyam,14460.0,60.0,5784
-294.0,MCCB ,,MCCB 3P,,,,,,,,,,MCCB  125A  THREE POLE ,,Nos,Satyam,16050.0,60.0,6420
-295.0,MCCB ,,MCCB 3P,,,,,,,,,,MCCB  160A  THREE POLE ,,Nos,Satyam,21260.0,60.0,8504
-296.0,MCCB ,,MCCB 3P,,,,,,,,,,MCCB  200A  THREE POLE ,,Nos,Satyam,30620.0,60.0,12248
-297.0,MCCB ,,MCCB 3P,,,,,,,,,,MCCB  250A  THREE POLE ,,Nos,Satyam,33960.0,60.0,13584
-298.0,MCCB ,,MCCB 4P,,,,,,,,,,MCCB  16A  FOUR   POLE ,,Nos,Satyam,18060.0,60.0,7224
-299.0,MCCB ,,MCCB 4P,,,,,,,,,,MCCB  25A  FOUR POLE ,,Nos,Satyam,18060.0,60.0,7224
-300.0,MCCB ,,MCCB 4P,,,,,,,,,,MCCB  32A  FOUR POLE ,,Nos,Satyam,18060.0,60.0,7224
-301.0,MCCB ,,MCCB 4P,,,,,,,,,,MCCB  40A FOUR POLE ,,Nos,Satyam,18060.0,60.0,7224
-302.0,MCCB ,,MCCB 4P,,,,,,,,,,MCCB  50A  FOUR POLE ,,Nos,Satyam,18060.0,60.0,7224
-303.0,MCCB ,,MCCB 4P,,,,,,,,,,MCCB  63A  FOUR POLE ,,Nos,Satyam,18060.0,60.0,7224
-304.0,MCCB ,,MCCB 4P,,,,,,,,,,MCCB  80A  FOUR POLE ,,Nos,Satyam,18060.0,60.0,7224
-305.0,MCCB ,,MCCB 4P,,,,,,,,,,MCCB  100A FOUR POLE ,,Nos,Satyam,18060.0,60.0,7224
-306.0,MCCB ,,MCCB 4P,,,,,,,,,,MCCB  125A  FOUR POLE ,,Nos,Satyam,19930.0,60.0,7972
-307.0,MCCB ,,MCCB 4P,,,,,,,,,,MCCB  160A  FOUR POLE ,,Nos,Satyam,25320.0,60.0,10128
-308.0,MCCB ,,MCCB 4P,,,,,,,,,,MCCB  200A  FOUR POLE ,,Nos,Satyam,37940.0,60.0,15176
-309.0,MCCB ,,MCCB 4P,,,,,,,,,,MCCB  250A  FOUR POLE ,,Nos,Satyam,33960.0,60.0,13584
-310.0,MCCB ,,MCCB 4P,,,,,,,,,,MCCB  320A  FOUR POLE ,,Nos,Satyam,57610.0,60.0,23044
-311.0,MCCB ,,MCCB 4P,,,,,,,,,,MCCB  630A  FOUR POLE ,,Nos,Satyam,89000.0,60.0,35600
-312.0,MCCB ,,SPREADER,,,,,,,,,,MCCB BUS BAR CONNECTOR    (3P SPREADER PH BARRIERS),3.0,Nos,Satyam,1230.0,50.0,615
-313.0,MCCB ,,SPREADER,,,,,,,,,,MCCB BUS BAR CONNECTOR    (4P SPREADER PH BARRIERS),4.0,Nos,Satyam,1630.0,50.0,815
-314.0,MCCB ,,EXTENDED ROTARY,,,,,,,,,,EXTENDED ROTARY HANDLE  (CVS 100/160/250) ,3.0,Nos,Satyam,3300.0,50.0,1650
-315.0,MCCB ,,EXTENDED ROTARY,,,,,,,,,,EXTENDED ROTARY HANDLE  4P(CVS 100/160/250) ,4.0,Nos,Satyam,5870.0,50.0,2935
-316.0,MCCB ,,EXTENDED ROTARY,,,,,,,,,,EXTENDED ROTARY HANDLE  4P(CVS 320A) ,4.0,Nos,Satyam,4680.0,50.0,2340
-317.0,Timer,,TIMER MULTISPAN,,,,,,,,,,TIMER MULTISPAN 60S,60.0,Nos,Anuroop,870.0,30.0,609
-318.0,Timer,,TIMER MULTISPAN,,,,,,,,,,TIMER MULTISPAN 30S,30.0,Nos,Anuroop,870.0,30.0,609
-319.0,Z Clamp,,Z Clamp,,,,,,,,,,Z CLAMP ,1.0,Nos,Anuroop,11.0,0.0,11
-320.0,BUSBAR,,,,,,,,,,,,BUSBAR ,1.0,Nos,,450.0,0.0,450
-321.0,Wire,,,,,,,,,,,,2 Core Shielded,,Meter,Thakur,25.0,0.0,25
-322.0,Panel stickers,,,,,,,,,,,,Panel Guid Sticker,,Nos,,50.0,0.0,50
-323.0,Moadbus Pin,,,,,,,,,,,,Moadbus connector pin ,,Nos,,250.0,0.0,250
-324.0,VFD,,CG,,,,,,,,,,"CG-0.75KW-HD,1HP,380-480V (200X80X150)",,Nos,INNOVATORS ELECRICAL,21328.0,50.0,10664
-325.0,VFD,,CG,,,,,,,,,,"CG-1.5KW-HD,2HP,380-480V (200X80X150)",,Nos,INNOVATORS ELECRICAL,22475.0,50.0,11237.5
-326.0,VFD,,CG,,,,,,,,,,"CG-2.2KW-HD,3HP,380-480V (200X80X150)",,Nos,INNOVATORS ELECRICAL,25784.0,50.0,12892
-327.0,VFD,,CG,,,,,,,,,,"CG-3.7KW-HD,5HP,380-480V (186.6X116.6X175)",,Nos,INNOVATORS ELECRICAL,29508.0,50.0,14754
-328.0,VFD,,CG,,,,,,,,,,"CG-7.5KW-HD,10HP,380-480V (249X146X177)",,Nos,INNOVATORS ELECRICAL,44749.0,50.0,22374.5
-329.0,VFD,,CG,,,,,,,,,,"CG-11KW-HD,15HP,380-480V (249X146X177)",,Nos,INNOVATORS ELECRICAL,54457.0,44.0,30495.92
-330.0,VFD,,CG,,,,,,,,,,"CG-15KW-HD,20HP,380-480V (300X198X185)",,Nos,INNOVATORS ELECRICAL,66888.0,44.0,37457.28
-331.0,VFD,,CG,,,,,,,,,,"CG-18.5KW-HD,25HP,380-480V (300X198X185)",,Nos,INNOVATORS ELECRICAL,74531.0,44.0,41737.36
-332.0,VFD,,CG,,,,,,,,,,"CG-22KW-HD,30HP,380-480V (300X198X185)",,Nos,INNOVATORS ELECRICAL,83341.0,44.0,46670.96
-333.0,VFD,,CG,,,,,,,,,,CG-4.4KW-ND(6HP)380-480V (186.6X116.6X175),,Nos,INNOVATORS ELECRICAL,31983.4,44.0,17910.704
-334.0,VFD,,CG,,,,,,,,,,"9.3KW-HD,12.5HP,380-480V (300X198X185)",,Nos,,54457.0,44.0,30495.92
-335.0,VFD,,DANFOS,,,,,,,,,,"3KW-HD,4HP,380-480V ",,Nos,INNOVATORS ELECRICAL,29508.0,50.0,14754
-336.0,Lugs,,,,,,,,,,,,Lugs End Sleeve 1 Sqmm,,Nos,Anuroop,1.0,0.0,1
-337.0,VFD,,CG,,,,,,,,,,"5.5KW-ND,7.5HP,380-480V (186.6X116.6X175)",,Nos,INNOVATORS ELECRICAL,29508.0,52.0,14163.84
-338.0,VFD,,DELTA,,,,,,,,,," DELTA 5.5KW-ND,7.5HP,380-480V (186.6X116.6X175)",,Nos,DELTA DRIVE,14000.0,0.0,14000
-339.0,VFD,,CG,,,,,,,,,,"4KW-HD,5.5HP,380-480V (186.6X116.6X175)",,Nos,INNOVATORS ELECRICAL,29508.0,50.0,14754
-340.0,VFD,,CG,,,,,,,,,,"0.75KW-HD,1HP,380-480V (200X80X150)",,Nos,INNOVATORS ELECRICAL,21328.0,60.0,8531.2
-341.0,VFD,,CG,,,,,,,,,,"1.5KW-HD,2HP,380-480V (200X80X150)",,Nos,INNOVATORS ELECRICAL,22475.0,60.0,8990
-342.0,VFD,,CG,,,,,,,,,,"2.2KW-HD,3HP,380-480V (200X80X150)",,Nos,INNOVATORS ELECRICAL,25784.0,60.0,10313.6
-343.0,VFD,,CG,,,,,,,,,,"3.7KW-HD,5HP,380-480V (186.6X116.6X175)",,Nos,INNOVATORS ELECRICAL,29508.0,60.0,11803.2
-344.0,VFD,,CG,,,,,,,,,,"5.5KW-HD,7.5HP,380-480V (186.6X116.6X175)",,Nos,INNOVATORS ELECRICAL,37291.0,60.0,14916.4
-345.0,VFD,,CG,,,,,,,,,,"7.5KW-HD,10HP,380-480V (249X146X177)",,Nos,INNOVATORS ELECRICAL,44749.0,60.0,17899.6
-346.0,VFD,,CG,,,,,,,,,,"11KW-HD,15HP,380-480V (249X146X177)",,Nos,INNOVATORS ELECRICAL,54457.0,60.0,21782.8
-347.0,VFD,,CG,,,,,,,,,,"15KW-HD,20HP,380-480V (300X198X185)",,Nos,INNOVATORS ELECRICAL,66888.0,60.0,26755.2
-348.0,VFD,,CG,,,,,,,,,,"18.5KW-HD,25HP,380-480V (300X198X185)",,Nos,INNOVATORS ELECRICAL,74531.0,60.0,29812.4
-349.0,VFD,,CG,,,,,,,,,,"22KW-HD,30HP,380-480V (300X198X185)",,Nos,INNOVATORS ELECRICAL,83341.0,60.0,33336.4
-350.0,VFD,,CG,,,,,,,,,,1.1KW-ND(1.5HP)380-480V (186.6X116.6X175),,Nos,INNOVATORS ELECRICAL,22475.0,60.0,8990
-351.0,INSULATOR,,1.0,,,,,,,,,,L TYPE INSULATOR ,,Nos,,20.0,0.0,20
-352.0,INSULATOR,,1.0,,,,,,,,,,Z TYPE INSULATOR,,Nos,,20.0,0.0,20
-353.0,INSULATOR,,1.0,,,,,,,,,,CONICAL TYPE INSULATOR 40MM,,Nos,,20.0,0.0,20
-354.0,SLEEVE,,RED,,,,,,,,,,BUS BAR SLEEVE RED,,METER,,15.0,0.0,15
-355.0,SLEEVE,,YELLOW,,,,,,,,,,BUS BAR SLEEVE YELLOW,,METER,,15.0,0.0,15
-356.0,SLEEVE,,BLUE,,,,,,,,,,BUS BAR SLEEVE BLUE,,METER,,15.0,0.0,15
-357.0,SLEEVE,,BLACK,,,,,,,,,,BUS BAR SLEEVE BLACK,,METER,,15.0,0.0,15
-358.0,TERMINAL,,RED,,,,,,,,,,CBB TERMINAL RED 35-50,,NOS,,200.0,0.0,200
-359.0,TERMINAL,,YELLOW,,,,,,,,,,CBB TERMINAL YELLOW 35-51,,NOS,,200.0,0.0,200
-360.0,TERMINAL,,BLUE,,,,,,,,,,CBB TERMINAL BLUE 35-52,,NOS,,200.0,0.0,200
-361.0,TERMINAL,,BLACK,,,,,,,,,,CBB TERMINAL BLACK 35-53,,NOS,,200.0,0.0,200
-362.0,TERMINAL,,GREY,,,,,,,,,,CBB TERMINAL GREY 35-54,,NOS,,200.0,0.0,200
-363.0,SWITCH,,1.0,,,,,,,,,,EMERGENCY STOP BUTTON,,Nos,,150.0,0.0,150
-364.0,SOCKET,,1.0,,,,,,,,,,3 PIN  SOCKET,,Nos,,1500.0,0.0,1500
-365.0,AIR FILTER,,1.0,,,,,,,,,,AIR FILTER (PEACOCK),,Nos,,47.0,30.0,32.9
-366.0,CONTACTOR,,LNT,,,,,,,,,,CONTACTOR 115 amp,,Nos,,15339.0,50.0,7669.5
-367.0,CONTACTOR,,LNT,,,,,,,,,,CONTACTOR 65 amp,,Nos,,3560.0,57.0,1530.8
-368.0,ADD ON BLOCK,,1.0,,,,,,,,,,ADD ON BLOCK,,Nos,,190.0,0.0,190
-369.0,WIRE,,RED,,,,,,,,,,WIRE  35 SQMM RED,35.0,Nos,THAKUR,567.0,30.0,396.9
-370.0,WIRE,,YELLOW,,,,,,,,,,WIRE  35 SQMM YELLOW,,Nos,THAKUR,567.0,30.0,396.9
-371.0,WIRE,,BLUE,,,,,,,,,,WIRE  35 SQMM BLUE,,Nos,THAKUR,567.0,30.0,396.9
-372.0,WIRE,,BLACK,,,,,,,,,,WIRE  35 SQMM BLACK,,Nos,THAKUR,567.0,30.0,396.9
-373.0,Luga,,1.0,,,,,,,,,,LUGS PIN TYPE  COPPER ,,Nos,,15.0,0.0,15
-374.0,Lugs,,1.0,,,,,,,,,,LUGS  RING TYPE  COPPER ,,Nos,,15.0,0.0,15
-375.0,Nuts ,,1.0,,,,,,,,,,nut bolt 8*12 ,,Nos,,5.0,0.0,5
-376.0,Nuts ,,1.0,,,,,,,,,,nut bolt 6*10 ,,nos,,5.0,0.0,5
-377.0,WASHPR,,1.0,,,,,,,,,,Washor ,,Nos,,5.0,0.0,5
-378.0,board,,1.0,,,,,,,,,,Switch board ,,Nos,,200.0,0.0,200
-379.0,MPR,,1.0,,,,,,,,,,Motor protection relay ,,Nos,,2000.0,0.0,2000
-380.0,metal box,,1.0,,,,,,,,,,metal box,,Nos,,55000.0,0.0,55000
-381.0,OLR,,1.0,,,,,,,,,,Thermal O/L  90-150A,,Nos,,8540.0,40.0,5124
-382.0,ATS,,1.0,,,,,,,,,,ATS 75hp (ELMEASURE 160A),,Nos,,27709.0,0.0,27709
-383.0,CT,,1.0,,,,,,,,,,Ammeter 0-150A (Multispan),,Nos,,785.0,0.0,785
-384.0,CT,,1.0,,,,,,,,,,C.T.150/5A (Std.),,Nos,,200.0,0.0,200
-385.0,Metal Box,,1.0,,,,,,,,,,Metal Box 700*500*400 (1.6mm) ATS,,Nos,Anand Engineering,15000.0,0.0,15000
-386.0,Metal Box,,1.0,,,,,,,,,,Metal Box 1000*1000*600 (1.6mm) LT,,Nos,Anand Engineering,30000.0,0.0,30000
-387.0,Metal Box,,1.0,,,,,,,,,,Metal Box 230*190*125 ,,Nos,Anand Engineering,500.0,0.0,500
-388.0,Transformer,,T,,,,,,,,,,Transformer ,,Nos,,200.0,0.0,200
-389.0,Controller,,A-STP,,,,,,,,,,AIPCU WITH HMI DISPLAY - STP,,Nos,SAARK,50000.0,50.0,25000
-390.0,Controller,,GIC,,,,,,,,,,GIC WATER LEVEL CONTROLLER ,,Nos,GIC,1500.0,0.0,1500
-391.0,Controller,,,,,,,,,,,,GIC CONTROLLER,,Nos,,1900.0,0.0,1900
-392.0,CONTACTOR,,,,,,,,,,,,CONTACTOR 0901 N5,,Nos,Satyam,1512.0,52.0,725.76
-393.0,CONTACTOR,,,,,,,,,,,,CONTACTOR 1201 N5,,Nos,Satyam,1512.0,52.0,725.76
-394.0,CONTACTOR,,,,,,,,,,,,CONTACTOR 1801 N5,,Nos,Satyam,1512.0,52.0,725.76
-395.0,CONTACTOR,,,,,,,,,,,,CONTACTOR 2501 N5,,Nos,Satyam,1512.0,52.0,725.76
-396.0,CONTACTOR,,,,,,,,,,,,CONTACTOR 3201 N5,,Nos,Satyam,1512.0,52.0,725.76
-397.0,CONTACTOR,,,,,,,,,,,,CONTACTOR 3801 N5,,Nos,Satyam,1512.0,52.0,725.76
-398.0,switch,,YELLOW SB,,,,,,,,,,3 POLE SWITCH DOOR MOUNT (YELLOW) 63A,63.0,Nos,Anuroop,1168.0,40.0,700.8
-399.0,switch,,1.0,,,,,,,,,,3 POLE SWITCH DOOR MOUNT (YELLOW) 80A,80.0,Nos,Anuroop,3003.0,40.0,1801.8
-400.0,switch,,1.0,,,,,,,,,,3 POLE SWITCH DOOR MOUNT (YELLOW) 100A,,Nos,Anuroop,3748.0,40.0,2248.8
-401.0,switch,,1.0,,,,,,,,,,3 POLE SWITCH DOOR MOUNT (YELLOW) 125A,,Nos,Anuroop,4684.0,40.0,2810.4
-402.0,switch,,1.0,,,,,,,,,,3 POLE SWITCH DOOR MOUNT (YELLOW) 16A,,Nos,Anuroop,847.0,40.0,508.2
-403.0,switch,,1.0,,,,,,,,,,3 POLE SWITCH DOOR MOUNT (YELLOW) 20A,,Nos,Anuroop,870.0,40.0,522
-404.0,switch,,1.0,,,,,,,,,,3 POLE SWITCH DOOR MOUNT (YELLOW) 25A,,Nos,Anuroop,944.0,40.0,566.4
-405.0,switch,,1.0,,,,,,,,,,3 POLE SWITCH DOOR MOUNT (YELLOW) 32A,,Nos,Anuroop,977.0,40.0,586.2
-406.0,switch,,1.0,,,,,,,,,,3 POLE SWITCH DOOR MOUNT (YELLOW) 40A,,Nos,Anuroop,1105.0,40.0,663
-407.0,METAL BOX,,METEL BOX,,,,,,,,,,METAL BOX 500x600x250 (HMI 2PUMP) UPTO 3HP,,NOS,DB INDUSRIES,3500.0,0.0,3500
-408.0,METAL BOX,,PUMP,,,,,,,,,,METAL BOX 500x700x250 (HMI 3PUMP) ,,NOS,DB INDUSRIES,4700.0,0.0,4700
-409.0,METAL BOX,,PUMP,,,,,,,,,,METAL BOX 500x700x300 (HMI 3PUMP) ,,NOS,DB INDUSRIES,5500.0,0.0,5500
-410.0,METAL BOX,,PUMP,,,,,,,,,,METAL BOX 600x800x300 (HMI 3PUMP) ,,NOS,DB INDUSRIES,8500.0,0.0,8500
-411.0,METAL BOX,,VFD,,,,,,,,,,METAL BOX 550x700x330 MULTY VFD,,NOS,DB INDUSRIES,4700.0,0.0,4700
-412.0,METAL BOX,,VFD,,,,,,,,,,METAL BOX 600x800x330 MULTY VFD,,NOS,DB INDUSRIES,6500.0,0.0,6500
-413.0,power ,,SMPS,,,,,,,,,,SMPS,,NOS,,500.0,0.0,500
-414.0,VFD,,Schineder,,,,,,,,,,7.5hp 5.5 KW VFD,,NOS,Satyam Schineder,14100.0,0.0,14100
-415.0,VFD,,Schineder,,,,,,,,,,2HP 4.2 A VFD,,NOS,Satyam Schineder,9858.0,0.0,9858
-416.0,VFD,,Schineder,,,,,,,,,,3HP 5.5 A VFD,,NOS,Satyam Schineder,11024.0,0.0,11024
-417.0,VFD,,Schineder,,,,,,,,,,5HP 8.9 A VFD,,NOS,Satyam Schineder,13250.0,0.0,13250
-418.0,VFD,,Schineder,,,,,,,,,,7.5HP 12.1 A VFD,,NOS,Satyam Schineder,14946.0,0.0,14946
-419.0,VFD,,Schineder,,,,,,,,,,10HP 16 A VFD,,NOS,Satyam Schineder,18020.0,0.0,18020
-420.0,VFD,,Schineder,,,,,,,,,,15HP 22.8 A VFD,,NOS,Satyam Schineder,24380.0,0.0,24380
-421.0,VFD,,Schineder,,,,,,,,,,20HP 36 A VFD,,NOS,Satyam Schineder,32330.0,0.0,32330
-422.0,VFD,,Schineder,,,,,,,,,,30HP 43 A VFD,,NOS,Satyam Schineder,46852.0,0.0,46852
-423.0,METAL BOX,,MB,,,,,,,,,,METAL BOX FOR 6 PUMP ,,NOS,,15000.0,0.0,15000
-424.0,VFD,,CG,,,,,,,,,,1HP SINGLE PHASE VFD CG ,,NOS,,15000.0,61.0,5850
-425.0,VFD,,DANFOSS,,,,,,,,,,"0.37KW,0.5HP,380-480V",,NOS,INNODRIVES DANFOSS,8103.0,0.0,8103
-426.0,VFD,,DANFOSS,,,,,,,,,,"0.75KW, 1HP,380-480V",,NOS,INNODRIVES DANFOSS,8400.0,0.0,8400
-427.0,VFD,,DANFOSS,,,,,,,,,,"1.5KW,2HP,380-480V",,NOS,INNODRIVES DANFOSS,11462.0,0.0,11462
-428.0,VFD,,DANFOSS,,,,,,,,,,"2.2KW,3HP,380-480V",,NOS,INNODRIVES DANFOSS,14168.0,0.0,14168
-429.0,VFD,,DANFOSS,,,,,,,,,,"3KW,4HP,380-480V",,NOS,INNODRIVES DANFOSS,16858.0,0.0,16858
-430.0,VFD,,DANFOSS,,,,,,,,,,"4KW,5HP,380-480V",,NOS,INNODRIVES DANFOSS,18146.0,0.0,18146
-431.0,VFD,,DANFOSS,,,,,,,,,,"5.5KW, 7.5HP, 380-480V",,NOS,INNODRIVES DANFOSS,21032.0,0.0,21032
-432.0,VFD,,DANFOSS,,,,,,,,,,"7.5KW,10HP,380-480V",,NOS,INNODRIVES DANFOSS,23755.0,0.0,23755
-433.0,VFD,,DANFOSS,,,,,,,,,,"11KW,15HP,380-480V ",,NOS,INNODRIVES DANFOSS,34401.0,0.0,34401
-434.0,VFD,,DANFOSS,,,,,,,,,,"15KW,20HP,380-480V",,NOS,INNODRIVES DANFOSS,39586.0,0.0,39586
-435.0,VFD,,DANFOSS,,,,,,,,,,"18.5KW,25HP,380-480V ",,NOS,INNODRIVES DANFOSS,48716.0,0.0,48716
-436.0,VFD,,DANFOSS,,,,,,,,,,"22KW,30HP,380-480V ",,NOS,INNODRIVES DANFOSS,57078.0,0.0,57078
-437.0,VFD,,DANFOSS,,,,,,,,,,"30KW,40HP,380-480V ",,NOS,INNODRIVES DANFOSS,83300.8,0.0,83300.8
-438.0,VFD,,DANFOSS,,,,,,,,,,"38KW,50HP,380-480V ",,NOS,INNODRIVES DANFOSS,83489.7,0.0,83489.7
-439.0,VFD,,DANFOSS,,,,,,,,,,"47KW,60HP,380-480V ",,NOS,INNODRIVES DANFOSS,116859.75,0.0,116859.75
-440.0,VFD,,DANFOSS,,,,,,,,,,"75KW,140 AMP ,380-480V ",,NOS,INNODRIVES DANFOSS,162906.45,0.0,162906.45
-441.0,VFD,,DELTA,,,,,,,,,," 230V, 0.4KW / 0.5HP, Inbuilt detachable display unit",,NOS,DELTA MS SERISE VFD2A8MS21ANSAA,8882.0,0.0,8882
-442.0,VFD,,DELTA,,,,,,,,,,"230V, 0.75KW / 0.1HP, Inbuilt detachable display unit",,NOS,DELTA MS SERISE VFD4A8MS21ANSAA,9720.0,0.0,9720
-443.0,VFD,,DELTA,,,,,,,,,," 230V, 1.5KW / 2HP, Inbuilt detachable display unit",,NOS,DELTA MS SERISE VFD7A5MS21ANSAA,10373.0,0.0,10373
-444.0,VFD,,DELTA,,,,,,,,,," 230V, 2.2KW / 3HP, Inbuilt detachable display unit",,NOS,DELTA MS SERISE VFD11AMS21ANSAA,11739.0,0.0,11739
-445.0,VFD,,DELTA,,,,,,,,,," 415V, 0.4KW / 0.5HP, Inbuilt detachable display unit",,NOS,DELTA MS SERISE VFD1A5MS43ANSAA,10671.0,0.0,10671
-446.0,VFD,,DELTA,,,,,,,,,," 415V, 0.75KW / 1HP, Inbuilt detachable display unit",,NOS,DELTA MS SERISE VFD2A7MS43ANSAA,11205.0,0.0,11205
-447.0,VFD,,DELTA,,,,,,,,,," 415V, 1.5KW / 2HP, Inbuilt detachable display unit",,NOS,DELTA MS SERISE VFD4A2MS43ANSAA,11863.0,0.0,11863
-448.0,VFD,,DELTA,,,,,,,,,," 415V, 2.2KW / 3HP, Inbuilt detachable display unit",,NOS,DELTA MS SERISE VFD5A5MS43ANSAA,13708.0,0.0,13708
-449.0,VFD,,DELTA,,,,,,,,,," 415V, 4KW / 5HP, Inbuilt detachable display unit",,NOS,DELTA MS SERISE VFD9A0MS43ANSAA,15677.0,0.0,15677
-450.0,VFD,,DELTA,,,,,,,,,," 415V, 5.5KW / 7.5HP, Inbuilt detachable display unit",,NOS,DELTA MS SERISE VFD13AMS43ANSAA,21690.0,0.0,21690
-451.0,VFD,,DELTA,,,,,,,,,," 415V, 7.5KW / 10HP,  Inbuilt detachable display unit",,NOS,DELTA MS SERISE VFD17AMS43ANSAA,22466.0,0.0,22466
-452.0,VFD,,DELTA,,,,,,,,,," 415V, 11KW /15HP,  Inbuilt detachable display unit",,NOS,DELTA MS SERISE VFD25AMS43ANSAA,27473.0,0.0,27473
-453.0,VFD,,DELTA,,,,,,,,,," 415V, 15KW / 20HP,  Inbuilt detachable display unit",,NOS,DELTA MS SERISE VFD32AMS43ANSAA,34206.0,0.0,34206
-454.0,VFD,,DELTA,,,,,,,,,," 415V, 18.5KW / 25HP, Inbuilt detachable display unit",,NOS,DELTA MS SERISE VFD38AMS43ANSAA,45827.0,0.0,45827
-455.0,VFD,,DELTA,,,,,,,,,," 415V, 22KW / 30HP, Inbuilt detachable display unit",,NOS,DELTA MS SERISE VFD45AMS43ANSAA,49461.0,0.0,49461
-456.0,VFD,,DELTA,,,,,,,,,," 415V,30KW / 40HP, Inbuilt detachable display unit",,NOS,DELTA MS SERISE VFD300CP43B-21,57100.0,0.0,57100
-457.0,VFD,,DELTA,,,,,,,,,," 415V, 35KW / 50HP, Inbuilt detachable display unit",,NOS,DELTA MS SERISE VFD370CP53B-21,73450.0,0.0,73450
-458.0,VFD,,DELTA,,,,,,,,,," 415V, 45KW / 60HP, Inbuilt detachable display unit",,NOS,DELTA MS SERISE VFD45AMS43ANSAA,43990.0,0.0,43990
-459.0,VFD,,DELTA,,,,,,,,,," 415V, 75KW / 75HP 144 AMP ",,NOS,,133677.5,0.0,133677.5
-460.0,Soft Starter ,,LNT,,,,,,,,,,15 HP L&T SOFT STARTER ,,NOS,AGC,45837.0,0.0,45837
-461.0,Soft Starter ,,LNT,,,,,,,,,,20 HP L&T SOFT STARTER,,NOS,AGC,47000.0,0.0,47000
-462.0,Soft Starter ,,LNT,,,,,,,,,,30 HP L&T SOFT STARTER,,NOS,AGC,50825.0,0.0,50825
-463.0,Soft Starter ,,LNT,,,,,,,,,,40 HP L&T SOFT STARTER,,NOS,AGC,52773.0,0.0,52773
-464.0,Soft Starter ,,LNT,,,,,,,,,,50 HP L&T SOFT STARTER,,NOS,AGC,52773.0,0.0,52773
-465.0,STP METAL BOX,,STAND,,,,,,,,,,"FABRICATION, POWDER COATING PANEL WITH STAND ",,NOS,DB,52773.0,0.0,52773
-466.0,FIRE,,system,,,,,,,,,,fire suppression system,,NOS,FIRE,25000.0,0.0,25000
-467.0,BUSBAR,,X,,,,,,,,,,BUSBAR 50X20,,NOS,FIRE,3000.0,0.0,3000
-468.0,TERMINAL,,AMP,,,,,,,,,,PVC TERMINAL 6AMP,,NOS,FIRE,3000.0,0.0,3000
-469.0,CONTACTOR ,,CONTACTOR,,,,,,,,,,IDEAL CONTACTOR ,,NOS,FIRE,3000.0,0.0,3000
-470.0,PAKEGING,,SMALL,,,,,,,,,,RAPING ROLL SMALL,,NOS,FIRE,3000.0,0.0,3000
-471.0,PAKEGING,,BIG,,,,,,,,,,RAPING ROLL  BIG ,,NOS,FIRE,3000.0,0.0,3000
-472.0,MCB,,SI-MCB,,,,,,,,,,SI-MCB 3P 63A,,Nos,SIMENS ,3149.0,69.0,976.19
-473.0,MCB,,SI-MCB,,,,,,,,,,SI--MCB 3P 40A,,Nos,SIMENS ,2820.0,69.0,874.2
-474.0,MCB,,SI-MCB,,,,,,,,,,SI-MCB 3P 25A,,Nos,SIMENS ,2015.0,69.0,624.65
-475.0,MCB,,SI-MCB,,,,,,,,,,SI-MCB 3P 20A,,Nos,SIMENS ,2015.0,69.0,624.65
-476.0,MCB,,SI-MCB,,,,,,,,,,SI-MCB 3P 16A,,Nos,SIMENS ,2015.0,69.0,624.65
-477.0,MCB,,SI-MCB,,,,,,,,,,SI-MCB 3P 10A,,Nos,SIMENS ,2015.0,69.0,624.65
-478.0,MCB,,SI-MCB,,,,,,,,,,SI-MCB 3P 6A,,Nos,SIMENS ,2015.0,69.0,624.65
-479.0,CT,,CT,,,,,,,,,,C.T.100/5A (Std.),,Nos,,400.0,0.0,400
-480.0,Metal Box,,1.0,,,,,,,,,,Metal Box 950*750*400 (1.6mm) ATS,,Nos,Anand Engineering,25000.0,0.0,25000
-481.0,Metal Box,,1.0,,,,,,,,,,SDF FN250TPF,,Nos,Anand Engineering,19580.0,50.0,9790
-482.0,Metal Box,,1.0,,,,,,,,,,Metal box 750*1000*350(2 vfd Outdoor Panel) ,,Nos,Anand Engineering,14000.0,0.0,14000
-483.0,Metal Box,,1.0,,,,,,,,,,Metal Box 600*500*250 (1.2mm) HMI PANEL,,Nos,Anand Engineering,3700.0,0.0,3700
-484.0,Metal Box,,1.0,,,,,,,,,,Metal Box 700*500*250 (1.2mm) HMI PANEL,,Nos,Anand Engineering,5200.0,0.0,5200
-485.0,Metal Box,,1.0,,,,,,,,,,Metal Box 850*1200*350 (1.2mm) HMI PANEL(15KW 3 PUMP),,Nos,Anand Engineering,14000.0,0.0,14000
-486.0,CONTACTOR,,,,,,,,,,,,50A L&T,,Nos,AJITESH,7640.0,40.0,4584
-487.0,CONTACTOR,,1.0,,,,,,,,,,50 A SEMINS,,Nos,ANUROOP,10575.0,51.0,5181.75
-488.0,METAL BOX,,HP,,,,,,,,,,METAL BOX 500x600x240 (HMI 2PUMP) UPTO 3HP,,NOS,DB INDUSRIES,4500.0,0.0,4500
-489.0,METAL BOX,,HP,,,,,,,,,,METAL BOX 500x600x240 (HMI 2PUMP) UPTO 5HP,,NOS,DB INDUSRIES,4700.0,0.0,4700
-490.0,METAL BOX,,indore,,,,,,,,,,METAL BOX 600x1200x350 1pump indore,,NOS,DB INDUSRIES,16000.0,0.0,16000
-491.0,METAL BOX,,indore,,,,,,,,,,METAL BOX 600x800x350 1pump indore,,NOS,DB INDUSRIES,12000.0,0.0,12000
-492.0,VFD,,VFD,,,,,,,,,,"18KW,20HP DELTA VFD ",,NOS,,54445.2,0.0,54445.2
-493.0,METAL BOX,,INDOOR,,,,,,,,,,25HP 1PUMP METEL BOX VFD INDOOR,,NOS,DB INDUSRIES,7000.0,0.0,7000
-494.0,METAL BOX,,OUTDOOR,,,,,,,,,,25HP 1PUMP METEL BOX VFD OUTDOOR,,NOS,DB INDUSRIES,15000.0,0.0,15000
-495.0,METAL BOX,,INDOOR,,,,,,,,,,METAL BOX 1150X1400X450 INDOOR ,,NOS,DB INDUSRIES,22000.0,0.0,22000
-496.0,DVM,,ammeter,,,,,,,,,,Digital voltmeter ammeter,,NOS,,2500.0,0.0,2500
-497.0,stop button,,button,,,,,,,,,,Emergency stop push button,,NOS,,170.0,0.0,170
-498.0,DVM,,meter,,,,,,,,,,DVM Multy function meter,,NOS,,2500.0,0.0,2500
-499.0,CHOCK,,CHOKE,,,,,,,,,,30KW 40HP 8A CHOKE ,,NOS,,13000.0,0.0,13000
-500.0,SFU,,BOS,,,,,,,,,,SWITCH FUSE UNIT (OPEN BOS),,NOS,AJITESH( L& T),12000.0,0.0,12000
-501.0,FUSE,,TUBE,,,,,,,,,,SFU FUSE TUBE,,NOS,AJITESH( L& T),1000.0,0.0,1000
-502.0,SI,,AO,,,,,,,,,,SIGNAL ISOLATOR (4-20MA for AI & AO),,NOS,ANUROOP MULTISPAN ,4175.0,32.0,2839
-503.0,metal BOX,,DLC,,,,,,,,,,FLAME PROOF PANEL ( DLC),,NOS,ANUROOP MULTISPAN ,25000.0,0.0,25000
-504.0,metal BOX,,PANEL,,,,,,,,,,22 KW 30HP 1 PUMP INDOOR PANEL ,,NOS,ANUROOP MULTISPAN ,20000.0,0.0,20000
-505.0,Choke,,AMP,,,,,,,,,, VFD CHOKE (20 HP 15KW  (CHOKE CURRENT  40 AMP)) ,,NOS,RAJ ELECTRICAL ,6785,0.0,6785
-506.0,Metal Box,,1.0,,,,,,,,,,Metal Box 1000*1500*350 (1.6) HMI PANEL(15KW 2 PUMP),,Nos,db ,22000.0,0.0,22000
-507.0,METAL BOX,,PANEL,,,,,,,,,,METAL BOX 750x650x350 (HMI 2PUMP)  5HP OUTDOOR PANEL ,,NOS,DB INDUSRIES,12500.0,0.0,12500
-508.0,SFU,,SIEMENS,,,,,,,,,,3KL8221-5TA00 125A SFU OPEN SIEMENS,,NOS,ANUROOP ,12245.0,45.0,6734.75
-509.0,CONTACTOR,,SIEMENS,,,,,,,,,, 9A 3P 24VDC NO CONTACTOR SIEMENS,,NOS,ANUROOP ,3300.0,45.0,1815
-510.0,CONTACTOR,,SIEMENS,,,,,,,,,,22A 3P 24VDC  CONTACTOR SIEMENS,,NOS,ANUROOP ,5480.0,45.0,3014
-511.0,CONTACTOR,,SIEMENS,,,,,,,,,, 38A 3P 24VDC CONTACTOR SIEMENS,,NOS,ANUROOP ,15190.0,45.0,8354.5
-512.0,MFM,,PLUS,,,,,,,,,,MULTY FUNCTION METER PM 130 EH PLUS,,NOS,ANUROOP ,20000.0,0.0,20000
-513.0,PANEL BOX,,D,,,,,,,,,, PANEL BOX 600 W * 600 H * 350 D,,NOS,DHUPPAR BROTHERS.,17000.0,0.0,17000
-514.0,METAL BOX ,,PANEL,,,,,,,,,,METAL BOX 450*350*250MM OUTDOOR PANEL ,,NOS,,9000.0,0.0,9000
-515.0,METAL BOX ,,PANEL,,,,,,,,,,METAL BOX 500*600*250MM OUTDOOR PANEL ,,NOS,,13000.0,0.0,13000
-516.0,RELAY,,SALZER,,,,,,,,,,MSP 2P 240 VAC 8PIN RELAY SALZER,,NOS,ANUROOP,283.0,0.0,283
-517.0,Metal Box,,1.0,,,,,,,,,,Metal box 550X 700X330 3 MULTY VFD ,,Nos,Anand Engineering,4700.0,0.0,4700
-518.0,Metal Box,,1.0,,,,,,,,,,Metal box 600X 700X300 2 VFD 4 PUMP,,Nos,Anand Engineering,15000.0,0.0,15000
-519.0,Metal Box,,1.0,,,,,,,,,,Metal box 1500X 2000X450 4 VFD 4 PUMP,,Nos,Anand Engineering,50000.0,0.0,50000
-520.0,Metal Box,,1.0,,,,,,,,,,Metal box 1700X 1500X450 3VFD 3 PUMP,,Nos,Anand Engineering,55000.0,0.0,55000
-521.0,Metal Box,,1.0,,,,,,,,,,Metal box 1700X 1500X450 2VFD 4 PUMP,,Nos,Anand Engineering,40000.0,0.0,40000
-522.0,Metal Box,,1.0,,,,,,,,,,Metal box 1700X 1500X450 2VFD 3PUMP,,Nos,Anand Engineering,30000.0,0.0,30000
-523.0,METAL BOX,,VFD,,,,,,,,,,900x600x300 - 3 PUMP HMI 1VFD,,NOS,DB INDUSTRIES ,9000.0,0.0,9000
-524.0,Metal Box,,1.0,,,,,,,,,,Metal Box 850*1200*350 (1.2mm) (11KW 3 PUMP) CONTROL PANEL BOX,,Nos,Anand Engineering,15000.0,0.0,15000
-525.0,Metal Box,,1.0,,,,,,,,,,Metal Box 850*1200*350 (1.2mm) HMI PANEL(11KW 3 PUMP),,Nos,Anand Engineering,11000.0,0.0,11000
-526.0,METAL BOX,,PUMP,,,,,,,,,,700x600x200 - 3 PUMP,,NOS,DB INDUSTRIES ,6000.0,0.0,6000
-527.0,METAL BOX,,PANEL,,,,,,,,,,3 COMPARTMENT CONTROL PANEL,,NOS,DB INDUSTRIES ,42000.0,0.0,42000
-528.0,VFD CHOKE,,1.0,,,,,,,,,,VFD CHOKE 20AMP,,Nos,,21440,0.0,21440
-529.0,METAL BOX,,PANEL,,,,,,,,,,4 COMPARTMENT CONTROL PANEL,,NOS,DB INDUSTRIES ,56000.0,0.0,56000
-530.0,Metal Box,,1.0,,,,,,,,,,Metal Box 800*1300*350 HMI PANEL 2PUMP 20HP 2VFD,,Nos,DB INDUSTRIES ,16000.0,0.0,16000
-531.0,Metal Box,,1.0,,,,,,,,,,METAL BOX 700*1000*320 HMI 3 PUMP 10PH WITH BYPASS,,Nos,DB INDUSTRIES ,15000.0,0.0,15000
-532.0,Metal Box,,1.0,,,,,,,,,,METAL BOX 800*1200*320 HMI 3 PUMP 10PH WITH BYPASS,,Nos,DB INDUSTRIES ,16000.0,0.0,16000
-533.0,Metal Box,,1.0,,,,,,,,,, 2 PUMP COMPARTMENTAL PANEL 1500x1000x400,,Nos,DB INDUSTRIES ,35000.0,0.0,35000
-534.0,Metal Box,,1.0,,,,,,,,,, 2 PUMP COMPARTMENTAL PANEL,,Nos,DB INDUSTRIES ,25000.0,0.0,25000
-535.0,Metal Box,,1.0,,,,,,,,,,Metal Box 800*1300*400 HMI PANEL 2PUMP 12.5HP 2VFD,,Nos,DB INDUSTRIES ,17000.0,0.0,17000
-536.0,METAL BOX,,1.0,,,,,,,,,,7.5HP AND 10 HP OUTDOOR PANEL BOX ,,Nos,DB INDUSTRIES ,8000.0,0.0,8000
-537.0,METAL BOX,,VFD,,,,,,,,,,1000(H)X850(W)X320(D) 15HP 4 VFD,,NOS,DB INDUSTRIES ,15000.0,0.0,15000
-538.0,METAL BOX,,VFD,,,,,,,,,,1500(H)X1000(W)X320(D) 15HP 6 VFD,,NOS,DB INDUSTRIES ,40000.0,0.0,40000
-539.0,METAL BOX,,VFD,,,,,,,,,,1500(H)X1000(W)X320(D) 20HP 3 VFD,,NOS,DB INDUSTRIES ,35000.0,0.0,35000
-540.0,METAL BOX,,VFD,,,,,,,,,,1500(H)X1000(W)X320(D) 25HP 3 VFD,,NOS,DB INDUSTRIES ,30000.0,0.0,30000
-541.0,METAL BOX,,VFD,,,,,,,,,,1500(H)X1000(W)X320(D) 35HP 2 VFD,,NOS,DB INDUSTRIES ,35000.0,0.0,35000
-542.0,METAL BOX,,BOX,,,,,,,,,,8 PUMP 4 VFD METAL BOX,,NOS,DB INDUSTRIES ,35000.0,0.0,35000
-543.0,,,CLOCK,,,,,,,,,,REAL TIME CLOCK ,,NOS,,2000.0,,2000.0
-544.0,PUSH BUTTON,,BUTTON,,,,,,,,,,START /STOP PUSH BUTTON,,NOS,,150.0,0.0,150
-545.0,,,PANEL,,,,,,,,,,CP2P_1HP_INDOOR_DLC_CONTROL_PANEL ,,NOS,SAARK,15200.0,0.0,15200
-546.0,,,PANEL,,,,,,,,,,CP2P_2HP_INDOOR_DLC_CONTROL_PANEL ,,NOS,SAARK,15200.0,0.0,15200
-547.0,VFD,,VFD,,,,,,,,,,FC-051 7.5KW 10 HP DANFOSS VFD,,NOS,DANFOSS,26375.0,0.0,26375
-548.0,METAL BOX,,VFD,,,,,,,,,,1500(H)X1000(W)X320(D)  6 VFD,,NOS,DB INDUSTRIES ,20000.0,0.0,20000
-549.0,METAL BOX,,PANEL,,,,,,,,,,METAL BOX 40 HP 3 VFD COMPARTMENT PANEL ,,NOS,DB INDUSTRIES ,40000.0,0.0,40000
-550.0,VFD,,V,,,,,,,,,,"55KW, 75HP 106AMP ,380-480V ",,NOS,INNODRIVES DANFOSS,143245.2,0.0,143245.2
-551.0,METAL BOX,,PANEL,,,,,,,,,,METAL BOX 75 HP 3 VFD COMPARTMENT PANEL ,,NOS,DB INDUSTRIES ,70000.0,0.0,70000
-552.0,Lugs,,,,,,,,,,,,LUGS 35 SQMM PIN COPPER,,Nos,Anuroop,60.0,0.0,60
-553.0,Lugs,,,,,,,,,,,,LUGS 35 SQMM RING COPPER,,Nos,Anuroop,90.0,30.0,63
-554.0,Wire,,,,,,,,,,,,WIRE 35 SQMM RED,,Meter,Thakur,1375.0,50.0,687.5
-555.0,Wire,,,,,,,,,,,,WIRE 35 SQMM YELLOW,,Meter,Thakur,1375.0,50.0,687.5
-556.0,Wire,,,,,,,,,,,,WIRE 35 SQMM BLUE,,Meter,Thakur,1375.0,50.0,687.5
-557.0,Wire,,,,,,,,,,,,WIRE 35 SQMM BLACK,,Meter,Thakur,1375.0,50.0,687.5
-558.0,Wire,,,,,,,,,,,,WIRE 35 SQMM GREY,,Meter,Thakur,1375.0,50.0,687.5
-559.0,MCCB,,MCCB 3P,,,,,,,,,,16A Three Pole MCCB,,NOS,25 kA,13420.0,60.0,5368
-560.0,MCCB,,MCCB 3P,,,,,,,,,,25A Three Pole MCCB,,NOS,25 kA,13420.0,60.0,5368
-561.0,MCCB,,MCCB 3P,,,,,,,,,,32A Three Pole MCCB,,NOS,25 kA,13420.0,60.0,5368
-562.0,MCCB,,MCCB 3P,,,,,,,,,,40A Three Pole MCCB,,NOS,25 kA,13420.0,60.0,5368
-563.0,MCCB,,MCCB 3P,,,,,,,,,,50A Three Pole MCCB,,NOS,25 kA,13420.0,60.0,5368
-564.0,MCCB,,MCCB 3P,,,,,,,,,,63A Three Pole MCCB,,NOS,25 kA,13420.0,60.0,5368
-565.0,MCCB,,MCCB 3P,,,,,,,,,,80A Three Pole MCCB,,NOS,25 kA,13420.0,60.0,5368
-566.0,MCCB,,MCCB 3P,,,,,,,,,,100A Three Pole MCCB,,NOS,25 kA,13420.0,60.0,5368
-567.0,MCCB,,MCCB 3P,,,,,,,,,,125A Three Pole MCCB,,NOS,25 kA,19750.0,60.0,7900
-568.0,MCCB,,MCCB 3P,,,,,,,,,,160A Three Pole MCCB,,NOS,25 kA,25780.0,60.0,10312
-569.0,MCCB,,MCCB 3P,,,,,,,,,,200A Three Pole MCCB,,NOS,25 kA,34120.0,60.0,13648
-570.0,MCCB,,MCCB 3P,,,,,,,,,,250A Three Pole MCCB,,NOS,25 kA,39930.0,60.0,15972
-571.0,MCCB,,MCCB 3P,,,,,,,,,,16A Four Pole MCCB,,NOS,25 kA,18680.0,60.0,7472
-572.0,MCCB,,MCCB 3P,,,,,,,,,,25A Four Pole MCCB,,NOS,25 kA,18680.0,60.0,7472
-573.0,MCCB,,MCCB 3P,,,,,,,,,,32A Four Pole MCCB,,NOS,25 kA,18680.0,60.0,7472
-574.0,MCCB,,MCCB 3P,,,,,,,,,,40A Four Pole MCCB,,NOS,25 kA,18680.0,60.0,7472
-575.0,MCCB,,MCCB 3P,,,,,,,,,,50A Four Pole MCCB,,NOS,25 kA,18680.0,60.0,7472
-576.0,MCCB,,MCCB 3P,,,,,,,,,,63A Four Pole MCCB,,NOS,25 kA,18680.0,60.0,7472
-577.0,MCCB,,MCCB 3P,,,,,,,,,,80A Four Pole MCCB,,NOS,25 kA,18680.0,60.0,7472
-578.0,MCCB,,MCCB 3P,,,,,,,,,,100A Four Pole MCCB,,NOS,25 kA,18680.0,60.0,7472
-579.0,MCCB,,MCCB 3P,,,,,,,,,,125A Four Pole MCCB,,NOS,25 kA,24170.0,60.0,9668
-580.0,MCCB,,MCCB 3P,,,,,,,,,,160A Four Pole MCCB,,NOS,25 kA,30890.0,60.0,12356
-581.0,MCCB,,MCCB 3P,,,,,,,,,,200A Four Pole MCCB,,NOS,25 kA,42650.0,60.0,17060
-582.0,MCCB,,MCCB 3P,,,,,,,,,,250A Four Pole MCCB,,NOS,25 kA,48850.0,60.0,19540
-583.0,MCCB,,MCCB 3P,,,,,,,,,,16A Three Pole MCCB,,NOS,36 kA,18380.0,60.0,7352
-584.0,MCCB,,MCCB 3P,,,,,,,,,,25A Three Pole MCCB,,NOS,36 kA,18380.0,60.0,7352
-585.0,MCCB,,MCCB 3P,,,,,,,,,,32A Three Pole MCCB,,NOS,36 kA,18380.0,60.0,7352
-586.0,MCCB,,MCCB 3P,,,,,,,,,,40A Three Pole MCCB,,NOS,36 kA,18380.0,60.0,7352
-587.0,MCCB,,MCCB 3P,,,,,,,,,,50A Three Pole MCCB,,NOS,36 kA,18380.0,60.0,7352
-588.0,MCCB,,MCCB 3P,,,,,,,,,,63A Three Pole MCCB,,NOS,36 kA,18380.0,60.0,7352
-589.0,MCCB,,MCCB 3P,,,,,,,,,,80A Three Pole MCCB,,NOS,36 kA,18380.0,60.0,7352
-590.0,MCCB,,MCCB 3P,,,,,,,,,,100A Three Pole MCCB,,NOS,36 kA,18380.0,60.0,7352
-591.0,MCCB,,MCCB 3P,,,,,,,,,,125A Three Pole MCCB,,NOS,36 kA,20380.0,60.0,8152
-592.0,MCCB,,MCCB 3P,,,,,,,,,,160A Three Pole MCCB,,NOS,36 kA,27000.0,60.0,10800
-593.0,MCCB,,MCCB 3P,,,,,,,,,,200A Three Pole MCCB,,NOS,36 kA,38890.0,60.0,15556
-594.0,MCCB,,MCCB 3P,,,,,,,,,,250A Three Pole MCCB,,NOS,36 kA,43140.0,60.0,17256
-595.0,MCCB,,MCCB 3P,,,,,,,,,,320A Three Pole MCCB,,NOS,36 kA,58970.0,60.0,23588
-596.0,MCCB,,MCCB 3P,,,,,,,,,,400A Three Pole MCCB,,NOS,36 kA,59320.0,60.0,23728
-597.0,MCCB,,MCCB 3P,,,,,,,,,,500A Three Pole MCCB,,NOS,36 kA,67250.0,60.0,26900
-598.0,MCCB,,MCCB 3P,,,,,,,,,,630A Three Pole MCCB,,NOS,36 kA,77000.0,60.0,30800
-599.0,MCCB,,MCCB 3P,,,,,,,,,,16A Four Pole MCCB,,NOS,36 kA,22940.0,60.0,9176
-600.0,MCCB,,MCCB 3P,,,,,,,,,,25A Four Pole MCCB,,NOS,36 kA,22940.0,60.0,9176
-601.0,MCCB,,MCCB 3P,,,,,,,,,,32A Four Pole MCCB,,NOS,36 kA,22940.0,60.0,9176
-602.0,MCCB,,MCCB 3P,,,,,,,,,,40A Four Pole MCCB,,NOS,36 kA,22940.0,60.0,9176
-603.0,MCCB,,MCCB 3P,,,,,,,,,,50A Four Pole MCCB,,NOS,36 kA,22940.0,60.0,9176
-604.0,MCCB,,MCCB 3P,,,,,,,,,,63A Four Pole MCCB,,NOS,36 kA,22940.0,60.0,9176
-605.0,MCCB,,MCCB 3P,,,,,,,,,,80A Four Pole MCCB,,NOS,36 kA,22940.0,60.0,9176
-606.0,MCCB,,MCCB 3P,,,,,,,,,,100A Four Pole MCCB,,NOS,36 kA,22940.0,60.0,9176
-607.0,MCCB,,MCCB 3P,,,,,,,,,,125A Four Pole MCCB,,NOS,36 kA,25310.0,60.0,10124
-608.0,MCCB,,MCCB 3P,,,,,,,,,,160A Four Pole MCCB,,NOS,36 kA,32170.0,60.0,12868
-609.0,MCCB,,MCCB 3P,,,,,,,,,,200A Four Pole MCCB,,NOS,36 kA,48190.0,60.0,19276
-610.0,MCCB,,MCCB 3P,,,,,,,,,,250A Four Pole MCCB,,NOS,36 kA,53380.0,60.0,21352
-611.0,MCCB,,MCCB 3P,,,,,,,,,,320A Four Pole MCCB,,NOS,36 kA,73170.0,60.0,29268
-612.0,MCCB,,MCCB 3P,,,,,,,,,,400A Four Pole MCCB,,NOS,36 kA,73820.0,60.0,29528
-613.0,MCCB,,MCCB 3P,,,,,,,,,,500A Four Pole MCCB,,NOS,36 kA,85170.0,60.0,34068
-614.0,MCCB,,MCCB 3P,,,,,,,,,,630A Four Pole MCCB,,NOS,36 kA,97180.0,60.0,38872
-615.0,MCCB,,MCCB 3P,,,,,,,,,,16A Three Pole MCCB,,NOS,50 kA,24920.0,60.0,9968
-616.0,MCCB,,MCCB 3P,,,,,,,,,,25A Three Pole MCCB,,NOS,50 kA,24920.0,60.0,9968
-617.0,MCCB,,MCCB 3P,,,,,,,,,,32A Three Pole MCCB,,NOS,50 kA,24920.0,60.0,9968
-618.0,MCCB,,MCCB 3P,,,,,,,,,,40A Three Pole MCCB,,NOS,50 kA,24920.0,60.0,9968
-619.0,MCCB,,MCCB 3P,,,,,,,,,,50A Three Pole MCCB,,NOS,50 kA,24920.0,60.0,9968
-620.0,MCCB,,MCCB 3P,,,,,,,,,,63A Three Pole MCCB,,NOS,50 kA,24920.0,60.0,9968
-621.0,MCCB,,MCCB 3P,,,,,,,,,,80A Three Pole MCCB,,NOS,50 kA,24920.0,60.0,9968
-622.0,MCCB,,MCCB 3P,,,,,,,,,,100A Three Pole MCCB,,NOS,50 kA,24920.0,60.0,9968
-623.0,MCCB,,MCCB 3P,,,,,,,,,,125A Three Pole MCCB,,NOS,50 kA,32400.0,60.0,12960
-624.0,MCCB,,MCCB 3P,,,,,,,,,,160A Three Pole MCCB,,NOS,50 kA,35060.0,60.0,14024
-625.0,MCCB,,MCCB 3P,,,,,,,,,,200A Three Pole MCCB,,NOS,50 kA,45370.0,60.0,18148
-626.0,MCCB,,MCCB 3P,,,,,,,,,,250A Three Pole MCCB,,NOS,50 kA,48790.0,60.0,19516
-627.0,MCCB,,MCCB 3P,,,,,,,,,,320A Three Pole MCCB,,NOS,50 kA,63890.0,60.0,25556
-628.0,MCCB,,MCCB 3P,,,,,,,,,,400A Three Pole MCCB,,NOS,50 kA,64360.0,60.0,25744
-629.0,MCCB,,MCCB 3P,,,,,,,,,,500A Three Pole MCCB,,NOS,50 kA,74620.0,60.0,29848
-630.0,MCCB,,MCCB 3P,,,,,,,,,,630A Three Pole MCCB,,NOS,50 kA,81290.0,60.0,32516
-631.0,MCCB,,MCCB 4P,,,,,,,,,,16A Four Pole MCCB,,NOS,50 kA,30640.0,60.0,12256
-632.0,MCCB,,MCCB 4P,,,,,,,,,,25A Four Pole MCCB,,NOS,50 kA,30640.0,60.0,12256
-633.0,MCCB,,MCCB 4P,,,,,,,,,,32A Four Pole MCCB,,NOS,50 kA,30640.0,60.0,12256
-634.0,MCCB,,MCCB 4P,,,,,,,,,,40A Four Pole MCCB,,NOS,50 kA,30640.0,60.0,12256
-635.0,MCCB,,MCCB 4P,,,,,,,,,,50A Four Pole MCCB,,NOS,50 kA,30640.0,60.0,12256
-636.0,MCCB,,MCCB 4P,,,,,,,,,,63A Four Pole MCCB,,NOS,50 kA,30640.0,60.0,12256
-637.0,MCCB,,MCCB 4P,,,,,,,,,,80A Four Pole MCCB,,NOS,50 kA,30640.0,60.0,12256
-638.0,MCCB,,MCCB 4P,,,,,,,,,,100A Four Pole MCCB,,NOS,50 kA,30640.0,60.0,12256
-639.0,MCCB,,MCCB 4P,,,,,,,,,,125A Four Pole MCCB,,NOS,50 kA,35450.0,60.0,14180
-640.0,MCCB,,MCCB 4P,,,,,,,,,,160A Four Pole MCCB,,NOS,50 kA,41750.0,60.0,16700
-641.0,MCCB,,MCCB 4P,,,,,,,,,,200A Four Pole MCCB,,NOS,50 kA,57000.0,60.0,22800
-642.0,MCCB,,MCCB 4P,,,,,,,,,,250A Four Pole MCCB,,NOS,50 kA,60110.0,60.0,24044
-643.0,MCCB,,MCCB 4P,,,,,,,,,,320A Four Pole MCCB,,NOS,50 kA,78980.0,60.0,31592
-644.0,MCCB,,MCCB 4P,,,,,,,,,,400A Four Pole MCCB,,NOS,50 kA,80430.0,60.0,32172
-645.0,MCCB,,MCCB 4P,,,,,,,,,,500A Four Pole MCCB,,NOS,50 kA,94170.0,60.0,37668
-646.0,MCCB,,MCCB 4P,,,,,,,,,,630A Four Pole MCCB,,NOS,50 kA,106420.0,60.0,42568
-647.0,METAL BOX,,MB,,,,,,,,,,DLC OUTDOOR BOX 2 PUMP ,,NOS,,3000.0,0.0,3000
-648.0,MPCB,,MPCB 3P,,,,,,,,,,MPCB 6A 3POLE,,Nos,Satyam,2345.0,58.0,984.9
-649.0,MPCB,,MPCB 3P,,,,,,,,,,MPCB 9A 3POLE,,Nos,Satyam,2405.0,58.0,1010.1
-650.0,MPCB,,MPCB 3P,,,,,,,,,,MPCB 12A 3POLE,,Nos,Satyam,2750.0,58.0,1155
-651.0,MPCB,,MPCB 3P,,,,,,,,,,MPCB 18A 3POLE,,Nos,Satyam,3170.0,58.0,1331.4
-652.0,MPCB,,MPCB 3P,,,,,,,,,,MPCB 25A 3POLE,,Nos,Satyam,4315.0,58.0,1812.3
-653.0,MPCB,,MPCB 3P,,,,,,,,,,MPCB 32A 3POLE,,Nos,Satyam,9045.0,58.0,3798.9
-654.0,MPCB,,MPCB 3P,,,,,,,,,,MPCB 38A 3POLE,,Nos,Satyam,10550.0,58.0,4431
-655.0,MPCB,,MPCB 3P,,,,,,,,,,MPCB 40A 3POLE,,Nos,Satyam,14160.0,58.0,5947.2
-656.0,MPCB,,MPCB 3P,,,,,,,,,,MPCB 50A 3POLE,,Nos,Satyam,17230.0,58.0,7236.6
-657.0,MPCB,,MPCB 3P,,,,,,,,,,MPCB 65A 3POLE,,Nos,Satyam,23345.0,58.0,9804.9
-658.0,MPCB,,MPCB 3P,,,,,,,,,,MPCB 80A 3POLE,,Nos,Satyam,30365.0,58.0,12753.3
-659.0,MPCB,,MPCB 3P,,,,,,,,,,MPCB 95A 3POLE,,Nos,Satyam,36385.0,58.0,15281.7
-660.0,VFD,,GROUNFOSS,,,,,,,,,,15KW VFD GROUNFOSS,,Nos,Satyam,35528.0,0.0,35528
-661.0,VFD,,GROUNFOSS,,,,,,,,,,22KW VFD GROUNFOSS,,Nos,Satyam,51588.0,0.0,51588
-662.0,VFD,,FC,,,,,,,,,,"15KW,20HP,380-480V FC-51",,NOS,INNODRIVES DANFOSS,49636.4,0.0,49636.4
-663.0,METAL BOX ,,BOX,,,,,,,,,,400 X 600 X 250 MM UPTO 5 HP METAL BOX ,,NOS,,3000.0,0.0,3000
-664.0,VFD,,DELTA ME,,,,,,,,,," 230V, 0.4KW / 0.5HP, Inbuilt detachable display unit",,NOS,DELTA ME SERISE VFD2A8MS21ANSAA,9326.1,0.0,9326.1
-665.0,VFD,,DELTA ME,,,,,,,,,,"230V, 0.75KW / 0.1HP, Inbuilt detachable display unit",,NOS,DELTA ME SERISE VFD4A8MS21ANSAA,10692,0.0,10692
-666.0,VFD,,DELTA ME,,,,,,,,,," 230V, 1.5KW / 2HP, Inbuilt detachable display unit",,NOS,DELTA ME SERISE VFD7A5MS21ANSAA,10891.65,0.0,10891.65
-667.0,VFD,,DELTA ME,,,,,,,,,," 230V, 2.2KW / 3HP, Inbuilt detachable display unit",,NOS,DELTA ME SERISE VFD11AMS21ANSAA,12325.95,0.0,12325.95
-668.0,VFD,,DELTA ME,,,,,,,,,," 415V, 4KW / 5HP, Inbuilt detachable display unit",,NOS,DELTA ME SERISE VFD9A0MS43ANSAA,14771.4,0.0,14771.4
-669.0,VFD,,DELTA ME,,,,,,,,,," 415V, 5.5KW / 7.5HP, Inbuilt detachable display unit",,NOS,DELTA ME SERISE VFD13AMS43ANSAA,18274.2,0.0,18274.2
-670.0,VFD,,DELTA ME,,,,,,,,,," 415V, 7.5KW / 10HP,  Inbuilt detachable display unit",,NOS,DELTA ME SERISE VFD17AMS43ANSAA,20843.55,0.0,20843.55
-671.0,METAL BOX,,DEWATERING,,,,,,,,,,METAL BOX FOR DEWATERING ,,NOS,DB ,1500.0,0.0,1500
-672.0,CT COIL,,1.0,,,,,,,,,,300 AMP/5 CT COIL (1 HOLE) ,,Nos,,5000.0,47.0,2650
-673.0,CT COIL,,1.0,,,,,,,,,,TERMINAL BLOCK ,,Nos,,200.0,0.0,200
-674.0,CONTACTOR,,XX,,,,,,,,,,CONTACTOR 120 AMP M7,,Nos,Satyam,43445.0,68.0,13902.4
-675.0,METAL BOX,,PANEL,,,,,,,,,,METAL BOX 100 HP 3 VFD COMPARTMENT PANEL ,,NOS,DB INDUSTRIES ,70000.0,0.0,70000
-676.0,,,TRANSFORMER,,,,,,,,,,ISOLATION TRANSFORMER,,NOS,DB INDUSTRIES ,2000.0,0.0,2000
-677.0,,,,,,,,,,,,,,,,,,,
-678.0,,,,,,,,,,,,,,,,,,,
-679.0,,,,,,,,,,,,,,,,,,,
-680.0,,,,,,,,,,,,,,,,,,,
-681.0,,,,,,,,,,,,,,,,,,,
-682.0,,,,,,,,,,,,,,,,,,,
-683.0,,,,,,,,,,,,,,,,,,,
-684.0,,,,,,,,,,,,,,,,,,,
-685.0,,,,,,,,,,,,,,,,,,,
-686.0,,,,,,,,,,,,,,,,,,,
-687.0,,,,,,,,,,,,,,,,,,,
-688.0,,,,,,,,,,,,,,,,,,,
-689.0,,,,,,,,,,,,,,,,,,,
-690.0,,,,,,,,,,,,,,,,,,,
-691.0,,,,,,,,,,,,,,,,,,,
-692.0,,,,,,,,,,,,,,,,,,,
-693.0,,,,,,,,,,,,,,,,,,,
-694.0,,,,,,,,,,,,,,,,,,,
-695.0,,,,,,,,,,,,,,,,,,,
-696.0,,,,,,,,,,,,,,,,,,,
-697.0,,,,,,,,,,,,,,,,,,,
-698.0,,,,,,,,,,,,,,,,,,,
-699.0,,,,,,,,,,,,,,,,,,,
-700.0,,,,,,,,,,,,,,,,,,,
-701.0,,,,,,,,,,,,,,,,,,,
-702.0,,,,,,,,,,,,,,,,,,,
-703.0,,,,,,,,,,,,,,,,,,,
-704.0,,,,,,,,,,,,,,,,,,,
-705.0,,,,,,,,,,,,,,,,,,,
-706.0,,,,,,,,,,,,,,,,,,,
-707.0,,,,,,,,,,,,,,,,,,,
-708.0,,,,,,,,,,,,,,,,,,,
-709.0,,,,,,,,,,,,,,,,,,,
-710.0,,,,,,,,,,,,,,,,,,,
-711.0,,,,,,,,,,,,,,,,,,,
-712.0,,,,,,,,,,,,,,,,,,,
-713.0,,,,,,,,,,,,,,,,,,,
-714.0,,,,,,,,,,,,,,,,,,,
-715.0,,,,,,,,,,,,,,,,,,,
-716.0,,,,,,,,,,,,,,,,,,,
-717.0,,,,,,,,,,,,,,,,,,,
-718.0,,,,,,,,,,,,,,,,,,,
-719.0,,,,,,,,,,,,,,,,,,,
-720.0,,,,,,,,,,,,,,,,,,,
-721.0,,,,,,,,,,,,,,,,,,,
-722.0,,,,,,,,,,,,,,,,,,,
-723.0,,,,,,,,,,,,,,,,,,,
-724.0,,,,,,,,,,,,,,,,,,,
-725.0,,,,,,,,,,,,,,,,,,,
-726.0,,,,,,,,,,,,,,,,,,,
-727.0,,,,,,,,,,,,,,,,,,,
-728.0,,,,,,,,,,,,,,,,,,,
-729.0,,,,,,,,,,,,,,,,,,,
-730.0,,,,,,,,,,,,,,,,,,,
-731.0,,,,,,,,,,,,,,,,,,,
-732.0,,,,,,,,,,,,,,,,,,,
-733.0,,,,,,,,,,,,,,,,,,,
-734.0,,,,,,,,,,,,,,,,,,,
-735.0,,,,,,,,,,,,,,,,,,,
-736.0,,,,,,,,,,,,,,,,,,,
-737.0,,,,,,,,,,,,,,,,,,,
-738.0,,,,,,,,,,,,,,,,,,,
-739.0,,,,,,,,,,,,,,,,,,,
-740.0,,,,,,,,,,,,,,,,,,,
-741.0,,,,,,,,,,,,,,,,,,,
-742.0,,,,,,,,,,,,,,,,,,,
-743.0,,,,,,,,,,,,,,,,,,,
-744.0,,,,,,,,,,,,,,,,,,,
-745.0,,,,,,,,,,,,,,,,,,,
-746.0,,,,,,,,,,,,,,,,,,,
-747.0,,,,,,,,,,,,,,,,,,,
-748.0,,,,,,,,,,,,,,,,,,,
-749.0,,,,,,,,,,,,,,,,,,,
-750.0,,,,,,,,,,,,,,,,,,,
-751.0,,,,,,,,,,,,,,,,,,,
-752.0,,,,,,,,,,,,,,,,,,,
-753.0,,,,,,,,,,,,,,,,,,,
-754.0,,,,,,,,,,,,,,,,,,,
-755.0,,,,,,,,,,,,,,,,,,,
-756.0,,,,,,,,,,,,,,,,,,,
-757.0,,,,,,,,,,,,,,,,,,,
-758.0,,,,,,,,,,,,,,,,,,,
-759.0,,,,,,,,,,,,,,,,,,,
-760.0,,,,,,,,,,,,,,,,,,,
-761.0,,,,,,,,,,,,,,,,,,,
-762.0,,,,,,,,,,,,,,,,,,,
-763.0,,,,,,,,,,,,,,,,,,,
-764.0,,,,,,,,,,,,,,,,,,,
-765.0,,,,,,,,,,,,,,,,,,,
-766.0,,,,,,,,,,,,,,,,,,,
-767.0,,,,,,,,,,,,,,,,,,,
-768.0,,,,,,,,,,,,,,,,,,,
-769.0,,,,,,,,,,,,,,,,,,,
-770.0,,,,,,,,,,,,,,,,,,,
-771.0,,,,,,,,,,,,,,,,,,,
-772.0,,,,,,,,,,,,,,,,,,,
-773.0,,,,,,,,,,,,,,,,,,,
-774.0,,,,,,,,,,,,,,,,,,,
-775.0,,,,,,,,,,,,,,,,,,,
-776.0,,,,,,,,,,,,,,,,,,,
-777.0,,,,,,,,,,,,,,,,,,,
-778.0,,,,,,,,,,,,,,,,,,,
-779.0,,,,,,,,,,,,,,,,,,,
-780.0,,,,,,,,,,,,,,,,,,,
-781.0,,,,,,,,,,,,,,,,,,,
-782.0,,,,,,,,,,,,,,,,,,,
-783.0,,,,,,,,,,,,,,,,,,,
-784.0,,,,,,,,,,,,,,,,,,,
-785.0,,,,,,,,,,,,,,,,,,,
-786.0,,,,,,,,,,,,,,,,,,,
-787.0,,,,,,,,,,,,,,,,,,,
-788.0,,,,,,,,,,,,,,,,,,,
-789.0,,,,,,,,,,,,,,,,,,,
-790.0,,,,,,,,,,,,,,,,,,,
-791.0,,,,,,,,,,,,,,,,,,,
-792.0,,,,,,,,,,,,,,,,,,,
-793.0,,,,,,,,,,,,,,,,,,,
-794.0,,,,,,,,,,,,,,,,,,,
-795.0,,,,,,,,,,,,,,,,,,,
-796.0,,,,,,,,,,,,,,,,,,,
-797.0,,,,,,,,,,,,,,,,,,,
-798.0,,,,,,,,,,,,,,,,,,,
-799.0,,,,,,,,,,,,,,,,,,,
-800.0,,,,,,,,,,,,,,,,,,,
-801.0,,,,,,,,,,,,,,,,,,,
-802.0,,,,,,,,,,,,,,,,,,,
-803.0,,,,,,,,,,,,,,,,,,,
-804.0,,,,,,,,,,,,,,,,,,,
-805.0,,,,,,,,,,,,,,,,,,,
-806.0,,,,,,,,,,,,,,,,,,,
-807.0,,,,,,,,,,,,,,,,,,,
-808.0,,,,,,,,,,,,,,,,,,,
-809.0,,,,,,,,,,,,,,,,,,,
-810.0,,,,,,,,,,,,,,,,,,,
-811.0,,,,,,,,,,,,,,,,,,,
-812.0,,,,,,,,,,,,,,,,,,,
-813.0,,,,,,,,,,,,,,,,,,,
-814.0,,,,,,,,,,,,,,,,,,,
-815.0,,,,,,,,,,,,,,,,,,,
-816.0,,,,,,,,,,,,,,,,,,,
-817.0,,,,,,,,,,,,,,,,,,,
-818.0,,,,,,,,,,,,,,,,,,,
-819.0,,,,,,,,,,,,,,,,,,,
-820.0,,,,,,,,,,,,,,,,,,,
-821.0,,,,,,,,,,,,,,,,,,,
-822.0,,,,,,,,,,,,,,,,,,,
-823.0,,,,,,,,,,,,,,,,,,,
-824.0,,,,,,,,,,,,,,,,,,,
-825.0,,,,,,,,,,,,,,,,,,,
-826.0,,,,,,,,,,,,,,,,,,,
-827.0,,,,,,,,,,,,,,,,,,,
-828.0,,,,,,,,,,,,,,,,,,,
-829.0,,,,,,,,,,,,,,,,,,,
-830.0,,,,,,,,,,,,,,,,,,,
-831.0,,,,,,,,,,,,,,,,,,,
-832.0,,,,,,,,,,,,,,,,,,,
-833.0,,,,,,,,,,,,,,,,,,,
-834.0,,,,,,,,,,,,,,,,,,,
-835.0,,,,,,,,,,,,,,,,,,,
-836.0,,,,,,,,,,,,,,,,,,,
-837.0,,,,,,,,,,,,,,,,,,,
-838.0,,,,,,,,,,,,,,,,,,,
-839.0,,,,,,,,,,,,,,,,,,,
-840.0,,,,,,,,,,,,,,,,,,,
-841.0,,,,,,,,,,,,,,,,,,,
-842.0,,,,,,,,,,,,,,,,,,,
-843.0,,,,,,,,,,,,,,,,,,,
-844.0,,,,,,,,,,,,,,,,,,,
-845.0,,,,,,,,,,,,,,,,,,,
-846.0,,,,,,,,,,,,,,,,,,,
-847.0,,,,,,,,,,,,,,,,,,,
-848.0,,,,,,,,,,,,,,,,,,,
-849.0,,,,,,,,,,,,,,,,,,,
-850.0,,,,,,,,,,,,,,,,,,,
-851.0,,,,,,,,,,,,,,,,,,,
-852.0,,,,,,,,,,,,,,,,,,,
-853.0,,,,,,,,,,,,,,,,,,,
-854.0,,,,,,,,,,,,,,,,,,,
-855.0,,,,,,,,,,,,,,,,,,,
-856.0,,,,,,,,,,,,,,,,,,,
-857.0,,,,,,,,,,,,,,,,,,,
-858.0,,,,,,,,,,,,,,,,,,,
-859.0,,,,,,,,,,,,,,,,,,,
-860.0,,,,,,,,,,,,,,,,,,,
-861.0,,,,,,,,,,,,,,,,,,,
-862.0,,,,,,,,,,,,,,,,,,,
-863.0,,,,,,,,,,,,,,,,,,,
-864.0,,,,,,,,,,,,,,,,,,,
-865.0,,,,,,,,,,,,,,,,,,,
-866.0,,,,,,,,,,,,,,,,,,,
-867.0,,,,,,,,,,,,,,,,,,,
-868.0,,,,,,,,,,,,,,,,,,,
-869.0,,,,,,,,,,,,,,,,,,,
-870.0,,,,,,,,,,,,,,,,,,,
-871.0,,,,,,,,,,,,,,,,,,,
-872.0,,,,,,,,,,,,,,,,,,,
-873.0,,,,,,,,,,,,,,,,,,,
-874.0,,,,,,,,,,,,,,,,,,,
-875.0,,,,,,,,,,,,,,,,,,,
-876.0,,,,,,,,,,,,,,,,,,,
-877.0,,,,,,,,,,,,,,,,,,,
-878.0,,,,,,,,,,,,,,,,,,,
-879.0,,,,,,,,,,,,,,,,,,,
-880.0,,,,,,,,,,,,,,,,,,,
-881.0,,,,,,,,,,,,,,,,,,,
-882.0,,,,,,,,,,,,,,,,,,,
-883.0,,,,,,,,,,,,,,,,,,,
-884.0,,,,,,,,,,,,,,,,,,,
-885.0,,,,,,,,,,,,,,,,,,,
-886.0,,,,,,,,,,,,,,,,,,,
-887.0,,,,,,,,,,,,,,,,,,,
-888.0,,,,,,,,,,,,,,,,,,,
-889.0,,,,,,,,,,,,,,,,,,,
-890.0,,,,,,,,,,,,,,,,,,,
-891.0,,,,,,,,,,,,,,,,,,,
-892.0,,,,,,,,,,,,,,,,,,,
-893.0,,,,,,,,,,,,,,,,,,,
-894.0,,,,,,,,,,,,,,,,,,,
-895.0,,,,,,,,,,,,,,,,,,,
-896.0,,,,,,,,,,,,,,,,,,,
-897.0,,,,,,,,,,,,,,,,,,,
-898.0,,,,,,,,,,,,,,,,,,,
-899.0,,,,,,,,,,,,,,,,,,,
-900.0,,,,,,,,,,,,,,,,,,,
-901.0,,,,,,,,,,,,,,,,,,,
-902.0,,,,,,,,,,,,,,,,,,,
-903.0,,,,,,,,,,,,,,,,,,,
-904.0,,,,,,,,,,,,,,,,,,,
-905.0,,,,,,,,,,,,,,,,,,,
-906.0,,,,,,,,,,,,,,,,,,,
-907.0,,,,,,,,,,,,,,,,,,,
-908.0,,,,,,,,,,,,,,,,,,,
-909.0,,,,,,,,,,,,,,,,,,,
-910.0,,,,,,,,,,,,,,,,,,,
-911.0,,,,,,,,,,,,,,,,,,,
-912.0,,,,,,,,,,,,,,,,,,,
-913.0,,,,,,,,,,,,,,,,,,,
-914.0,,,,,,,,,,,,,,,,,,,
-915.0,,,,,,,,,,,,,,,,,,,
-916.0,,,,,,,,,,,,,,,,,,,
-917.0,,,,,,,,,,,,,,,,,,,
-918.0,,,,,,,,,,,,,,,,,,,
-919.0,,,,,,,,,,,,,,,,,,,
-920.0,,,,,,,,,,,,,,,,,,,
-921.0,,,,,,,,,,,,,,,,,,,
-922.0,,,,,,,,,,,,,,,,,,,
-923.0,,,,,,,,,,,,,,,,,,,
-924.0,,,,,,,,,,,,,,,,,,,
-925.0,,,,,,,,,,,,,,,,,,,
-926.0,,,,,,,,,,,,,,,,,,,
-927.0,,,,,,,,,,,,,,,,,,,
-928.0,,,,,,,,,,,,,,,,,,,
-929.0,,,,,,,,,,,,,,,,,,,
-930.0,,,,,,,,,,,,,,,,,,,
-931.0,,,,,,,,,,,,,,,,,,,
-932.0,,,,,,,,,,,,,,,,,,,
-933.0,,,,,,,,,,,,,,,,,,,
-934.0,,,,,,,,,,,,,,,,,,,
-935.0,,,,,,,,,,,,,,,,,,,
-936.0,,,,,,,,,,,,,,,,,,,
-937.0,,,,,,,,,,,,,,,,,,,
-938.0,,,,,,,,,,,,,,,,,,,
-939.0,,,,,,,,,,,,,,,,,,,
-940.0,,,,,,,,,,,,,,,,,,,
-941.0,,,,,,,,,,,,,,,,,,,
-942.0,,,,,,,,,,,,,,,,,,,
-943.0,,,,,,,,,,,,,,,,,,,
-944.0,,,,,,,,,,,,,,,,,,,
-945.0,,,,,,,,,,,,,,,,,,,
-946.0,,,,,,,,,,,,,,,,,,,
-947.0,,,,,,,,,,,,,,,,,,,
-948.0,,,,,,,,,,,,,,,,,,,
-949.0,,,,,,,,,,,,,,,,,,,
-950.0,,,,,,,,,,,,,,,,,,,
-951.0,,,,,,,,,,,,,,,,,,,
-952.0,,,,,,,,,,,,,,,,,,,
-953.0,,,,,,,,,,,,,,,,,,,
-954.0,,,,,,,,,,,,,,,,,,,
-955.0,,,,,,,,,,,,,,,,,,,
-956.0,,,,,,,,,,,,,,,,,,,
-957.0,,,,,,,,,,,,,,,,,,,
-958.0,,,,,,,,,,,,,,,,,,,
-959.0,,,,,,,,,,,,,,,,,,,
-960.0,,,,,,,,,,,,,,,,,,,
-961.0,,,,,,,,,,,,,,,,,,,
-962.0,,,,,,,,,,,,,,,,,,,
-963.0,,,,,,,,,,,,,,,,,,,
-964.0,,,,,,,,,,,,,,,,,,,
-965.0,,,,,,,,,,,,,,,,,,,
-966.0,,,,,,,,,,,,,,,,,,,
-967.0,,,,,,,,,,,,,,,,,,,
-968.0,,,,,,,,,,,,,,,,,,,
-969.0,,,,,,,,,,,,,,,,,,,
-970.0,,,,,,,,,,,,,,,,,,,
-971.0,,,,,,,,,,,,,,,,,,,
-972.0,,,,,,,,,,,,,,,,,,,
-973.0,,,,,,,,,,,,,,,,,,,
-974.0,,,,,,,,,,,,,,,,,,,
-975.0,,,,,,,,,,,,,,,,,,,
-976.0,,,,,,,,,,,,,,,,,,,
-977.0,,,,,,,,,,,,,,,,,,,
-978.0,,,,,,,,,,,,,,,,,,,
-979.0,,,,,,,,,,,,,,,,,,,
-980.0,,,,,,,,,,,,,,,,,,,
-981.0,,,,,,,,,,,,,,,,,,,
-982.0,,,,,,,,,,,,,,,,,,,
-983.0,,,,,,,,,,,,,,,,,,,
-984.0,,,,,,,,,,,,,,,,,,,
-985.0,,,,,,,,,,,,,,,,,,,
-986.0,,,,,,,,,,,,,,,,,,,
-987.0,,,,,,,,,,,,,,,,,,,
-988.0,,,,,,,,,,,,,,,,,,,
-989.0,,,,,,,,,,,,,,,,,,,
-990.0,,,,,,,,,,,,,,,,,,,
-991.0,,,,,,,,,,,,,,,,,,,
-992.0,,,,,,,,,,,,,,,,,,,
-993.0,,,,,,,,,,,,,,,,,,,
-994.0,,,,,,,,,,,,,,,,,,,
-995.0,,,,,,,,,,,,,,,,,,,
-996.0,,,,,,,,,,,,,,,,,,,
-997.0,,,,,,,,,,,,,,,,,,,
-998.0,,,,,,,,,,,,,,,,,,,
-999.0,,,,,,,,,,,,,,,,,,,
+﻿SKU,Category,make,SUB Category Type 1,SUB Category Type 2,SUB Category Type 3,SUB Category Type 4,SUB Category Type 5,SUB Category Type 6,SUB Category Type 7,SUB Category Type 8,SUB Category Type 9,SUB Category Type 10,Item Name,CAPACITY,Unit,Supplier,List Price,DP Discount,DP,LP Discount,LP
+23.0,MCB,Schneider,1P,1.0,C Curve,A9N1P01CIN,,abc,,,,18/09/2026,MCB 1P 1A,1.0,Nos,Satyam,1014.0,70.0,304.2,,
+24.0,MCB,Schneider,1P,1.0,C Curve,A9N1P02CIN,,,,,,18/09/2026,MCB 1P 2A,2.0,Nos,Satyam,1014.0,70.0,304.2,,
+25.0,MCB,Schneider,1P,1.0,C Curve,A9N1P03CIN,,,,,,18/09/2026,MCB 1P 3A,3.0,Nos,Satyam,1014.0,70.0,304.2,,
+26.0,MCB,Schneider,1P,1.0,C Curve,A9N1P04CIN,,,,,,18/09/2026,MCB 1P 4A,4.0,Nos,Satyam,1014.0,70.0,304.2,,
+27.0,MCB,Schneider,1P,1.0,C Curve,A9N1P06CIN,,,,,,18/09/2026,MCB 1P 6A,6.0,Nos,Satyam,601.0,70.0,180.3,,
+28.0,MCB,Schneider,1P,1.0,C Curve,A9N1P10CIN,,,,,,18/09/2026,MCB 1P 10A,10.0,Nos,Satyam,601.0,70.0,180.3,,
+29.0,MCB,Schneider,1P,1.0,C Curve,A9N1P16CIN,,,,,,18/09/2026,MCB 1P 16A,16.0,Nos,Satyam,601.0,70.0,180.3,,
+30.0,MCB,Schneider,1P,1.0,C Curve,A9N1P20CIN,,,,,,18/09/2026,MCB 1P 20A,20.0,Nos,Satyam,601.0,70.0,180.3,,
+31.0,MCB,Schneider,1P,1.0,C Curve,A9N1P25CIN,,,,,,18/09/2026,MCB 1P 25A,25.0,Nos,Satyam,601.0,70.0,180.3,,
+32.0,MCB,Schneider,1P,1.0,C Curve,A9N1P32CIN,,,,,,18/09/2026,MCB 1P 32A,32.0,Nos,Satyam,601.0,70.0,180.3,,
+33.0,MCB,Schneider,1P,1.0,C Curve,A9N1P40CIN,,,,,,18/09/2026,MCB 1P 40A,40.0,Nos,Satyam,1435.0,70.0,430.5,,
+34.0,MCB,Schneider,1P,1.0,C Curve,A9N1P50CIN,,,,,,18/09/2026,MCB 1P 50A,50.0,Nos,Satyam,1435.0,70.0,430.5,,
+35.0,MCB,Schneider,1P,1.0,C Curve,A9N1P63CIN,,,,,,18/09/2026,MCB 1P 63A,63.0,Nos,Satyam,1454.0,70.0,436.2,,
+36.0,MCB,Schneider,2P,2.0,C Curve,A9N2P01CIN,,,,,,18/09/2026,MCB 2P 1A,1.0,Nos,Satyam,2879.0,70.0,863.7,,
+37.0,MCB,Schneider,2P,2.0,C Curve,A9N2P02CIN,,,,,,18/09/2026,MCB 2P 2A,2.0,Nos,Satyam,2879.0,70.0,863.7,,
+38.0,MCB,Schneider,2P,2.0,C Curve,A9N2P03CIN,,,,,,18/09/2026,MCB 2P 3A,3.0,Nos,Satyam,2879.0,70.0,863.7,,
+39.0,MCB,Schneider,2P,2.0,C Curve,A9N2P04CIN,,,,,,18/09/2026,MCB 2P 4A,4.0,Nos,Satyam,2879.0,70.0,863.7,,
+40.0,MCB,Schneider,2P,2.0,C Curve,A9N2P06CIN,,,,,,18/09/2026,MCB 2P 6A,6.0,Nos,Satyam,2078.0,70.0,623.4,,
+41.0,MCB,Schneider,2P,2.0,C Curve,A9N2P10CIN,,,,,,18/09/2026,MCB 2P 10A,10.0,Nos,Satyam,2078.0,70.0,623.4,,
+42.0,MCB,Schneider,2P,2.0,C Curve,A9N2P16CIN,,,,,,18/09/2026,MCB 2P 16A,16.0,Nos,Satyam,2078.0,70.0,623.4,,
+43.0,MCB,Schneider,2P,2.0,C Curve,A9N2P20CIN,,,,,,18/09/2026,MCB 2P 20A,20.0,Nos,Satyam,2078.0,70.0,623.4,,
+44.0,MCB,Schneider,2P,2.0,C Curve,A9N2P25CIN,,,,,,18/09/2026,MCB 2P 25A,25.0,Nos,Satyam,2078.0,70.0,623.4,,
+45.0,MCB,Schneider,2P,2.0,C Curve,A9N2P32CIN,,,,,,18/09/2026,MCB 2P 32A,32.0,Nos,Satyam,2078.0,70.0,623.4,,
+46.0,MCB,Schneider,2P,2.0,C Curve,A9N2P40CIN,,,,,,18/09/2026,MCB 2P 40A,40.0,Nos,Satyam,3346.0,70.0,1003.8,,
+47.0,MCB,Schneider,2P,2.0,C Curve,A9N2P50CIN,,,,,,18/09/2026,MCB 2P 50A,50.0,Nos,Satyam,3346.0,70.0,1003.8,,
+48.0,MCB,Schneider,2P,2.0,C Curve,A9N2P63CIN,,,,,,18/09/2026,MCB 2P 63A,63.0,Nos,Satyam,3378.0,70.0,1013.4,,
+49.0,MCB,Schneider,3P,3.0,C Curve,A9N3P01CIN,,,,,,18/09/2026,MCB 3P 1A,1.0,Nos,Satyam,4543.0,70.0,1362.9,,
+50.0,MCB,Schneider,3P,3.0,C Curve,A9N3P02CIN,,,,,,18/09/2026,MCB 3P 2A,2.0,Nos,Satyam,4543.0,70.0,1362.9,,
+51.0,MCB,Schneider,3P,3.0,C Curve,A9N3P03CIN,,,,,,18/09/2026,MCB 3P 3A,3.0,Nos,Satyam,4543.0,70.0,1362.9,,
+52.0,MCB,Schneider,3P,3.0,C Curve,A9N3P04CIN,,,,,,18/09/2026,MCB 3P 4A,4.0,Nos,Satyam,4543.0,70.0,1362.9,,
+53.0,MCB,Schneider,3P,3.0,C Curve,A9N3P06CIN,,,,,,18/09/2026,MCB 3P 6A,6.0,Nos,Satyam,3449.0,70.0,1034.7,,
+54.0,MCB,Schneider,3P,3.0,C Curve,A9N3P10CIN,,,,,,18/09/2026,MCB 3P 10A,10.0,Nos,Satyam,3449.0,70.0,1034.7,,
+55.0,MCB,Schneider,3P,3.0,C Curve,A9N3P16CIN,,,,,,18/09/2026,MCB 3P 16A,16.0,Nos,Satyam,3449.0,70.0,1034.7,,
+56.0,MCB,Schneider,3P,3.0,C Curve,A9N3P20CIN,,,,,,18/09/2026,MCB 3P 20A,20.0,Nos,Satyam,3449.0,70.0,1034.7,,
+57.0,MCB,Schneider,3P,3.0,C Curve,A9N3P25CIN,,,,,,18/09/2026,MCB 3P 25A,25.0,Nos,Satyam,3449.0,70.0,1034.7,,
+58.0,MCB,Schneider,3P,3.0,C Curve,A9N3P32CIN,,,,,,18/09/2026,MCB 3P 32A,32.0,Nos,Satyam,3449.0,70.0,1034.7,,
+59.0,MCB,Schneider,3P,3.0,C Curve,A9N3P40CIN ,,,,,,18/09/2026,MCB 3P 40A ,40.0,Nos,Satyam,5251.0,70.0,1575.3,,
+60.0,MCB,Schneider,3P,3.0,C Curve,A9N3P50CIN,,,,,,18/09/2026,MCB 3P 50A ,50.0,Nos,Satyam,5251.0,70.0,1575.3,,
+61.0,MCB,Schneider,3P,3.0,C Curve,A9N3P63CIN,,,,,,18/09/2026,MCB 3P 63A ,63.0,Nos,Satyam,5426.0,70.0,1627.8,,
+63.0,MCB,Schneider,4P,4.0,C Curve,A9N4P01CIN,,,,,,18/09/2026,MCB 4P 1A ,1.0,Nos,Satyam,5716.0,70.0,1714.8,,
+64.0,MCB,Schneider,4P,4.0,C Curve,A9N4P02CIN,,,,,,18/09/2026,MCB 4P 2A ,2.0,Nos,Satyam,5716.0,70.0,1714.8,,
+66.0,MCB,Schneider,4P,4.0,C Curve,A9N4P04CIN,,,,,,18/09/2026,MCB 4P 4A,4.0,Nos,Satyam,5716.0,70.0,1714.8,,
+67.0,MCB,Schneider,4P,4.0,C Curve,A9N4P06CIN,,,,,,18/09/2026,MCB 4P 6A,6.0,Nos,Satyam,4648.0,70.0,1394.4,,
+68.0,MCB,Schneider,4P,4.0,C Curve,A9N4P10CIN,,,,,,18/09/2026,MCB 4P 10A,10.0,Nos,Satyam,4648.0,70.0,1394.4,,
+69.0,MCB,Schneider,4P,4.0,C Curve,A9N4P16CIN,,,,,,18/09/2026,MCB 4P 16A ,16.0,Nos,Satyam,4648.0,70.0,1394.4,,
+70.0,MCB,Schneider,4P,4.0,C Curve,A9N4P20CIN,,,,,,18/09/2026,MCB 4P 20A,20.0,Nos,Satyam,4648.0,70.0,1394.4,,
+71.0,MCB,Schneider,4P,4.0,C Curve,A9N4P25CIN,,,,,,18/09/2026,MCB 4P 25A,25.0,Nos,Satyam,4648.0,70.0,1394.4,,
+72.0,MCB,Schneider,4P,4.0,C Curve,A9N4P32CIN,,,,,,18/09/2026,MCB 4P 32A,32.0,Nos,Satyam,4648.0,70.0,1394.4,,
+73.0,MCB,Schneider,4P,4.0,C Curve,A9N4P40CIN,,,,,,18/09/2026,MCB 4P 40A,40.0,Nos,Satyam,6751.0,70.0,2025.3,,
+74.0,MCB,Schneider,4P,4.0,C Curve,A9N4P50CIN,,,,,,18/09/2026,MCB 4P 50A,50.0,Nos,Satyam,6751.0,70.0,2025.3,,
+,MCB,Schneider,4P,4.0,C Curve,A9N4P63CIN,,,,,,18/09/2026,MCB 4P 63A,63.0,Nos,Satyam,7031.0,,,,
+472.0,MCB,,SI-MCB,,,,,,,,,,SI-MCB 3P 63A,,Nos,SIMENS ,3149.0,69.0,976.19,,
+473.0,MCB,,SI-MCB,,,,,,,,,,SI--MCB 3P 40A,,Nos,SIMENS ,2820.0,69.0,874.2,,
+474.0,MCB,,SI-MCB,,,,,,,,,,SI-MCB 3P 25A,,Nos,SIMENS ,2015.0,69.0,624.65,,
+475.0,MCB,,SI-MCB,,,,,,,,,,SI-MCB 3P 20A,,Nos,SIMENS ,2015.0,69.0,624.65,,
+476.0,MCB,,SI-MCB,,,,,,,,,,SI-MCB 3P 16A,,Nos,SIMENS ,2015.0,69.0,624.65,,
+477.0,MCB,,SI-MCB,,,,,,,,,,SI-MCB 3P 10A,,Nos,SIMENS ,2015.0,69.0,624.65,,
+478.0,MCB,,SI-MCB,,,,,,,,,,SI-MCB 3P 6A,,Nos,SIMENS ,2015.0,69.0,624.65,,
+286.0,MCCB ,,MCCB 3P,25KA,16A,LV510300,3.0,,,,,18/09/2026,MCCB  16A  THREE POLE ,16.0,Nos,Satyam,13420.0,60.0,5368,,
+287.0,MCCB ,,MCCB 3P,25KA,25A,LV510301,3.0,,,,,18/09/2026,MCCB  25A  THREE POLE ,25.0,Nos,Satyam,13420.0,60.0,5368,,
+288.0,MCCB ,,MCCB 3P,25KA,32A,LV510302,3.0,,,,,18/09/2026,MCCB  32A  THREE POLE ,32.0,Nos,Satyam,13420.0,60.0,5368,,
+289.0,MCCB ,,MCCB 3P,25KA,40A,LV510303,3.0,,,,,18/09/2026,MCCB  40A  THREE POLE ,40.0,Nos,Satyam,13420.0,60.0,5368,,
+290.0,MCCB ,,MCCB 3P,25KA,50A,LV510304,3.0,,,,,18/09/2026,MCCB  50A  THREE POLE ,50.0,Nos,Satyam,13420.0,60.0,5368,,
+291.0,MCCB ,,MCCB 3P,25KA,63A,LV510305,3.0,,,,,18/09/2026,MCCB  63A  THREE POLE ,63.0,Nos,Satyam,13420.0,60.0,5368,,
+292.0,MCCB ,,MCCB 3P,25KA,80A,LV510306,3.0,,,,,18/09/2026,MCCB  80A  THREE POLE ,80.0,Nos,Satyam,13420.0,60.0,5368,,
+293.0,MCCB ,,MCCB 3P,25KA,100A,LV510307,3.0,,,,,18/09/2026,MCCB  100A  THREE POLE ,100.0,Nos,Satyam,13500.0,60.0,5400,,
+294.0,MCCB ,,MCCB 3P,25KA,125A,LV516302,3.0,,,,,18/09/2026,MCCB  125A  THREE POLE ,125.0,Nos,Satyam,19750.0,60.0,7900,,
+295.0,MCCB ,,MCCB 3P,25KA,160A,LV516303,3.0,,,,,18/09/2026,MCCB  160A  THREE POLE ,160.0,Nos,Satyam,25780.0,60.0,10312,,
+296.0,MCCB ,,MCCB 3P,25KA,200A,LV525302,3.0,,,,,18/09/2026,MCCB  200A  THREE POLE ,200.0,Nos,Satyam,34120.0,60.0,13648,,
+297.0,MCCB ,,MCCB 3P,25KA,250A,LV525303,3.0,,,,,18/09/2026,MCCB  250A  THREE POLE ,250.0,Nos,Satyam,39930.0,60.0,15972,,
+,MCCB ,,MCCB 4P,25KA,16A,LV510310,4.0,,,,,18/09/2026,MCCB  16A  FOUR   POLE,16.0,Nos,Satyam,18680.0,60.0,7472,,
+,MCCB ,,MCCB 4P,25KA,25A,LV510311,4.0,,,,,18/09/2026,MCCB  16A  FOUR   POLE ,25.0,Nos,Satyam,18680.0,60.0,7472,,
+,MCCB ,,MCCB 4P,25KA,32A,LV510312,4.0,,,,,18/09/2026,MCCB  32A  FOUR   POLE,32.0,Nos,Satyam,18680.0,60.0,7472,,
+,MCCB ,,MCCB 4P,25KA,40A,LV510313,4.0,,,,,18/09/2026,MCCB  40A  FOUR   POLE ,40.0,Nos,Satyam,18680.0,60.0,7472,,
+,MCCB ,,MCCB 4P,25KA,50A,LV510314,4.0,,,,,18/09/2026,MCCB  50A  FOUR   POLE,50.0,Nos,Satyam,18680.0,60.0,7472,,
+,MCCB ,,MCCB 4P,25KA,63A,LV510315,4.0,,,,,18/09/2026,MCCB  63A  FOUR   POLE ,63.0,Nos,Satyam,18680.0,60.0,7472,,
+,MCCB ,,MCCB 4P,25KA,80A,LV510316,4.0,,,,,18/09/2026,MCCB  80A  FOUR   POLE,80.0,Nos,Satyam,18680.0,60.0,7472,,
+,MCCB ,,MCCB 4P,25KA,100A,LV510317,4.0,,,,,18/09/2026,MCCB  100A  FOUR   POLE ,100.0,Nos,Satyam,18680.0,60.0,7472,,
+,MCCB ,,MCCB 4P,25KA,125A,LV516312,4.0,,,,,18/09/2026,MCCB  125A  FOUR   POLE ,125.0,Nos,Satyam,24170.0,60.0,9668,,
+,MCCB ,,MCCB 4P,25KA,160A,LV516313,4.0,,,,,18/09/2026,MCCB  160A  FOUR   POLE,160.0,Nos,Satyam,30890.0,60.0,12356,,
+,MCCB ,,MCCB 4P,25KA,200A,LV525312,4.0,,,,,18/09/2026,MCCB  200A  FOUR   POLE ,200.0,Nos,Satyam,42650.0,60.0,17060,,
+,MCCB ,,MCCB 4P,25KA,250A,LV525313,4.0,,,,,18/09/2026,MCCB  250A  FOUR   POLE ,250.0,Nos,Satyam,48850.0,60.0,19540,,
+,MCCB ,,MCCB 3P,36KA,16A,LV510330,3.0,,,,,18/09/2026,MCCB  16A  THREE POLE ,16.0,Nos,Satyam,18360.0,60.0,7344,,
+,MCCB ,,MCCB 3P,36KA,25A,LV510331,3.0,,,,,18/09/2026,MCCB  25A  THREE POLE ,25.0,Nos,Satyam,18360.0,60.0,7344,,
+,MCCB ,,MCCB 3P,36KA,32A,LV510332,3.0,,,,,18/09/2026,MCCB  32A  THREE POLE ,32.0,Nos,Satyam,18360.0,60.0,7344,,
+,MCCB ,,MCCB 3P,36KA,40A,LV510333,3.0,,,,,18/09/2026,MCCB  40A  THREE POLE ,40.0,Nos,Satyam,18360.0,60.0,7344,,
+,MCCB ,,MCCB 3P,36KA,50A,LV510334,3.0,,,,,18/09/2026,MCCB  50A  THREE POLE ,50.0,Nos,Satyam,18360.0,60.0,7344,,
+,MCCB ,,MCCB 3P,36KA,63A,LV510335,3.0,,,,,18/09/2026,MCCB  63A  THREE POLE ,63.0,Nos,Satyam,18360.0,60.0,7344,,
+,MCCB ,,MCCB 3P,36KA,80A,LV510336,3.0,,,,,18/09/2026,MCCB  80A  THREE POLE ,80.0,Nos,Satyam,18360.0,60.0,7344,,
+,MCCB ,,MCCB 3P,36KA,100A,LV510337,3.0,,,,,18/09/2026,MCCB  100A  THREE POLE ,100.0,Nos,Satyam,18360.0,60.0,7344,,
+,MCCB ,,MCCB 3P,36KA,125A,LV516332,3.0,,,,,18/09/2026,MCCB  125A  THREE POLE ,125.0,Nos,Satyam,20380.0,60.0,8152,,
+,MCCB ,,MCCB 3P,36KA,160A,LV516333,3.0,,,,,18/09/2026,MCCB  160A  THREE POLE ,160.0,Nos,Satyam,27000.0,60.0,10800,,
+,MCCB ,,MCCB 3P,36KA,200A,LV525332,3.0,,,,,18/09/2026,MCCB  200A  THREE POLE ,200.0,Nos,Satyam,38890.0,60.0,15556,,
+,MCCB ,,MCCB 3P,36KA,250A,LV525333,3.0,,,,,18/09/2026,MCCB  250A  THREE POLE ,250.0,Nos,Satyam,43140.0,60.0,17256,,
+,MCCB ,,MCCB 3P,36KA,320A,LV540305,3.0,,,,,18/09/2026,MCCB  320A  THREE POLE ,320.0,Nos,Satyam,58970.0,60.0,23588,,
+,MCCB ,,MCCB 3P,36KA,400A,LV540306,3.0,,,,,18/09/2026,MCCB  400A  THREE POLE ,400.0,Nos,Satyam,59320.0,60.0,23728,,
+,MCCB ,,MCCB 3P,36KA,500A,LV563305,3.0,,,,,18/09/2026,MCCB  500A  THREE POLE ,500.0,Nos,Satyam,67250.0,60.0,26900,,
+,MCCB ,,MCCB 3P,36KA,630A,LV563307,3.0,,,,,18/09/2026,MCCB  630A  THREE POLE ,630.0,Nos,Satyam,77000.0,60.0,30800,,
+,MCCB ,,MCCB 4P,36KA,16A,LV510340,4.0,,,,,18/09/2026,MCCB  16A  FOUR POLE ,16.0,Nos,Satyam,22940.0,60.0,9176,,
+,MCCB ,,MCCB 4P,36KA,25A,LV510341,4.0,,,,,18/09/2026,MCCB  25A  FOUR POLE ,25.0,Nos,Satyam,22940.0,60.0,9176,,
+,MCCB ,,MCCB 4P,36KA,32A,LV510342,4.0,,,,,18/09/2026,MCCB  32A  FOUR POLE ,32.0,Nos,Satyam,22940.0,60.0,9176,,
+,MCCB ,,MCCB 4P,36KA,40A,LV510343,4.0,,,,,18/09/2026,MCCB  40A  FOUR POLE ,40.0,Nos,Satyam,22940.0,60.0,9176,,
+,MCCB ,,MCCB 4P,36KA,50A,LV510344,4.0,,,,,18/09/2026,MCCB  50A  FOUR POLE ,50.0,Nos,Satyam,22940.0,60.0,9176,,
+,MCCB ,,MCCB 4P,36KA,63A,LV510345,4.0,,,,,18/09/2026,MCCB  63A  FOUR POLE ,63.0,Nos,Satyam,22940.0,60.0,9176,,
+,MCCB ,,MCCB 4P,36KA,80A,LV510346,4.0,,,,,18/09/2026,MCCB  80A  FOUR POLE ,80.0,Nos,Satyam,22940.0,60.0,9176,,
+,MCCB ,,MCCB 4P,36KA,100A,LV510347,4.0,,,,,18/09/2026,MCCB  100A  FOUR POLE ,100.0,Nos,Satyam,22940.0,60.0,9176,,
+,MCCB ,,MCCB 4P,36KA,125A,LV516342,4.0,,,,,18/09/2026,MCCB  125A  FOUR POLE ,125.0,Nos,Satyam,25310.0,60.0,10124,,
+,MCCB ,,MCCB 4P,36KA,160A,LV516343,4.0,,,,,18/09/2026,MCCB  160A  FOUR POLE ,160.0,Nos,Satyam,32170.0,60.0,12868,,
+,MCCB ,,MCCB 4P,36KA,200A,LV525342,4.0,,,,,18/09/2026,MCCB  200A  FOUR POLE ,200.0,Nos,Satyam,48190.0,60.0,19276,,
+,MCCB ,,MCCB 4P,36KA,250A,LV525343,4.0,,,,,18/09/2026,MCCB  250A  FOUR POLE ,250.0,Nos,Satyam,53380.0,60.0,21352,,
+,MCCB ,,MCCB 4P,36KA,320A,LV540308,4.0,,,,,18/09/2026,MCCB  320A  FOUR POLE ,320.0,Nos,Satyam,73170.0,60.0,29268,,
+,MCCB ,,MCCB 4P,36KA,400A,LV540309,4.0,,,,,18/09/2026,MCCB  400A  FOUR POLE ,400.0,Nos,Satyam,73820.0,60.0,29528,,
+,MCCB ,,MCCB 4P,36KA,500A,LV563308,4.0,,,,,18/09/2026,MCCB  500A  FOUR POLE ,500.0,Nos,Satyam,85170.0,60.0,34068,,
+,MCCB ,,MCCB 4P,36KA,630A,LV563310,4.0,,,,,18/09/2026,MCCB  630A  FOUR POLE ,630.0,Nos,Satyam,97180.0,60.0,38872,,
+,MCCB ,,MCCB 3P,50kA,16A,LV510470,3.0,,,,,18/09/2026,MCCB  16A  THREE POLE ,16.0,Nos,Satyam,24920.0,60.0,9968,,
+,MCCB ,,MCCB 3P,50kA,25A,LV510471,3.0,,,,,18/09/2026,MCCB  25A  THREE POLE ,25.0,Nos,Satyam,24920.0,60.0,9968,,
+,MCCB ,,MCCB 3P,50kA,32A,LV510472,3.0,,,,,18/09/2026,MCCB  32A  THREE POLE ,32.0,Nos,Satyam,24920.0,60.0,9968,,
+,MCCB ,,MCCB 3P,50kA,40A,LV510473,3.0,,,,,18/09/2026,MCCB  40A  THREE POLE ,40.0,Nos,Satyam,24920.0,60.0,9968,,
+,MCCB ,,MCCB 3P,50kA,50A,LV510474,3.0,,,,,18/09/2026,MCCB  50A  THREE POLE ,50.0,Nos,Satyam,24920.0,60.0,9968,,
+,MCCB ,,MCCB 3P,50kA,63A,LV510475,3.0,,,,,18/09/2026,MCCB  63A  THREE POLE ,63.0,Nos,Satyam,24920.0,60.0,9968,,
+,MCCB ,,MCCB 3P,50kA,80A,LV510476,3.0,,,,,18/09/2026,MCCB  80A  THREE POLE ,80.0,Nos,Satyam,24920.0,60.0,9968,,
+,MCCB ,,MCCB 3P,50kA,100A,LV510477,3.0,,,,,18/09/2026,MCCB  100A  THREE POLE ,100.0,Nos,Satyam,24920.0,60.0,9968,,
+,MCCB ,,MCCB 3P,50kA,125A,LV516462,3.0,,,,,18/09/2026,MCCB  125A  THREE POLE ,125.0,Nos,Satyam,32400.0,60.0,12960,,
+,MCCB ,,MCCB 3P,50kA,160A,LV516463,3.0,,,,,18/09/2026,MCCB  160A  THREE POLE ,160.0,Nos,Satyam,35060.0,60.0,14024,,
+,MCCB ,,MCCB 3P,50kA,200A,LV525452,3.0,,,,,18/09/2026,MCCB  200A  THREE POLE ,200.0,Nos,Satyam,45370.0,60.0,18148,,
+,MCCB ,,MCCB 3P,50kA,250A,LV525453,3.0,,,,,18/09/2026,MCCB  250A  THREE POLE ,250.0,Nos,Satyam,48790.0,60.0,19516,,
+,MCCB ,,MCCB 3P,50kA,320A,LV540315,3.0,,,,,18/09/2026,MCCB  320A  THREE POLE ,320.0,Nos,Satyam,63890.0,60.0,25556,,
+,MCCB ,,MCCB 3P,50kA,400A,LV540316,3.0,,,,,18/09/2026,MCCB  400A  THREE POLE ,400.0,Nos,Satyam,64360.0,60.0,25744,,
+,MCCB ,,MCCB 3P,50kA,500A,LV563315,3.0,,,,,18/09/2026,MCCB  500A  THREE POLE ,500.0,Nos,Satyam,74620.0,60.0,29848,,
+,MCCB ,,MCCB 3P,50kA,630A,LV563317,3.0,,,,,18/09/2026,MCCB  630A  THREE POLE ,630.0,Nos,Satyam,81290.0,60.0,32516,,
+,MCCB ,,MCCB 4P,50kA,16A,LV510480,4.0,,,,,18/09/2026,MCCB  16A  FOUR POLE ,16.0,Nos,Satyam,30640.0,60.0,12256,,
+,MCCB ,,MCCB 4P,50kA,25A,LV510481,4.0,,,,,18/09/2026,MCCB  25A  FOUR POLE ,25.0,Nos,Satyam,30640.0,60.0,12256,,
+,MCCB ,,MCCB 4P,50kA,32A,LV510482,4.0,,,,,18/09/2026,MCCB  32A  FOUR POLE ,32.0,Nos,Satyam,30640.0,60.0,12256,,
+,MCCB ,,MCCB 4P,50kA,40A,LV510483,4.0,,,,,18/09/2026,MCCB  40A  FOUR POLE ,40.0,Nos,Satyam,30640.0,60.0,12256,,
+,MCCB ,,MCCB 4P,50kA,50A,LV510484,4.0,,,,,18/09/2026,MCCB  50A  FOUR POLE ,50.0,Nos,Satyam,30640.0,60.0,12256,,
+,MCCB ,,MCCB 4P,50kA,63A,LV510485,4.0,,,,,18/09/2026,MCCB  63A  FOUR POLE ,63.0,Nos,Satyam,30640.0,60.0,12256,,
+,MCCB ,,MCCB 4P,50kA,80A,LV510486,4.0,,,,,18/09/2026,MCCB  80A  FOUR POLE ,80.0,Nos,Satyam,30640.0,60.0,12256,,
+,MCCB ,,MCCB 4P,50kA,100A,LV510487,4.0,,,,,18/09/2026,MCCB  100A  FOUR POLE ,100.0,Nos,Satyam,30640.0,60.0,12256,,
+,MCCB ,,MCCB 4P,50kA,125A,LV516467,4.0,,,,,18/09/2026,MCCB  125A  FOUR POLE ,125.0,Nos,Satyam,35450.0,60.0,14180,,
+,MCCB ,,MCCB 4P,50kA,160A,LV516468,4.0,,,,,18/09/2026,MCCB  160A  FOUR POLE ,160.0,Nos,Satyam,41750.0,60.0,16700,,
+,MCCB ,,MCCB 4P,50kA,200A,LV525457,4.0,,,,,18/09/2026,MCCB  200A  FOUR POLE ,200.0,Nos,Satyam,57000.0,60.0,22800,,
+,MCCB ,,MCCB 4P,50kA,250A,LV525458,4.0,,,,,18/09/2026,MCCB  250A  FOUR POLE ,250.0,Nos,Satyam,60110.0,60.0,24044,,
+,MCCB ,,MCCB 4P,50kA,320A,LV540318,4.0,,,,,18/09/2026,MCCB  320A  FOUR POLE ,320.0,Nos,Satyam,78980.0,60.0,31592,,
+,MCCB ,,MCCB 4P,50kA,400A,LV540319,4.0,,,,,18/09/2026,MCCB  400A  FOUR POLE ,400.0,Nos,Satyam,80430.0,60.0,32172,,
+,MCCB ,,MCCB 4P,50kA,500A,LV563318,4.0,,,,,18/09/2026,MCCB  500A  FOUR POLE ,500.0,Nos,Satyam,94170.0,60.0,37668,,
+,MCCB ,,MCCB 4P,50kA,630A,LV563320,4.0,,,,,18/09/2026,MCCB  630A  FOUR POLE ,630.0,Nos,Satyam,106420.0,60.0,42568,,
+,MCCB ,,MCCB 3P,50KA,16A,LV510330FT,,,,,,,MCCB  250A  THREE POLE ,,Nos,Satyam,33960.0,60.0,13584,,
+298.0,MCCB ,,MCCB 4P,25KA,16A,LV510310FT,,,,,,,MCCB  16A  FOUR   POLE ,,Nos,Satyam,18060.0,60.0,7224,,
+299.0,MCCB ,,MCCB 4P,,,,,,,,,,MCCB  25A  FOUR POLE ,,Nos,Satyam,18060.0,60.0,7224,,
+300.0,MCCB ,,MCCB 4P,,,,,,,,,,MCCB  32A  FOUR POLE ,,Nos,Satyam,18060.0,60.0,7224,,
+301.0,MCCB ,,MCCB 4P,,,,,,,,,,MCCB  40A FOUR POLE ,,Nos,Satyam,18060.0,60.0,7224,,
+302.0,MCCB ,,MCCB 4P,,,,,,,,,,MCCB  50A  FOUR POLE ,,Nos,Satyam,18060.0,60.0,7224,,
+303.0,MCCB ,,MCCB 4P,,,,,,,,,,MCCB  63A  FOUR POLE ,,Nos,Satyam,18060.0,60.0,7224,,
+304.0,MCCB ,,MCCB 4P,,,,,,,,,,MCCB  80A  FOUR POLE ,,Nos,Satyam,18060.0,60.0,7224,,
+305.0,MCCB ,,MCCB 4P,,,,,,,,,,MCCB  100A FOUR POLE ,,Nos,Satyam,18060.0,60.0,7224,,
+306.0,MCCB ,,MCCB 4P,,,,,,,,,,MCCB  125A  FOUR POLE ,,Nos,Satyam,19930.0,60.0,7972,,
+307.0,MCCB ,,MCCB 4P,,,,,,,,,,MCCB  160A  FOUR POLE ,,Nos,Satyam,25320.0,60.0,10128,,
+308.0,MCCB ,,MCCB 4P,,,,,,,,,,MCCB  200A  FOUR POLE ,,Nos,Satyam,37940.0,60.0,15176,,
+309.0,MCCB ,,MCCB 4P,,,,,,,,,,MCCB  250A  FOUR POLE ,,Nos,Satyam,33960.0,60.0,13584,,
+310.0,MCCB ,,MCCB 4P,,,,,,,,,,MCCB  320A  FOUR POLE ,,Nos,Satyam,57610.0,60.0,23044,,
+311.0,MCCB ,,MCCB 4P,,,,,,,,,,MCCB  630A  FOUR POLE ,,Nos,Satyam,89000.0,60.0,35600,,
+311.0,MCCB ,,MCCB 4P,36KA,16A,LV510330FT,,,,,,,MCCB  630A  FOUR POLE ,,Nos,Satyam,89000.0,60.0,35600,,
+311.0,MCCB ,,MCCB 4P,50KA,16A,LV510330FT,,,,,,,MCCB  630A  FOUR POLE ,,Nos,Satyam,89000.0,60.0,35600,,
+312.0,MCCB ,,SPREADER,,,,,,,,,,MCCB BUS BAR CONNECTOR    (3P SPREADER PH BARRIERS),3.0,Nos,Satyam,1230.0,50.0,615,,
+313.0,MCCB ,,SPREADER,,,,,,,,,,MCCB BUS BAR CONNECTOR    (4P SPREADER PH BARRIERS),4.0,Nos,Satyam,1630.0,50.0,815,,
+314.0,MCCB ,,EXTENDED ROTARY,,,,,,,,,,EXTENDED ROTARY HANDLE  (CVS 100/160/250) ,3.0,Nos,Satyam,3300.0,50.0,1650,,
+315.0,MCCB ,,EXTENDED ROTARY,,,,,,,,,,EXTENDED ROTARY HANDLE  4P(CVS 100/160/250) ,4.0,Nos,Satyam,5870.0,50.0,2935,,
+316.0,MCCB ,,EXTENDED ROTARY,,,,,,,,,,EXTENDED ROTARY HANDLE  4P(CVS 320A) ,4.0,Nos,Satyam,4680.0,50.0,2340,,
+559.0,MCCB,,MCCB 3P,,,,,,,,,,16A Three Pole MCCB,,NOS,25 kA,13420.0,60.0,5368,,
+560.0,MCCB,,MCCB 3P,,,,,,,,,,25A Three Pole MCCB,,NOS,25 kA,13420.0,60.0,5368,,
+561.0,MCCB,,MCCB 3P,,,,,,,,,,32A Three Pole MCCB,,NOS,25 kA,13420.0,60.0,5368,,
+562.0,MCCB,,MCCB 3P,,,,,,,,,,40A Three Pole MCCB,,NOS,25 kA,13420.0,60.0,5368,,
+563.0,MCCB,,MCCB 3P,,,,,,,,,,50A Three Pole MCCB,,NOS,25 kA,13420.0,60.0,5368,,
+564.0,MCCB,,MCCB 3P,,,,,,,,,,63A Three Pole MCCB,,NOS,25 kA,13420.0,60.0,5368,,
+565.0,MCCB,,MCCB 3P,,,,,,,,,,80A Three Pole MCCB,,NOS,25 kA,13420.0,60.0,5368,,
+566.0,MCCB,,MCCB 3P,,,,,,,,,,100A Three Pole MCCB,,NOS,25 kA,13420.0,60.0,5368,,
+567.0,MCCB,,MCCB 3P,,,,,,,,,,125A Three Pole MCCB,,NOS,25 kA,19750.0,60.0,7900,,
+568.0,MCCB,,MCCB 3P,,,,,,,,,,160A Three Pole MCCB,,NOS,25 kA,25780.0,60.0,10312,,
+569.0,MCCB,,MCCB 3P,,,,,,,,,,200A Three Pole MCCB,,NOS,25 kA,34120.0,60.0,13648,,
+570.0,MCCB,,MCCB 3P,,,,,,,,,,250A Three Pole MCCB,,NOS,25 kA,39930.0,60.0,15972,,
+571.0,MCCB,,MCCB 3P,,,,,,,,,,16A Four Pole MCCB,,NOS,25 kA,18680.0,60.0,7472,,
+572.0,MCCB,,MCCB 3P,,,,,,,,,,25A Four Pole MCCB,,NOS,25 kA,18680.0,60.0,7472,,
+573.0,MCCB,,MCCB 3P,,,,,,,,,,32A Four Pole MCCB,,NOS,25 kA,18680.0,60.0,7472,,
+574.0,MCCB,,MCCB 3P,,,,,,,,,,40A Four Pole MCCB,,NOS,25 kA,18680.0,60.0,7472,,
+575.0,MCCB,,MCCB 3P,,,,,,,,,,50A Four Pole MCCB,,NOS,25 kA,18680.0,60.0,7472,,
+576.0,MCCB,,MCCB 3P,,,,,,,,,,63A Four Pole MCCB,,NOS,25 kA,18680.0,60.0,7472,,
+577.0,MCCB,,MCCB 3P,,,,,,,,,,80A Four Pole MCCB,,NOS,25 kA,18680.0,60.0,7472,,
+578.0,MCCB,,MCCB 3P,,,,,,,,,,100A Four Pole MCCB,,NOS,25 kA,18680.0,60.0,7472,,
+579.0,MCCB,,MCCB 3P,,,,,,,,,,125A Four Pole MCCB,,NOS,25 kA,24170.0,60.0,9668,,
+580.0,MCCB,,MCCB 3P,,,,,,,,,,160A Four Pole MCCB,,NOS,25 kA,30890.0,60.0,12356,,
+581.0,MCCB,,MCCB 3P,,,,,,,,,,200A Four Pole MCCB,,NOS,25 kA,42650.0,60.0,17060,,
+582.0,MCCB,,MCCB 3P,,,,,,,,,,250A Four Pole MCCB,,NOS,25 kA,48850.0,60.0,19540,,
+583.0,MCCB,,MCCB 3P,,,,,,,,,,16A Three Pole MCCB,,NOS,36 kA,18380.0,60.0,7352,,
+584.0,MCCB,,MCCB 3P,,,,,,,,,,25A Three Pole MCCB,,NOS,36 kA,18380.0,60.0,7352,,
+585.0,MCCB,,MCCB 3P,,,,,,,,,,32A Three Pole MCCB,,NOS,36 kA,18380.0,60.0,7352,,
+586.0,MCCB,,MCCB 3P,,,,,,,,,,40A Three Pole MCCB,,NOS,36 kA,18380.0,60.0,7352,,
+587.0,MCCB,,MCCB 3P,,,,,,,,,,50A Three Pole MCCB,,NOS,36 kA,18380.0,60.0,7352,,
+588.0,MCCB,,MCCB 3P,,,,,,,,,,63A Three Pole MCCB,,NOS,36 kA,18380.0,60.0,7352,,
+589.0,MCCB,,MCCB 3P,,,,,,,,,,80A Three Pole MCCB,,NOS,36 kA,18380.0,60.0,7352,,
+590.0,MCCB,,MCCB 3P,,,,,,,,,,100A Three Pole MCCB,,NOS,36 kA,18380.0,60.0,7352,,
+591.0,MCCB,,MCCB 3P,,,,,,,,,,125A Three Pole MCCB,,NOS,36 kA,20380.0,60.0,8152,,
+592.0,MCCB,,MCCB 3P,,,,,,,,,,160A Three Pole MCCB,,NOS,36 kA,27000.0,60.0,10800,,
+593.0,MCCB,,MCCB 3P,,,,,,,,,,200A Three Pole MCCB,,NOS,36 kA,38890.0,60.0,15556,,
+594.0,MCCB,,MCCB 3P,,,,,,,,,,250A Three Pole MCCB,,NOS,36 kA,43140.0,60.0,17256,,
+595.0,MCCB,,MCCB 3P,,,,,,,,,,320A Three Pole MCCB,,NOS,36 kA,58970.0,60.0,23588,,
+596.0,MCCB,,MCCB 3P,,,,,,,,,,400A Three Pole MCCB,,NOS,36 kA,59320.0,60.0,23728,,
+597.0,MCCB,,MCCB 3P,,,,,,,,,,500A Three Pole MCCB,,NOS,36 kA,67250.0,60.0,26900,,
+598.0,MCCB,,MCCB 3P,,,,,,,,,,630A Three Pole MCCB,,NOS,36 kA,77000.0,60.0,30800,,
+599.0,MCCB,,MCCB 3P,,,,,,,,,,16A Four Pole MCCB,,NOS,36 kA,22940.0,60.0,9176,,
+600.0,MCCB,,MCCB 3P,,,,,,,,,,25A Four Pole MCCB,,NOS,36 kA,22940.0,60.0,9176,,
+601.0,MCCB,,MCCB 3P,,,,,,,,,,32A Four Pole MCCB,,NOS,36 kA,22940.0,60.0,9176,,
+602.0,MCCB,,MCCB 3P,,,,,,,,,,40A Four Pole MCCB,,NOS,36 kA,22940.0,60.0,9176,,
+603.0,MCCB,,MCCB 3P,,,,,,,,,,50A Four Pole MCCB,,NOS,36 kA,22940.0,60.0,9176,,
+604.0,MCCB,,MCCB 3P,,,,,,,,,,63A Four Pole MCCB,,NOS,36 kA,22940.0,60.0,9176,,
+605.0,MCCB,,MCCB 3P,,,,,,,,,,80A Four Pole MCCB,,NOS,36 kA,22940.0,60.0,9176,,
+606.0,MCCB,,MCCB 3P,,,,,,,,,,100A Four Pole MCCB,,NOS,36 kA,22940.0,60.0,9176,,
+607.0,MCCB,,MCCB 3P,,,,,,,,,,125A Four Pole MCCB,,NOS,36 kA,25310.0,60.0,10124,,
+608.0,MCCB,,MCCB 3P,,,,,,,,,,160A Four Pole MCCB,,NOS,36 kA,32170.0,60.0,12868,,
+609.0,MCCB,,MCCB 3P,,,,,,,,,,200A Four Pole MCCB,,NOS,36 kA,48190.0,60.0,19276,,
+610.0,MCCB,,MCCB 3P,,,,,,,,,,250A Four Pole MCCB,,NOS,36 kA,53380.0,60.0,21352,,
+611.0,MCCB,,MCCB 3P,,,,,,,,,,320A Four Pole MCCB,,NOS,36 kA,73170.0,60.0,29268,,
+612.0,MCCB,,MCCB 3P,,,,,,,,,,400A Four Pole MCCB,,NOS,36 kA,73820.0,60.0,29528,,
+613.0,MCCB,,MCCB 3P,,,,,,,,,,500A Four Pole MCCB,,NOS,36 kA,85170.0,60.0,34068,,
+614.0,MCCB,,MCCB 3P,,,,,,,,,,630A Four Pole MCCB,,NOS,36 kA,97180.0,60.0,38872,,
+615.0,MCCB,,MCCB 3P,,,,,,,,,,16A Three Pole MCCB,,NOS,50 kA,24920.0,60.0,9968,,
+616.0,MCCB,,MCCB 3P,,,,,,,,,,25A Three Pole MCCB,,NOS,50 kA,24920.0,60.0,9968,,
+617.0,MCCB,,MCCB 3P,,,,,,,,,,32A Three Pole MCCB,,NOS,50 kA,24920.0,60.0,9968,,
+618.0,MCCB,,MCCB 3P,,,,,,,,,,40A Three Pole MCCB,,NOS,50 kA,24920.0,60.0,9968,,
+619.0,MCCB,,MCCB 3P,,,,,,,,,,50A Three Pole MCCB,,NOS,50 kA,24920.0,60.0,9968,,
+620.0,MCCB,,MCCB 3P,,,,,,,,,,63A Three Pole MCCB,,NOS,50 kA,24920.0,60.0,9968,,
+621.0,MCCB,,MCCB 3P,,,,,,,,,,80A Three Pole MCCB,,NOS,50 kA,24920.0,60.0,9968,,
+622.0,MCCB,,MCCB 3P,,,,,,,,,,100A Three Pole MCCB,,NOS,50 kA,24920.0,60.0,9968,,
+623.0,MCCB,,MCCB 3P,,,,,,,,,,125A Three Pole MCCB,,NOS,50 kA,32400.0,60.0,12960,,
+624.0,MCCB,,MCCB 3P,,,,,,,,,,160A Three Pole MCCB,,NOS,50 kA,35060.0,60.0,14024,,
+625.0,MCCB,,MCCB 3P,,,,,,,,,,200A Three Pole MCCB,,NOS,50 kA,45370.0,60.0,18148,,
+626.0,MCCB,,MCCB 3P,,,,,,,,,,250A Three Pole MCCB,,NOS,50 kA,48790.0,60.0,19516,,
+627.0,MCCB,,MCCB 3P,,,,,,,,,,320A Three Pole MCCB,,NOS,50 kA,63890.0,60.0,25556,,
+628.0,MCCB,,MCCB 3P,,,,,,,,,,400A Three Pole MCCB,,NOS,50 kA,64360.0,60.0,25744,,
+629.0,MCCB,,MCCB 3P,,,,,,,,,,500A Three Pole MCCB,,NOS,50 kA,74620.0,60.0,29848,,
+630.0,MCCB,,MCCB 3P,,,,,,,,,,630A Three Pole MCCB,,NOS,50 kA,81290.0,60.0,32516,,
+631.0,MCCB,,MCCB 4P,,,,,,,,,,16A Four Pole MCCB,,NOS,50 kA,30640.0,60.0,12256,,
+632.0,MCCB,,MCCB 4P,,,,,,,,,,25A Four Pole MCCB,,NOS,50 kA,30640.0,60.0,12256,,
+633.0,MCCB,,MCCB 4P,,,,,,,,,,32A Four Pole MCCB,,NOS,50 kA,30640.0,60.0,12256,,
+634.0,MCCB,,MCCB 4P,,,,,,,,,,40A Four Pole MCCB,,NOS,50 kA,30640.0,60.0,12256,,
+635.0,MCCB,,MCCB 4P,,,,,,,,,,50A Four Pole MCCB,,NOS,50 kA,30640.0,60.0,12256,,
+636.0,MCCB,,MCCB 4P,,,,,,,,,,63A Four Pole MCCB,,NOS,50 kA,30640.0,60.0,12256,,
+637.0,MCCB,,MCCB 4P,,,,,,,,,,80A Four Pole MCCB,,NOS,50 kA,30640.0,60.0,12256,,
+638.0,MCCB,,MCCB 4P,,,,,,,,,,100A Four Pole MCCB,,NOS,50 kA,30640.0,60.0,12256,,
+639.0,MCCB,,MCCB 4P,,,,,,,,,,125A Four Pole MCCB,,NOS,50 kA,35450.0,60.0,14180,,
+640.0,MCCB,,MCCB 4P,,,,,,,,,,160A Four Pole MCCB,,NOS,50 kA,41750.0,60.0,16700,,
+641.0,MCCB,,MCCB 4P,,,,,,,,,,200A Four Pole MCCB,,NOS,50 kA,57000.0,60.0,22800,,
+642.0,MCCB,,MCCB 4P,,,,,,,,,,250A Four Pole MCCB,,NOS,50 kA,60110.0,60.0,24044,,
+643.0,MCCB,,MCCB 4P,,,,,,,,,,320A Four Pole MCCB,,NOS,50 kA,78980.0,60.0,31592,,
+644.0,MCCB,,MCCB 4P,,,,,,,,,,400A Four Pole MCCB,,NOS,50 kA,80430.0,60.0,32172,,
+645.0,MCCB,,MCCB 4P,,,,,,,,,,500A Four Pole MCCB,,NOS,50 kA,94170.0,60.0,37668,,
+646.0,MCCB,,MCCB 4P,,,,,,,,,,630A Four Pole MCCB,,NOS,50 kA,106420.0,60.0,42568,,
+256.0,RCCB,,RCCB 4P,,,,,,,,,,RCCB  25A  WITH 30MA  4 Pole ,25.0,Nos,Anuroop,6465.0,53.0,3038.55,,
+257.0,RCCB,,RCCB 4P,,,,,,,,,,RCCB  25A  WITH 100MA  4 Pole,25.0,Nos,Anuroop,6870.0,53.0,3228.9,,
+258.0,RCCB,,RCCB 4P,,,,,,,,,,RCCB  25A  WITH 300MA  4 Pole,,Nos,Anuroop,7072.0,53.0,3323.84,,
+259.0,RCCB,,RCCB 4P,,,,,,,,,,RCCB  40A  WITH 30MA  4 Pole,40.0,Nos,Anuroop,6364.0,53.0,2991.08,,
+260.0,RCCB,,RCCB 4P,,,,,,,,,,RCCB  40A  WITH 100MA  4 Pole,,Nos,Anuroop,6908.0,53.0,3246.76,,
+261.0,RCCB,,RCCB 4P,,,,,,,,,,RCCB  40A  WITH 300MA  4 Pole,,Nos,Anuroop,7175.0,53.0,3372.25,,
+262.0,RCCB,,RCCB 4P,,,,,,,,,,RCCB  63A  WITH 30MA  4 Pole,63.0,Nos,Anuroop,7369.0,53.0,3463.43,,
+263.0,RCCB,,RCCB 4P,,,,,,,,,,RCCB  63A  WITH 100MA  4 Pole,,Nos,Anuroop,8162.0,53.0,3836.14,,
+264.0,RCCB,,RCCB 4P,,,,,,,,,,RCCB  63A  WITH 300MA  4 Pole,,Nos,Anuroop,8200.0,53.0,3854,,
+265.0,RCCB,,RCCB 4P,,,,,,,,,,RCCB  80A  WITH 30MA  4 Pole,,Nos,Anuroop,12999.0,53.0,6109.53,,
+266.0,RCCB,,RCCB 4P,,,,,,,,,,RCCB  80A  WITH 100MA   4 Pole,,Nos,Anuroop,13209.0,53.0,6208.23,,
+267.0,RCCB,,RCCB 4P,,,,,,,,,,RCCB  80A  WITH 300MA  4 Pole,,Nos,Anuroop,13279.0,53.0,6241.13,,
+648.0,MPCB,,MPCB 3P,GZ1E01,0.1,0.16,,,,,,,MPCB 0.1 - 0.16A  3POLE,0.1 - 0.16A,Nos,Satyam,7135.0,58.0,2996.7,,
+649.0,MPCB,,MPCB 3P,GZ1E02,0.16,0.25,,,,,,,MPCB 0.16 - 0.25A  3POLE,0.16 - 0.25,Nos,Satyam,7135.0,58.0,2996.7,,
+650.0,MPCB,,MPCB 3P,GZ1E03,0.25,0.4,,,,,,,MPCB 0.25 - 0.40A  3POLE,0.25 - 0.40,Nos,Satyam,7135.0,58.0,2996.7,,
+651.0,MPCB,,MPCB 3P,GZ1E04,0.4,0.63,,,,,,,MPCB 0.40 - 0.63A  3POLE,0.40 - 0.63,Nos,Satyam,8305.0,58.0,3488.1,,
+652.0,MPCB,,MPCB 3P,GZ1E05,0.63,1.0,,,,,,,MPCB 0.63 – 1.0A  3POLE,0.63 – 1.0,Nos,Satyam,8305.0,58.0,3488.1,,
+653.0,MPCB,,MPCB 3P,GZ1E06,1.0,1.6,,,,,,,MPCB 1.0 – 1.6A  3POLE,1.0 – 1.6,Nos,Satyam,8145.0,58.0,3420.9,,
+654.0,MPCB,,MPCB 3P,GZ1E07,1.6,2.5,,,,,,,MPCB  1.6 – 2.5A  3POLE,1.6 – 2.5,Nos,Satyam,8145.0,58.0,3420.9,,
+655.0,MPCB,,MPCB 3P,GZ1E08,2.5,4.0,,,,,,,MPCB 2.5 – 4A  3POLE,2.5 – 4,Nos,Satyam,8455.0,58.0,3551.1,,
+656.0,MPCB,,MPCB 3P,GZ1E10,4.0,6.3,,,,,,,MPCB  4 – 6.3A  3POLE,4 – 6.3,Nos,Satyam,8455.0,58.0,3551.1,,
+657.0,MPCB,,MPCB 3P,GZ1E14,6.0,10.0,,,,,,,MPCB 6 – 10A  3POLE,6 – 10,Nos,Satyam,9015.0,58.0,3786.3,,
+658.0,MPCB,,MPCB 3P,GZ1E16,9.0,14.0,,,,,,,MPCB 9 – 14A  3POLE,9 – 14,Nos,Satyam,10155.0,58.0,4265.1,,
+659.0,MPCB,,MPCB 3P,GZ1E20,13.0,18.0,,,,,,,MPCB 13 – 18A  3POLE,13 – 18,Nos,Satyam,11045.0,58.0,4638.9,,
+,MPCB,,MPCB 3P,GZ1E21,17.0,23.0,,,,,,,MPCB 17 – 23A  3POLE,17 – 23,Nos,Satyam,11645.0,58.0,4890.9,,
+,MPCB,,MPCB 3P,GZ1E22,20.0,25.0,,,,,,,MPCB  20 – 25A 3POLE,20 – 25,Nos,Satyam,12230.0,58.0,5136.6,,
+,MPCB,,MPCB 3P,GZ1E32,24.0,32.0,,,,,,,MPCB  24 – 32A 3POLE,24 – 32,Nos,Satyam,20880.0,58.0,8769.6,,
+76.0,CONTACTOR,Schneider,M7,LC1E,6A ,3 HP,2.2 KW,NC,LC1E0601*,,,18/09/2026,CONTACTOR 0601 M7,6.0,Nos,Satyam,2345.0,60.0,938,,
+,CONTACTOR,Schneider,M7,LC1E,6A,3HP,2.2 KW,NO,LC1E0610*,,,18/09/2026,CONTACTOR 06010 M7,6.0,Nos,Satyam,2345.0,60.0,938,,
+,CONTACTOR,Schneider,M7,LC1E,9A,5.5 HP,4 KW ,NC,LC1E0901*,,,18/09/2026,CONTACTOR 0901 M7,9.0,Nos,Satyam,2405.0,60.0,962,,
+,CONTACTOR,Schneider,M7,LC1E,9A,5.5 HP ,4 KW,NO,LC1E0910*,,,18/09/2026,CONTACTOR 09010 M7,9.0,Nos,Satyam,2405.0,60.0,962,,
+77.0,CONTACTOR,Schneider,M7,LC1E,12A,7.5HP,5.5 KW,NC,LC1E1201*,,,18/09/2026,CONTACTOR 1201 M7,12.0,Nos,Satyam,2750.0,60.0,1100,,
+,CONTACTOR,Schneider,M7,LC1E,12A,7.5 HP,5.5 KW,NO,LC1E1210*,,,18/09/2026,CONTACTOR 12010 M7,12.0,Nos,Satyam,2750.0,60.0,1100,,
+78.0,CONTACTOR,Schneider,M7,LC1E,18 A,12 HP , 9 KW,NC,LC1E1801*,,,18/09/2026,CONTACTOR 1801 M7,18.0,Nos,Satyam,3170.0,60.0,1268,3804,350.0
+,CONTACTOR,Schneider,M7,LC1E,18 A,12 HP ,9 KW ,NO,LC1E1810*,,,18/09/2026,CONTACTOR 18010 M7,18.0,Nos,Satyam,3170.0,60.0,1268,,
+79.0,CONTACTOR,Schneider,M7,LC1E,25 A ,15 HP ,11 KW,NC,LC1E2501*,,,18/09/2026,CONTACTOR 2501 M7,25.0,Nos,Satyam,4315.0,60.0,1726,,
+,CONTACTOR,Schneider,M7,LC1E,25 A,15 HP,11 KW,NO,LC1E2510*,,,18/09/2026,CONTACTOR 25010 M7,25.0,Nos,Satyam,4315.0,60.0,1726,,
+80.0,CONTACTOR,Schneider,M7,LC1E,32  A,20 HP,15 KW ,NC,LC1E3201*,,,18/09/2026,CONTACTOR 3201 M7,32.0,Nos,Satyam,9045.0,60.0,3618,,
+,CONTACTOR,Schneider,M7,LC1E,32 A,20 HP ,15 KW ,NO,LC1E3210*,,,18/09/2026,CONTACTOR 32010 M7,32.0,Nos,Satyam,9045.0,60.0,3618,,
+81.0,CONTACTOR,Schneider,M7,LC1E,38 A,25 HP,18.5 KW ,NC,LC1E3801*,,,18/09/2026,CONTACTOR 3801 M7,38.0,Nos,Satyam,10550.0,60.0,4220,,
+,CONTACTOR,Schneider,M7,LC1E,38 A,25 HP,18.5 KW,NO,LC1E3810*,,,18/09/2026,CONTACTOR 38010 M7,38.0,Nos,Satyam,10550.0,60.0,4220,,
+82.0,CONTACTOR,Schneider,M7,LC1E,40 A,29 HP,22 KW,NC,LC1E40B01*,,,18/09/2026,CONTACTOR 40B01 AMP M7 FRAME-2,40.0,Nos,Satyam,11405.0,60.0,4562,,
+,CONTACTOR,Schneider,M7,LC1E,40 A,29 HP,22 KW,NO,LC1E40B10*,,,18/09/2026,CONTACTOR 40B010 AMP M7 FRAME-2,40.0,Nos,Satyam,11405.0,60.0,4562,,
+,CONTACTOR,Schneider,M7,LC1E,40 A,29 HP,22 KW ,NC + NO,LC1E40*,,,18/09/2026,CONTACTOR 40 AMP M7 FRAME-3,40.0,Nos,Satyam,14160.0,60.0,5664,,
+83.0,CONTACTOR,Schneider,M7,LC1E,50 A, 34 HP,25/30 KW,NC + NO,LC1E50*,,,18/09/2026,CONTACTOR 50 AMP M7,50.0,Nos,Satyam,17230.0,60.0,6892,,
+84.0,CONTACTOR,Schneider,M7,LC1E,65 A,50 HP,37 KW,NC + NO,LC1E65*,,,18/09/2026,CONTACTOR 65 AMP M7,65.0,Nos,Satyam,23345.0,60.0,9338,,
+85.0,CONTACTOR,Schneider,M7,LC1E,80 A,60 HP,45 KW,NC + NO,LC1E80*,,,18/09/2026,CONTACTOR 80 AMP M7,80.0,Nos,Satyam,30365.0,60.0,12146,,
+86.0,CONTACTOR,Schneider,M7,LC1E,95 A,60 HP,45 KW,NC + NO,LC1E95*,,,18/09/2026,CONTACTOR 95 AMP M7,95.0,Nos,Satyam,36385.0,60.0,14554,,
+,CONTACTOR,Schneider,N5,LC1E,6A ,3 HP,2.2 KW,NC,LC1E0601*,,,18/09/2026,CONTACTOR 0601 N5,6.0,Nos,Satyam,2765.0,60.0,1106,,
+,CONTACTOR,Schneider,N5,LC1E,6A,3HP,2.2 KW,NO,LC1E0610*,,,18/09/2026,CONTACTOR 06010 N5,6.0,Nos,Satyam,2765.0,60.0,1106,,
+,CONTACTOR,Schneider,N5,LC1E,9A,5.5 HP,4 KW ,NC,LC1E0901*,,,18/09/2026,CONTACTOR 0901 N5,9.0,Nos,Satyam,2405.0,60.0,962,,
+,CONTACTOR,Schneider,N5,LC1E,9A,5.5 HP ,4 KW,NO,LC1E0910*,,,18/09/2026,CONTACTOR 09010 N5,9.0,Nos,Satyam,2405.0,60.0,962,,
+,CONTACTOR,Schneider,N5,LC1E,12A,7.5HP,5.5 KW,NC,LC1E1201*,,,18/09/2026,CONTACTOR 1201 N5,12.0,Nos,Satyam,2750.0,60.0,1100,,
+,CONTACTOR,Schneider,N5,LC1E,12A,7.5 HP,5.5 KW,NO,LC1E1210*,,,18/09/2026,CONTACTOR 12010 N5,12.0,Nos,Satyam,2750.0,60.0,1100,,
+,CONTACTOR,Schneider,N5,LC1E,18 A,12 HP , 9 KW,NC,LC1E1801*,,,18/09/2026,CONTACTOR 1801 N5,18.0,Nos,Satyam,3170.0,60.0,1268,,
+,CONTACTOR,Schneider,N5,LC1E,18 A,12 HP ,9 KW ,NO,LC1E1810*,,,18/09/2026,CONTACTOR 18010  N5,18.0,Nos,Satyam,3170.0,60.0,1268,,
+,CONTACTOR,Schneider,N5,LC1E,25 A ,15 HP ,11 KW,NC,LC1E2501*,,,18/09/2026,CONTACTOR 2501 N5,25.0,Nos,Satyam,5105.0,60.0,2042,,
+,CONTACTOR,Schneider,N5,LC1E,25 A,15 HP,11 KW,NO,LC1E2510*,,,18/09/2026,CONTACTOR 25010 N5,25.0,Nos,Satyam,4315.0,60.0,1726,,
+,CONTACTOR,Schneider,N5,LC1E,32  A,20 HP,15 KW ,NC,LC1E3201*,,,18/09/2026,CONTACTOR 3201 N5,32.0,Nos,Satyam,10700.0,60.0,4280,,
+,CONTACTOR,Schneider,N5,LC1E,32 A,20 HP ,15 KW ,NO,LC1E3210*,,,18/09/2026,CONTACTOR 32010 N5,32.0,Nos,Satyam,9045.0,60.0,3618,,
+,CONTACTOR,Schneider,N5,LC1E,38 A,25 HP,18.5 KW ,NC,LC1E3801*,,,18/09/2026,CONTACTOR 3801 N5,38.0,Nos,Satyam,12645.0,60.0,5058,,
+,CONTACTOR,Schneider,N5,LC1E,38 A,25 HP,25 HP,NO,LC1E3810*,,,18/09/2026,CONTACTOR 38010 N5,38.0,Nos,Satyam,10550.0,60.0,4220,,
+,CONTACTOR,Schneider,N5,LC1E,40 A,29 HP,29 HP,NC + NO,LC1E40*,,,18/09/2026,CONTACTOR 40 AMP N5FRAME-3,40.0,Nos,Satyam,14160.0,60.0,5664,,
+,CONTACTOR,Schneider,N5,LC1E,50 A, 34 HP, 34 HP,NC + NO,LC1E50*,,,18/09/2026,CONTACTOR 50 AMP N5,50.0,Nos,Satyam,17230.0,60.0,6892,,
+,CONTACTOR,Schneider,N5,LC1E,65 A,50 HP,50 HP,NC + NO,LC1E65*,,,18/09/2026,CONTACTOR 65 AMP N5,65.0,Nos,Satyam,23345.0,60.0,9338,,
+,CONTACTOR,Schneider,N5,LC1E,80 A,60 HP,60 HP,NC + NO,LC1E80*,,,18/09/2026,CONTACTOR 80 AMP N5,80.0,Nos,Satyam,30365.0,60.0,12146,,
+,CONTACTOR,Schneider,N5,LC1E,95 A,60 HP,60 HP,NC + NO,LC1E95*,,,18/09/2026,CONTACTOR 95 AMP N5,95.0,Nos,Satyam,36385.0,60.0,14554,,
+469.0,CONTACTOR ,,CONTACTOR,,,,,,,,,,IDEAL CONTACTOR ,,NOS,FIRE,3000.0,0.0,3000,,
+486.0,CONTACTOR,,,,,,,,,,,,50A L&T,,Nos,AJITESH,7640.0,40.0,4584,,
+487.0,CONTACTOR,,1.0,,,,,,,,,,50 A SEMINS,,Nos,ANUROOP,10575.0,51.0,5181.75,,
+509.0,CONTACTOR,,SIEMENS,,,,,,,,,, 9A 3P 24VDC NO CONTACTOR SIEMENS,,NOS,ANUROOP ,3300.0,45.0,1815,,
+510.0,CONTACTOR,,SIEMENS,,,,,,,,,,22A 3P 24VDC  CONTACTOR SIEMENS,,NOS,ANUROOP ,5480.0,45.0,3014,,
+511.0,CONTACTOR,,SIEMENS,,,,,,,,,, 38A 3P 24VDC CONTACTOR SIEMENS,,NOS,ANUROOP ,15190.0,45.0,8354.5,,
+674.0,CONTACTOR,,XX,,,,,,,,,,CONTACTOR 120 AMP M7,,Nos,Satyam,43445.0,68.0,13902.4,,
+,OLR,Schneider,LRE,0.25A,0.4A,E06,E38,LRE03,,,,18/09/2026,OLR 0.25...04 AMP ,0.25...04 AMP ,Nos,Satyam,3755.0,60.0,1502,,
+,OLR,Schneider,LRE,0.4A,0.63A,E06,E38,LRE04,,,,18/09/2026,OLR 0.4...0.63 AMP, 0.4...0.63 AMP,Nos,Satyam,3755.0,60.0,1502,,
+,OLR,Schneider,LRE,0.63A,1A,E06,E38,LRE03,,,,18/09/2026,OLR 0.63...1 AMP, 0.63...1 AMP,Nos,Satyam,3755.0,60.0,1502,,
+269.0,OLR,Schneider,LRE,1 A,.1.6A,E06,E38,LRE06,,,,18/09/2026,OLR 1...1.6 AMP,1...1.6 AMP,Nos,Satyam,3755.0,60.0,1502,,
+270.0,OLR,Schneider,LRE,.1.6 A,.2.5A,E06,E38,LRE07,,,,18/09/2026,OLR 1.6...2.5 AMP,2.51.6...2.5 AMP,Nos,Satyam,3755.0,60.0,1502,,
+271.0,OLR,Schneider,LRE,.2.5A,4A,E06,E38,LRE08,,,,18/09/2026,OLR 2.5...4  AMP,2.5...4  AMP,Nos,Satyam,3755.0,60.0,1502,,
+272.0,OLR,Schneider,LRE,4A,6A,E06,E38,LRE10 ,,,,18/09/2026,OLR 4...6  AMP,4...6  AMP,Nos,Satyam,3755.0,60.0,1502,,
+273.0,OLR,Schneider,LRE,5.5A,8A,E09,E38,LRE12,,,,18/09/2026,OLR 5.5...8  AMP,5.5...8  AMP,Nos,Satyam,3755.0,60.0,1502,,
+274.0,OLR,Schneider,LRE,7A,10A,E09,E38,LRE14,,,,18/09/2026,OLR 7...10  AMP,7...10  AMP,Nos,Satyam,3755.0,60.0,1502,,
+275.0,OLR,Schneider,LRE,9A,13A,E12,E38,LRE16,,,,18/09/2026,OLR 9...13  AMP, 9...13  AMP,Nos,Satyam,3755.0,60.0,1502,,
+276.0,OLR,Schneider,LRE,12A,18A,E18,E38,LRE21,,,,18/09/2026,OLR 12-18 AMP,12-18 AMP,Nos,Satyam,4165.0,60.0,1666,,
+277.0,OLR,Schneider,LRE,16A,24A,E25,E38,LRE22,,,,18/09/2026,OLR 16-24 AMP,16-24 AMP,Nos,Satyam,4620.0,60.0,1848,,
+,OLR,Schneider,LRE,17 A,25 A,E40,E95,LRE322,,,,18/09/2026,OLR 17...25 AMP,17...25 AMP,NOS,Satyam,8170.0,60.0,3268,,
+,OLR,Schneider,LRE,23A,32A,E40,E95,LRE353,,,,18/09/2026,OLR 23... 32 AMP,23... 32 AMP,NOS,Satyam,8170.0,60.0,3268,,
+,OLR,Schneider,LRE,30A,40A,E40,E95,LRE355,,,,18/09/2026,OLR 30...40 AMP, 30...40 AMP,NOS,Satyam,8170.0,60.0,3268,,
+278.0,OLR,Schneider,LRE,23A,32A,E25,E38,LRE32,,,,18/09/2026,OLR 23-32 AMP,23-32 AMP,Nos,Satyam,6430.0,60.0,2572,,
+279.0,OLR,Schneider,LRE,30A,38A,E38,E38,LRE35,,,,18/09/2026,OLR 30-38 AMP,30-38 AMP,Nos,Satyam,7245.0,60.0,2898,,
+280.0,OLR,Schneider,LRE,37A,50A,E50,E95,LRE357,,,,18/09/2026,OLR 37...50 AMP,37...50 AMP,Nos,Satyam,8170.0,60.0,3268,,
+281.0,OLR,Schneider,LRE,48A,65A,E65,E95,LRE359,,,,18/09/2026,OLR 48...65 AMP,48...65 AMP,Nos,Satyam,10725.0,60.0,4290,,
+282.0,OLR,Schneider,LRE,55A,70A,E80,E95,LRE361,,,,18/09/2026,OLR 55...70 AMP, 55...70 AMP,Nos,Satyam,12705.0,60.0,5082,,
+283.0,OLR,Schneider,LRE,63A,80A,E80,E95,LRE363,,,,18/09/2026,OLR 63...80 AMP, 63...80 AMP,Nos,Satyam,13265.0,60.0,5306,,
+284.0,OLR,Schneider,LRE,80A,104A,E95,E95,LRE365,,,,18/09/2026,OLR 80...104 AMP,80...104 AMP,Nos,Satyam,13265.0,60.0,5306,,
+,OLR,Schneider,LRE,51A,81A,E120,E300,LRE480,,,,18/09/2026,OLR 51...81 AMP,51...81 AMP,Nos,Satyam,24830.0,60.0,9932,,
+,OLR,Schneider,LRE,62A,99A,E120,E300,LRE481,,,,18/09/2026,OLR 62.....99 AMP,62...99 AMP,Nos,Satyam,24830.0,60.0,9932,,
+,OLR,Schneider,LRE,84A,135A,E120,E300,LRE482,,,,18/09/2026,OLR 84 ....135 AMP,84...135 AMP,Nos,Satyam,24830.0,60.0,9932,,
+,OLR,Schneider,LRE,124A,198A,E160,E300,LRE483,,,,18/09/2026,OLR 124...198 AMP ,124...198 AMP,Nos,Satyam,24830.0,60.0,9932,,
+,OLR,Schneider,LRE,146A,234A,E200,E300,LRE484,,,,18/09/2026,OLR 146...234AMP,146...234 AMP,Nos,Satyam,24830.0,60.0,9932,,
+,OLR,Schneider,LRE,174A,274A,E250,E300,LRE485,,,,18/09/2026,OLR 174..274 AMP,174...274 AMP,Nos,Satyam,24830.0,60.0,9932,,
+,OLR,Schneider,LRE,208A,333A,E300,E300,LRE486,,,,18/09/2026,OLR 208...333 AMP,208...333 AMP,Nos,Satyam,27060.0,60.0,10824,,
+,OLR,Schneider,LRE,258A,414A,E300,E400,LRE487,,,,18/09/2026,OLR 258...414 AMP,258...414 AMP,Nos,Satyam,32930.0,60.0,13172,,
+381.0,OLR,,1.0,,,,,,,,,,Thermal O/L  90-150A,,Nos,,8540.0,40.0,5124,,
+324.0,VFD,CG,2.5A,VSX48-003-20CEB,0.75KW-HD,1HP,3PH,200X80X150),,,,,"CG-0.75KW-HD,1HP,380-480V (200X80X150)",,Nos,INNOVATORS ELECRICAL,21328.0,50.0,10664,,
+325.0,VFD,CG,,,,,,,,,,,"CG-1.5KW-HD,2HP,380-480V (200X80X150)",,Nos,INNOVATORS ELECRICAL,22475.0,50.0,11237.5,,
+326.0,VFD,CG,,,,,,,,,,,"CG-2.2KW-HD,3HP,380-480V (200X80X150)",,Nos,INNOVATORS ELECRICAL,25784.0,50.0,12892,,
+327.0,VFD,CG,,,,,,,,,,,"CG-3.7KW-HD,5HP,380-480V (186.6X116.6X175)",,Nos,INNOVATORS ELECRICAL,29508.0,50.0,14754,,
+328.0,VFD,CG,,,,,,,,,,,"CG-7.5KW-HD,10HP,380-480V (249X146X177)",,Nos,INNOVATORS ELECRICAL,44749.0,50.0,22374.5,,
+329.0,VFD,CG,,,,,,,,,,,"CG-11KW-HD,15HP,380-480V (249X146X177)",,Nos,INNOVATORS ELECRICAL,54457.0,44.0,30495.92,,
+330.0,VFD,CG,,,,,,,,,,,"CG-15KW-HD,20HP,380-480V (300X198X185)",,Nos,INNOVATORS ELECRICAL,66888.0,44.0,37457.28,,
+331.0,VFD,CG,,,,,,,,,,,"CG-18.5KW-HD,25HP,380-480V (300X198X185)",,Nos,INNOVATORS ELECRICAL,74531.0,44.0,41737.36,,
+332.0,VFD,CG,,,,,,,,,,,"CG-22KW-HD,30HP,380-480V (300X198X185)",,Nos,INNOVATORS ELECRICAL,83341.0,44.0,46670.96,,
+333.0,VFD,CG,,,,,,,,,,,CG-4.4KW-ND(6HP)380-480V (186.6X116.6X175),,Nos,INNOVATORS ELECRICAL,31983.4,44.0,17910.704,,
+334.0,VFD,CG,,,,,,,,,,,"9.3KW-HD,12.5HP,380-480V (300X198X185)",,Nos,,54457.0,44.0,30495.92,,
+335.0,VFD,DANFOS,,,,,,,,,,,"3KW-HD,4HP,380-480V ",,Nos,INNOVATORS ELECRICAL,29508.0,50.0,14754,,
+337.0,VFD,CG,,,,,,,,,,,"5.5KW-ND,7.5HP,380-480V (186.6X116.6X175)",,Nos,INNOVATORS ELECRICAL,29508.0,52.0,14163.84,,
+338.0,VFD,DELTA,,,,,,,,,,," DELTA 5.5KW-ND,7.5HP,380-480V (186.6X116.6X175)",,Nos,DELTA DRIVE,14000.0,0.0,14000,,
+339.0,VFD,CG,,,,,,,,,,,"4KW-HD,5.5HP,380-480V (186.6X116.6X175)",,Nos,INNOVATORS ELECRICAL,29508.0,50.0,14754,,
+340.0,VFD,CG,,,,,,,,,,,"0.75KW-HD,1HP,380-480V (200X80X150)",,Nos,INNOVATORS ELECRICAL,21328.0,60.0,8531.2,,
+341.0,VFD,CG,,,,,,,,,,,"1.5KW-HD,2HP,380-480V (200X80X150)",,Nos,INNOVATORS ELECRICAL,22475.0,60.0,8990,,
+342.0,VFD,CG,,,,,,,,,,,"2.2KW-HD,3HP,380-480V (200X80X150)",,Nos,INNOVATORS ELECRICAL,25784.0,60.0,10313.6,,
+343.0,VFD,CG,,,,,,,,,,,"3.7KW-HD,5HP,380-480V (186.6X116.6X175)",,Nos,INNOVATORS ELECRICAL,29508.0,60.0,11803.2,,
+344.0,VFD,CG,,,,,,,,,,,"5.5KW-HD,7.5HP,380-480V (186.6X116.6X175)",,Nos,INNOVATORS ELECRICAL,37291.0,60.0,14916.4,,
+345.0,VFD,CG,,,,,,,,,,,"7.5KW-HD,10HP,380-480V (249X146X177)",,Nos,INNOVATORS ELECRICAL,44749.0,60.0,17899.6,,
+346.0,VFD,CG,,,,,,,,,,,"11KW-HD,15HP,380-480V (249X146X177)",,Nos,INNOVATORS ELECRICAL,54457.0,60.0,21782.8,,
+347.0,VFD,CG,,,,,,,,,,,"15KW-HD,20HP,380-480V (300X198X185)",,Nos,INNOVATORS ELECRICAL,66888.0,60.0,26755.2,,
+348.0,VFD,CG,,,,,,,,,,,"18.5KW-HD,25HP,380-480V (300X198X185)",,Nos,INNOVATORS ELECRICAL,74531.0,60.0,29812.4,,
+349.0,VFD,CG,,,,,,,,,,,"22KW-HD,30HP,380-480V (300X198X185)",,Nos,INNOVATORS ELECRICAL,83341.0,60.0,33336.4,,
+350.0,VFD,CG,,,,,,,,,,,1.1KW-ND(1.5HP)380-480V (186.6X116.6X175),,Nos,INNOVATORS ELECRICAL,22475.0,60.0,8990,,
+414.0,VFD,,Schineder,,,,,,,,,,7.5hp 5.5 KW VFD,,NOS,Satyam Schineder,14100.0,0.0,14100,,
+415.0,VFD,,Schineder,,,,,,,,,,2HP 4.2 A VFD,,NOS,Satyam Schineder,9858.0,0.0,9858,11336.7,
+416.0,VFD,,Schineder,,,,,,,,,,3HP 5.5 A VFD,,NOS,Satyam Schineder,11024.0,0.0,11024,12677.6,
+417.0,VFD,,Schineder,,,,,,,,,,5HP 8.9 A VFD,,NOS,Satyam Schineder,13250.0,0.0,13250,3000.0,
+418.0,VFD,,Schineder,,,,,,,,,,7.5HP 12.1 A VFD,,NOS,Satyam Schineder,14946.0,0.0,14946,,
+419.0,VFD,,Schineder,,,,,,,,,,10HP 16 A VFD,,NOS,Satyam Schineder,18020.0,0.0,18020,,
+420.0,VFD,,Schineder,,,,,,,,,,15HP 22.8 A VFD,,NOS,Satyam Schineder,24380.0,0.0,24380,,
+421.0,VFD,,Schineder,,,,,,,,,,20HP 36 A VFD,,NOS,Satyam Schineder,32330.0,0.0,32330,,
+422.0,VFD,,Schineder,,,,,,,,,,30HP 43 A VFD,,NOS,Satyam Schineder,46852.0,0.0,46852,,
+424.0,VFD,,CG,,,,,,,,,,1HP SINGLE PHASE VFD CG ,,NOS,,15000.0,61.0,5850,,
+425.0,VFD,,DANFOSS,,,,,,,,,,"0.37KW,0.5HP,380-480V",,NOS,INNODRIVES DANFOSS,8103.0,0.0,8103,,
+426.0,VFD,,DANFOSS,,,,,,,,,,"0.75KW, 1HP,380-480V",,NOS,INNODRIVES DANFOSS,8400.0,0.0,8400,,
+427.0,VFD,,DANFOSS,,,,,,,,,,"1.5KW,2HP,380-480V",,NOS,INNODRIVES DANFOSS,11462.0,0.0,11462,,
+428.0,VFD,,DANFOSS,,,,,,,,,,"2.2KW,3HP,380-480V",,NOS,INNODRIVES DANFOSS,14168.0,0.0,14168,,
+429.0,VFD,,DANFOSS,,,,,,,,,,"3KW,4HP,380-480V",,NOS,INNODRIVES DANFOSS,16858.0,0.0,16858,,
+430.0,VFD,,DANFOSS,,,,,,,,,,"4KW,5HP,380-480V",,NOS,INNODRIVES DANFOSS,18146.0,0.0,18146,,
+431.0,VFD,,DANFOSS,,,,,,,,,,"5.5KW, 7.5HP, 380-480V",,NOS,INNODRIVES DANFOSS,21032.0,0.0,21032,,
+432.0,VFD,,DANFOSS,,,,,,,,,,"7.5KW,10HP,380-480V",,NOS,INNODRIVES DANFOSS,23755.0,0.0,23755,,
+433.0,VFD,,DANFOSS,,,,,,,,,,"11KW,15HP,380-480V ",,NOS,INNODRIVES DANFOSS,34401.0,0.0,34401,,
+434.0,VFD,,DANFOSS,,,,,,,,,,"15KW,20HP,380-480V",,NOS,INNODRIVES DANFOSS,39586.0,0.0,39586,,
+435.0,VFD,,DANFOSS,,,,,,,,,,"18.5KW,25HP,380-480V ",,NOS,INNODRIVES DANFOSS,48716.0,0.0,48716,,
+436.0,VFD,,DANFOSS,,,,,,,,,,"22KW,30HP,380-480V ",,NOS,INNODRIVES DANFOSS,57078.0,0.0,57078,,
+437.0,VFD,,DANFOSS,,,,,,,,,,"30KW,40HP,380-480V ",,NOS,INNODRIVES DANFOSS,83300.8,0.0,83300.8,,
+438.0,VFD,,DANFOSS,,,,,,,,,,"38KW,50HP,380-480V ",,NOS,INNODRIVES DANFOSS,83489.7,0.0,83489.7,,
+439.0,VFD,,DANFOSS,,,,,,,,,,"47KW,60HP,380-480V ",,NOS,INNODRIVES DANFOSS,116859.75,0.0,116859.75,,
+440.0,VFD,,DANFOSS,,,,,,,,,,"75KW,140 AMP ,380-480V ",,NOS,INNODRIVES DANFOSS,162906.45,0.0,162906.45,,
+441.0,VFD,,DELTA,,,,,,,,,," 230V, 0.4KW / 0.5HP, Inbuilt detachable display unit",,NOS,DELTA MS SERISE VFD2A8MS21ANSAA,8882.0,0.0,8882,,
+442.0,VFD,,DELTA,,,,,,,,,,"230V, 0.75KW / 0.1HP, Inbuilt detachable display unit",,NOS,DELTA MS SERISE VFD4A8MS21ANSAA,9720.0,0.0,9720,,
+443.0,VFD,,DELTA,,,,,,,,,," 230V, 1.5KW / 2HP, Inbuilt detachable display unit",,NOS,DELTA MS SERISE VFD7A5MS21ANSAA,10373.0,0.0,10373,,
+444.0,VFD,,DELTA,,,,,,,,,," 230V, 2.2KW / 3HP, Inbuilt detachable display unit",,NOS,DELTA MS SERISE VFD11AMS21ANSAA,11739.0,0.0,11739,,
+445.0,VFD,,DELTA,,,,,,,,,," 415V, 0.4KW / 0.5HP, Inbuilt detachable display unit",,NOS,DELTA MS SERISE VFD1A5MS43ANSAA,10671.0,0.0,10671,,
+446.0,VFD,,DELTA,,,,,,,,,," 415V, 0.75KW / 1HP, Inbuilt detachable display unit",,NOS,DELTA MS SERISE VFD2A7MS43ANSAA,11205.0,0.0,11205,,
+447.0,VFD,,DELTA,,,,,,,,,," 415V, 1.5KW / 2HP, Inbuilt detachable display unit",,NOS,DELTA MS SERISE VFD4A2MS43ANSAA,11863.0,0.0,11863,,
+448.0,VFD,,DELTA,,,,,,,,,," 415V, 2.2KW / 3HP, Inbuilt detachable display unit",,NOS,DELTA MS SERISE VFD5A5MS43ANSAA,13708.0,0.0,13708,,
+449.0,VFD,,DELTA,,,,,,,,,," 415V, 4KW / 5HP, Inbuilt detachable display unit",,NOS,DELTA MS SERISE VFD9A0MS43ANSAA,15677.0,0.0,15677,,
+450.0,VFD,,DELTA,,,,,,,,,," 415V, 5.5KW / 7.5HP, Inbuilt detachable display unit",,NOS,DELTA MS SERISE VFD13AMS43ANSAA,21690.0,0.0,21690,,
+451.0,VFD,,DELTA,,,,,,,,,," 415V, 7.5KW / 10HP,  Inbuilt detachable display unit",,NOS,DELTA MS SERISE VFD17AMS43ANSAA,22466.0,0.0,22466,,
+452.0,VFD,,DELTA,,,,,,,,,," 415V, 11KW /15HP,  Inbuilt detachable display unit",,NOS,DELTA MS SERISE VFD25AMS43ANSAA,27473.0,0.0,27473,,
+453.0,VFD,,DELTA,,,,,,,,,," 415V, 15KW / 20HP,  Inbuilt detachable display unit",,NOS,DELTA MS SERISE VFD32AMS43ANSAA,34206.0,0.0,34206,,
+454.0,VFD,,DELTA,,,,,,,,,," 415V, 18.5KW / 25HP, Inbuilt detachable display unit",,NOS,DELTA MS SERISE VFD38AMS43ANSAA,45827.0,0.0,45827,,
+455.0,VFD,,DELTA,,,,,,,,,," 415V, 22KW / 30HP, Inbuilt detachable display unit",,NOS,DELTA MS SERISE VFD45AMS43ANSAA,49461.0,0.0,49461,,
+456.0,VFD,,DELTA,,,,,,,,,," 415V,30KW / 40HP, Inbuilt detachable display unit",,NOS,DELTA MS SERISE VFD300CP43B-21,57100.0,0.0,57100,,
+457.0,VFD,,DELTA,,,,,,,,,," 415V, 35KW / 50HP, Inbuilt detachable display unit",,NOS,DELTA MS SERISE VFD370CP53B-21,73450.0,0.0,73450,,
+458.0,VFD,,DELTA,,,,,,,,,," 415V, 45KW / 60HP, Inbuilt detachable display unit",,NOS,DELTA MS SERISE VFD45AMS43ANSAA,43990.0,0.0,43990,,
+459.0,VFD,,DELTA,,,,,,,,,," 415V, 75KW / 75HP 144 AMP ",,NOS,,133677.5,0.0,133677.5,,
+492.0,VFD,,VFD,,,,,,,,,,"18KW,20HP DELTA VFD ",,NOS,,54445.2,0.0,54445.2,,
+547.0,VFD,,VFD,,,,,,,,,,FC-051 7.5KW 10 HP DANFOSS VFD,,NOS,DANFOSS,26375.0,0.0,26375,,
+550.0,VFD,,V,,,,,,,,,,"55KW, 75HP 106AMP ,380-480V ",,NOS,INNODRIVES DANFOSS,143245.2,0.0,143245.2,,
+660.0,VFD,,GROUNFOSS,,,,,,,,,,15KW VFD GROUNFOSS,,Nos,,35528.0,0.0,35528,,
+661.0,VFD,,GROUNFOSS,,,,,,,,,,22KW VFD GROUNFOSS,,Nos,,51588.0,0.0,51588,,
+662.0,VFD,,FC,,,,,,,,,,"15KW,20HP,380-480V FC-51",,NOS,INNODRIVES DANFOSS,49636.4,0.0,49636.4,,
+664.0,VFD,,DELTA ME,,,,,,,,,," 230V, 0.4KW / 0.5HP, Inbuilt detachable display unit",,NOS,DELTA ME SERISE VFD2A8MS21ANSAA,9326.1,0.0,9326.1,,
+665.0,VFD,,DELTA ME,,,,,,,,,,"230V, 0.75KW / 0.1HP, Inbuilt detachable display unit",,NOS,DELTA ME SERISE VFD4A8MS21ANSAA,10692,0.0,10692,,
+666.0,VFD,,DELTA ME,,,,,,,,,," 230V, 1.5KW / 2HP, Inbuilt detachable display unit",,NOS,DELTA ME SERISE VFD7A5MS21ANSAA,10891.65,0.0,10891.65,,
+667.0,VFD,,DELTA ME,,,,,,,,,," 230V, 2.2KW / 3HP, Inbuilt detachable display unit",,NOS,DELTA ME SERISE VFD11AMS21ANSAA,12325.95,0.0,12325.95,,
+668.0,VFD,,DELTA ME,,,,,,,,,," 415V, 4KW / 5HP, Inbuilt detachable display unit",,NOS,DELTA ME SERISE VFD9A0MS43ANSAA,14771.4,0.0,14771.4,,
+669.0,VFD,,DELTA ME,,,,,,,,,," 415V, 5.5KW / 7.5HP, Inbuilt detachable display unit",,NOS,DELTA ME SERISE VFD13AMS43ANSAA,18274.2,0.0,18274.2,,
+670.0,VFD,,DELTA ME,,,,,,,,,," 415V, 7.5KW / 10HP,  Inbuilt detachable display unit",,NOS,DELTA ME SERISE VFD17AMS43ANSAA,20843.55,0.0,20843.55,,
+1.0,Controller,SAARK,1.0,,,,,,,,,,AI-PCU02 WITH HMI DISPLAY ,1.0,Nos,Saark Exploration Pvt Ltd,50000.0,50.0,25000,,
+2.0,Controller,,2.0,,,,,,,,,,AI-PCU02 WITH HMI DISPLAY ,2.0,Nos,Saark Exploration Pvt Ltd,39000.0,50.0,19500,,
+3.0,Controller,,3.0,,,,,,,,,,AIPCU  HMI CONTROLLER MULTIVFD,3.0,Nos,Saark Exploration Pvt Ltd,80000.0,50.0,40000,,
+4.0,Controller,,4.0,,,,,,,,,,AIPCU  HMI CONTROLLER MULTIVFD,4.0,Nos,Saark Exploration Pvt Ltd,60000.0,50.0,30000,,
+5.0,Controller,,5.0,,,,,,,,,,DEFENDER ,5.0,Nos,Saark Exploration Pvt Ltd,70000.0,50.0,35000,,
+6.0,Controller,,6.0,,,,,,,,,,HMI CONTROLLER STP,6.0,Nos,Saark Exploration Pvt Ltd,70000.0,50.0,35000,,
+7.0,Controller,,7.0,,,,,,,,,,"HMI CONTROLLER DIESEL (GPS, PRDL, FT,ROUTER)",7.0,Nos,Saark Exploration Pvt Ltd,107000.0,50.0,53500,,
+8.0,Controller,,8.0,,,,,,,,,,AI-PCU01,8.0,Nos,Saark Exploration Pvt Ltd,32000.0,50.0,16000,,
+9.0,Controller,,9.0,,,,,,,,,,DLC02,9.0,Nos,Saark Exploration Pvt Ltd,11500.0,50.0,5750,,
+10.0,Controller,,10.0,,,,,,,,,,DLC02 DEWATERING ,10.0,Nos,Saark Exploration Pvt Ltd,11500.0,65.0,4025,,
+11.0,Controller,,11.0,,,,,,,,,,DLC02 DEWATERING (THERMAL AND MOISTURE) ,11.0,Nos,Saark Exploration Pvt Ltd,9500.0,0.0,9500,,
+12.0,Controller,,12.0,,,,,,,,,,DLC PCB,12.0,Nos,Saark Exploration Pvt Ltd,11500.0,70.0,3450,,
+13.0,Controller,,13.0,,,,,,,,,,DLC VFD,13.0,Nos,Saark Exploration Pvt Ltd,30000.0,50.0,15000,,
+14.0,Controller,,14.0,,,,,,,,,,DLC VFD T SURESH ,14.0,Nos,Saark Exploration Pvt Ltd,9500.0,0.0,9500,,
+389.0,Controller,,A-STP,,,,,,,,,,AIPCU WITH HMI DISPLAY - STP,,Nos,SAARK,50000.0,50.0,25000,,
+390.0,Controller,,GIC,,,,,,,,,,GIC WATER LEVEL CONTROLLER ,,Nos,GIC,1500.0,0.0,1500,,
+391.0,Controller,,,,,,,,,,,,GIC CONTROLLER,,Nos,,1900.0,0.0,1900,,
+18.0,CT COIL,,30-02 HOLE,,,,,,,,,,30amp CT With Wire (2 HOLE),30.0,Nos,Saark Exploration Pvt Ltd,250.0,50.0,125,,
+19.0,CT COIL,,30-03 HOLE,,,,,,,,,,30amp CT With Wire (3 HOLE ) ,30.0,Nos,Saark Exploration Pvt Ltd,300.0,47.0,159,,
+20.0,CT COIL,,60-03 HOLE,,,,,,,,,,60amp CT With Wire (3 HOLE ) ,60.0,Nos,Saark Exploration Pvt Ltd,1500.0,47.0,795,,
+21.0,CT COIL,,30-02 HOLE,,,,,,,,,,100amp CT With Wire (2 HOLE ) ,10.0,Nos,Saark Exploration Pvt Ltd,2000.0,47.0,1060,,
+22.0,CT COIL,,600/5 HOLE,,,,,,,,,,600/5 amp CT With Wire ,600.0,Nos,Saark Exploration Pvt Ltd,4000.0,47.0,2120,,
+672.0,CT COIL,,1.0,,,,,,,,,,300 AMP/5 CT COIL (1 HOLE) ,,Nos,,5000.0,47.0,2650,,
+673.0,CT COIL,,1.0,,,,,,,,,,TERMINAL BLOCK ,,Nos,,200.0,0.0,200,,
+15.0,POWER SUPPLY,,1.0,,,,,,,,,,AI-PCU POWER SUPPLY,1.0,Nos,Saark Exploration Pvt Ltd,900.0,35.0,585,,
+16.0,POWER SUPPLY,,2.0,,,,,,,,,,DLC POWER SUPPLY ,2.0,Nos,Saark Exploration Pvt Ltd,900.0,45.0,495,,
+17.0,Switch ,,1.0,,,,,,,,,,RELAY CARD FOR MANUAL PROTECTION,1.0,Nos,Saark Exploration Pvt Ltd,640.0,50.0,320,,
+147.0,Switch,,1.0,,,,,,,,,,DOOR LIMIT SWITCH  1NO 1NC,1.0,Nos,Anuroop,268.0,45.0,147.4,,268
+212.0,Switch,,TNI,,,,,,,,,,2 Pole selector switch (TNI) ,2.0,Nos,Ajitesh,96.0,30.0,67.2,,
+213.0,Switch,,TNI,,,,,,,,,,3 Pole selector switch (TNI) ,3.0,Nos,Ajitesh,150.0,30.0,105,,
+214.0,Switch,,Element,,,,,,,,,,NO Element,1.0,nos,Ajitesh,87.0,30.0,60.9,,
+215.0,Switch,,Element,,,,,,,,,,NC Element,2.0,Nos,Ajitesh,87.0,30.0,60.9,,
+216.0,Switch,,INDICATOR,,,,,,,,,,RED INDICATOR ,1.0,Nos,Ajitesh,60.0,30.0,42,,
+217.0,Switch,,INDICATOR,,,,,,,,,,YELLOW INDICATOR ,2.0,Nos,Ajitesh,60.0,30.0,42,,
+218.0,Switch,,INDICATOR,,,,,,,,,,BLUE INDICATOR ,3.0,Nos,Ajitesh,60.0,30.0,42,,
+219.0,Switch,,INDICATOR,,,,,,,,,,AMBER INDICATOR ,4.0,Nos,Ajitesh,60.0,30.0,42,,
+220.0,Switch,,INDICATOR,,,,,,,,,,GREEN INDICATOR ,5.0,Nos,Ajitesh,60.0,30.0,42,,
+363.0,SWITCH,,1.0,,,,,,,,,,EMERGENCY STOP BUTTON,,Nos,,150.0,0.0,150,,
+398.0,switch,,YELLOW SB,,,,,,,,,,3 POLE SWITCH DOOR MOUNT (YELLOW) 63A,63.0,Nos,Anuroop,1168.0,40.0,700.8,,
+399.0,switch,,1.0,,,,,,,,,,3 POLE SWITCH DOOR MOUNT (YELLOW) 80A,80.0,Nos,Anuroop,3003.0,40.0,1801.8,,
+400.0,switch,,1.0,,,,,,,,,,3 POLE SWITCH DOOR MOUNT (YELLOW) 100A,,Nos,Anuroop,3748.0,40.0,2248.8,,
+401.0,switch,,1.0,,,,,,,,,,3 POLE SWITCH DOOR MOUNT (YELLOW) 125A,,Nos,Anuroop,4684.0,40.0,2810.4,,
+402.0,switch,,1.0,,,,,,,,,,3 POLE SWITCH DOOR MOUNT (YELLOW) 16A,,Nos,Anuroop,847.0,40.0,508.2,,
+403.0,switch,,1.0,,,,,,,,,,3 POLE SWITCH DOOR MOUNT (YELLOW) 20A,,Nos,Anuroop,870.0,40.0,522,,
+404.0,switch,,1.0,,,,,,,,,,3 POLE SWITCH DOOR MOUNT (YELLOW) 25A,,Nos,Anuroop,944.0,40.0,566.4,,
+405.0,switch,,1.0,,,,,,,,,,3 POLE SWITCH DOOR MOUNT (YELLOW) 32A,,Nos,Anuroop,977.0,40.0,586.2,,
+406.0,switch,,1.0,,,,,,,,,,3 POLE SWITCH DOOR MOUNT (YELLOW) 40A,,Nos,Anuroop,1105.0,40.0,663,,
+,Terminal,,RED,cbb,,,,,,,,,CBB TERMINAL RED 35-50,,NOS,,200.0,0.0,200,,
+,Terminal,,YELLOW,cbb,,,,,,,,,CBB TERMINAL YELLOW 35-51,,NOS,,200.0,0.0,200,,
+,Terminal,,BLUE,cbb,,,,,,,,,CBB TERMINAL BLUE 35-52,,NOS,,200.0,0.0,200,,
+,Terminal,,BLACK,cbb,,,,,,,,,CBB TERMINAL BLACK 35-53,,NOS,,200.0,0.0,200,,
+,Terminal,,GREY,cbb,,,,,,,,,CBB TERMINAL GREY 35-54,,NOS,,200.0,0.0,200,,
+87.0,Terminal,,RED,,,,,,,,,,CTS 16U RED,16.0,Nos,Anuroop,42.0,30.0,29.4,,
+88.0,Terminal,,YELLOW,,,,,,,,,,CTS 16U YELLOW,16.0,Nos,Anuroop,42.0,30.0,29.4,,
+89.0,Terminal,,BLUE,,,,,,,,,,CTS 16U BLUE,16.0,Nos,Anuroop,42.0,30.0,29.4,,
+90.0,Terminal,,RED,,,,,,,,,,CTS 10U RED,10.0,Nos,Anuroop,25.0,30.0,17.5,,
+91.0,Terminal,,YELLOW,,,,,,,,,,CTS 10U YELLOW,,Nos,Anuroop,25.0,30.0,17.5,,
+92.0,Terminal,,BLUE,,,,,,,,,,CTS 10U BLUE,,Nos,Anuroop,25.0,30.0,17.5,,
+93.0,Terminal,,BLACK,,,,,,,,,,CTS 10U BLACK,,Nos,Anuroop,25.0,30.0,17.5,,
+94.0,Terminal,,GREY,,,,,,,,,,CTS 10U GREY,,Nos,Anuroop,25.0,30.0,17.5,,
+95.0,Terminal,,GREEN ERTH,,,,,,,,,,CTS 6U GREEN ERTH,,Nos,Anuroop,93.0,30.0,65.1,,
+96.0,Terminal,,RED,CTS,41A,,,,,,,,CTS 6U RED,,Nos,Anuroop,23.5,30.0,16.45,38.0,14.57
+97.0,Terminal,,YELLOW,,,,,,,,,,CTS 6U YELLOW,,Nos,Anuroop,20.0,30.0,14,,20
+98.0,Terminal,,BLUE,,,,,,,,,,CTS 6U BLUE,,Nos,Anuroop,20.0,30.0,14,,20
+99.0,Terminal,,BLACK,,,,,,,,,,CTS 6U BLACK,,Nos,Anuroop,20.0,30.0,14,,20
+100.0,Terminal,,GREY,,,,,,,,,,CTS 6U GREY,,Nos,Anuroop,20.0,30.0,14,,20
+101.0,Terminal,,RED,,,,,,,,,,CTS 4U RED,,Nos,Anuroop,11.0,7.0,10.23,,11
+102.0,Terminal,,YELLOW,,,,,,,,,,CTS 4U YELLOW,,Nos,Anuroop,11.0,7.0,10.23,,11
+103.0,Terminal,,BLUE,,,,,,,,,,CTS 4U BLUE,,Nos,Anuroop,11.0,7.0,10.23,,11
+104.0,Terminal,,BLACK,,,,,,,,,,CTS 4U BLACK ,,Nos,Anuroop,11.0,7.0,10.23,,11
+105.0,Terminal,,GREY,,,,,,,,,,CTS 4U GREY,,Nos,Anuroop,11.0,7.0,10.23,,11
+106.0,Terminal,,GREY,,,,,,,,,,CTS - 2.5U,,Nos,Anuroop,8.0,7.0,7.44,,8
+107.0,Terminal,,GREY,,,,,,,,,,EP - 2.5/4U,4.0,Nos,Anuroop,8.0,30.0,5.6,,8
+108.0,Terminal,,GREY,,,,,,,,,,EP - 6/10U,10.0,Nos,Anuroop,9.0,30.0,6.3,,9
+109.0,Terminal,,GREY,,,,,,,,,,END LOCK CA802,1.0,Nos,Anuroop,15.0,30.0,10.5,,15
+468.0,TERMINAL,,AMP,,,,,,,,,,PVC TERMINAL 6AMP,,NOS,FIRE,3000.0,0.0,3000,,
+110.0,Din Rail,,1.0,,,,,,,,,,Din Rail 35X7.5,1.0,Meter,Ajitesh,88.8,30.0,62.16,,88.8
+111.0,Cable Tray,,25X60,,,,,,,,,,CABLE TREY 25X60 BTYPE,1.0,Meter,Ajitesh,185.0,40.0,111,,185
+112.0,Cable Tray,,25X45,,,,,,,,,,CABLE TREY 25X45 BTYPE,2.0,Meter,Ajitesh,170.0,40.0,102,,170
+113.0,Cable Tray,,45X60,,,,,,,,,,CABLE TREY 45X60 BTYPE,3.0,Meter,Ajitesh,312.0,40.0,187.2,,312
+114.0,Metal Box,,1.0,,,,,,,,,,Metal Box 450*350*210 DLC UPTO 2 PUMP ,1.0,Nos,Anand Engineering,2500.0,0.0,2500,,2500
+115.0,Metal Box,,1.0,,,,,,,,,,Metal Box 500*400*210 DLC ,2.0,Nos,Anand Engineering,3000.0,0.0,3000,,3000
+116.0,Metal Box,,1.0,,,,,,,,,,Metal Box Dewatering,3.0,Nos,Anand Engineering,960.0,0.0,960,,960
+117.0,Metal Box,,1.0,,,,,,,,,,Metal Box 500*400*250 DLC UPTO 4 PUMP ,4.0,Nos,Anand Engineering,3900.0,0.0,3900,,3900
+118.0,Metal Box,,1.0,,,,,,,,,,Metal Box 600*400*250 DLC UPTO 4 PUMP ,5.0,Nos,Anand Engineering,4500.0,0.0,4500,,4500
+119.0,Metal Box,,1.0,,,,,,,,,,Metal Box 600*700*250(1.6MM) ,6.0,Nos,Anand Engineering,5600.0,0.0,5600,,5600
+120.0,Metal Box,,1.0,,,,,,,,,,Metal Box 500*600*250(1.6MM) ,7.0,Nos,Anand Engineering,3500.0,0.0,3500,,3500
+121.0,Metal Box,,1.0,,,,,,,,,,Metal Box 700*500*250 (1.2mm),8.0,Nos,Anand Engineering,4700.0,0.0,4700,,4700
+122.0,Metal Box,,1.0,,,,,,,,,,Metal Box 800*600*250 (1.6mm),9.0,Nos,Anand Engineering,7500.0,0.0,7500,,7500
+123.0,Metal Box,,1.0,,,,,,,,,,Metal Box 900*700*250 (1.6mm),10.0,Nos,Anand Engineering,8500.0,0.0,8500,,8500
+124.0,Metal Box,,1.0,,,,,,,,,,Metal Box 900*700*250 (1.6mm) outdoor,11.0,Nos,Anand Engineering,12000.0,0.0,12000,,12000
+125.0,Metal Box,,1.0,,,,,,,,,,Metal Box 900*700*250 (1.6mm) OUTDOOR CONTROL PANEL ,12.0,Nos,Anand Engineering,17000.0,0.0,17000,,17000
+126.0,Metal Box,,1.0,,,,,,,,,,Metal Box 900*750*330 (1.6mm),13.0,Nos,Anand Engineering,9500.0,0.0,9500,,9500
+127.0,Metal Box,,1.0,,,,,,,,,,Metal Box 870 x 600 x 350 (1.6mm),14.0,Nos,Anand Engineering,9000.0,0.0,9000,,9000
+128.0,Metal Box,,1.0,,,,,,,,,,Metal Box 900*900*350 (1.6mm),15.0,Nos,Anand Engineering,14000.0,0.0,14000,,14000
+129.0,Metal Box,,1.0,,,,,,,,,,50HP 4PUMP 2VFD METAL BOX,16.0,Nos,Anand Engineering,40000.0,0.0,40000,,40000
+130.0,Metal Box,,1.0,,,,,,,,,,60HP 3PUMP 3VFD METAL BOX,17.0,Nos,Anand Engineering,20000.0,0.0,20000,,20000
+131.0,Metal Box,,1.0,,,,,,,,,,SOFT STARTER METAL BOX 40HP ,18.0,Nos,Anand Engineering,20000.0,0.0,20000,,20000
+132.0,Metal Box,,1.0,,,,,,,,,,SOFT STARTER METAL BOX 50HP ,19.0,Nos,Anand Engineering,35000.0,0.0,35000,,35000
+133.0,Metal Box,,1.0,,,,,,,,,,METAL BOX FOR 75HP ,20.0,Nos,Anand Engineering,40000.0,0.0,40000,,40000
+134.0,Metal Box,,1.0,,,,,,,,,,Metal Box 850*650*210 STP  UPTO 15  PUMP ,21.0,Nos,Anand Engineering,4300.0,0.0,4300,,4300
+135.0,Metal Box,,1.0,,,,,,,,,,Metal Box 900*500*250 UPTO 4 PUMP MULTY VFD ,22.0,Nos,Anand Engineering,7500.0,0.0,7500,,7500
+136.0,Metal Box,,1.0,,,,,,,,,,Metal Box 950*600*375 UPTO 4 PUMP MULTY VFD ,23.0,Nos,Anand Engineering,10700.0,0.0,10700,,10700
+137.0,Metal Box,,1.0,,,,,,,,,,Metal Box 850*550*375 UPTO 4 PUMP MULTY VFD ,24.0,Nos,Anand Engineering,9500.0,0.0,9500,,9500
+138.0,Metal Box,,1.0,,,,,,,,,,Metal Box 650*400*300 ,25.0,Nos,Anand Engineering,600.0,0.0,600,,600
+139.0,Metal Box,,1.0,,,,,,,,,,Metal Box 700*600*300 UPTO 4 PUMP MULTY VFD ,26.0,Nos,Anand Engineering,7500.0,0.0,7500,,7500
+140.0,Metal Box,,1.0,,,,,,,,,,Metal Box 650*950*300(1.6MM) ,27.0,Nos,Anand Engineering,7600.0,0.0,7600,,7600
+141.0,Metal Box,,1.0,,,,,,,,,,METAL BOX 450*350*250MM,28.0,Nos,,3500.0,0.0,3500,,3500
+142.0,Metal Box,,1.0,,,,,,,,,,METAL BOX 2100*600*400MM,29.0,Nos,,30000.0,0.0,30000,,30000
+143.0,Metal Box,,1.0,,,,,,,,,,METAL BOX 900*900*300MM,30.0,Nos,,20000.0,0.0,20000,,20000
+380.0,metal box,,1.0,,,,,,,,,,metal box,,Nos,,55000.0,0.0,55000,,
+385.0,Metal Box,,1.0,,,,,,,,,,Metal Box 700*500*400 (1.6mm) ATS,,Nos,Anand Engineering,15000.0,0.0,15000,,
+386.0,Metal Box,,1.0,,,,,,,,,,Metal Box 1000*1000*600 (1.6mm) LT,,Nos,Anand Engineering,30000.0,0.0,30000,,
+387.0,Metal Box,,1.0,,,,,,,,,,Metal Box 230*190*125 ,,Nos,Anand Engineering,500.0,0.0,500,,
+407.0,METAL BOX,,METEL BOX,,,,,,,,,,METAL BOX 500x600x250 (HMI 2PUMP) UPTO 3HP,,NOS,DB INDUSRIES,3500.0,0.0,3500,,
+408.0,METAL BOX,,PUMP,,,,,,,,,,METAL BOX 500x700x250 (HMI 3PUMP) ,,NOS,DB INDUSRIES,4700.0,0.0,4700,,
+409.0,METAL BOX,,PUMP,,,,,,,,,,METAL BOX 500x700x300 (HMI 3PUMP) ,,NOS,DB INDUSRIES,5500.0,0.0,5500,,
+410.0,METAL BOX,,PUMP,,,,,,,,,,METAL BOX 600x800x300 (HMI 3PUMP) ,,NOS,DB INDUSRIES,8500.0,0.0,8500,,
+411.0,METAL BOX,,VFD,,,,,,,,,,METAL BOX 550x700x330 MULTY VFD,,NOS,DB INDUSRIES,4700.0,0.0,4700,,
+412.0,METAL BOX,,VFD,,,,,,,,,,METAL BOX 600x800x330 MULTY VFD,,NOS,DB INDUSRIES,6500.0,0.0,6500,,
+423.0,METAL BOX,,MB,,,,,,,,,,METAL BOX FOR 6 PUMP ,,NOS,,15000.0,0.0,15000,,
+480.0,Metal Box,,1.0,,,,,,,,,,Metal Box 950*750*400 (1.6mm) ATS,,Nos,Anand Engineering,25000.0,0.0,25000,,
+481.0,Metal Box,,1.0,,,,,,,,,,SDF FN250TPF,,Nos,Anand Engineering,19580.0,50.0,9790,,
+482.0,Metal Box,,1.0,,,,,,,,,,Metal box 750*1000*350(2 vfd Outdoor Panel) ,,Nos,Anand Engineering,14000.0,0.0,14000,,
+483.0,Metal Box,,1.0,,,,,,,,,,Metal Box 600*500*250 (1.2mm) HMI PANEL,,Nos,Anand Engineering,3700.0,0.0,3700,,
+484.0,Metal Box,,1.0,,,,,,,,,,Metal Box 700*500*250 (1.2mm) HMI PANEL,,Nos,Anand Engineering,5200.0,0.0,5200,,
+485.0,Metal Box,,1.0,,,,,,,,,,Metal Box 850*1200*350 (1.2mm) HMI PANEL(15KW 3 PUMP),,Nos,Anand Engineering,14000.0,0.0,14000,,
+488.0,METAL BOX,,HP,,,,,,,,,,METAL BOX 500x600x240 (HMI 2PUMP) UPTO 3HP,,NOS,DB INDUSRIES,4500.0,0.0,4500,,
+489.0,METAL BOX,,HP,,,,,,,,,,METAL BOX 500x600x240 (HMI 2PUMP) UPTO 5HP,,NOS,DB INDUSRIES,4700.0,0.0,4700,,
+490.0,METAL BOX,,indore,,,,,,,,,,METAL BOX 600x1200x350 1pump indore,,NOS,DB INDUSRIES,16000.0,0.0,16000,,
+491.0,METAL BOX,,indore,,,,,,,,,,METAL BOX 600x800x350 1pump indore,,NOS,DB INDUSRIES,12000.0,0.0,12000,,
+493.0,METAL BOX,,INDOOR,,,,,,,,,,25HP 1PUMP METEL BOX VFD INDOOR,,NOS,DB INDUSRIES,7000.0,0.0,7000,,
+494.0,METAL BOX,,OUTDOOR,,,,,,,,,,25HP 1PUMP METEL BOX VFD OUTDOOR,,NOS,DB INDUSRIES,15000.0,0.0,15000,,
+495.0,METAL BOX,,INDOOR,,,,,,,,,,METAL BOX 1150X1400X450 INDOOR ,,NOS,DB INDUSRIES,22000.0,0.0,22000,,
+503.0,metal BOX,,DLC,,,,,,,,,,FLAME PROOF PANEL ( DLC),,NOS,ANUROOP MULTISPAN ,25000.0,0.0,25000,,
+504.0,metal BOX,,PANEL,,,,,,,,,,22 KW 30HP 1 PUMP INDOOR PANEL ,,NOS,ANUROOP MULTISPAN ,20000.0,0.0,20000,,
+506.0,Metal Box,,1.0,,,,,,,,,,Metal Box 1000*1500*350 (1.6) HMI PANEL(15KW 2 PUMP),,Nos,db ,22000.0,0.0,22000,,
+507.0,METAL BOX,,PANEL,,,,,,,,,,METAL BOX 750x650x350 (HMI 2PUMP)  5HP OUTDOOR PANEL ,,NOS,DB INDUSRIES,12500.0,0.0,12500,,
+514.0,METAL BOX ,,PANEL,,,,,,,,,,METAL BOX 450*350*250MM OUTDOOR PANEL ,,NOS,,9000.0,0.0,9000,,
+515.0,METAL BOX ,,PANEL,,,,,,,,,,METAL BOX 500*600*250MM OUTDOOR PANEL ,,NOS,,13000.0,0.0,13000,,
+517.0,Metal Box,,1.0,,,,,,,,,,Metal box 550X 700X330 3 MULTY VFD ,,Nos,Anand Engineering,4700.0,0.0,4700,,
+518.0,Metal Box,,1.0,,,,,,,,,,Metal box 600X 700X300 2 VFD 4 PUMP,,Nos,Anand Engineering,15000.0,0.0,15000,,
+519.0,Metal Box,,1.0,,,,,,,,,,Metal box 1500X 2000X450 4 VFD 4 PUMP,,Nos,Anand Engineering,50000.0,0.0,50000,,
+520.0,Metal Box,,1.0,,,,,,,,,,Metal box 1700X 1500X450 3VFD 3 PUMP,,Nos,Anand Engineering,55000.0,0.0,55000,,
+521.0,Metal Box,,1.0,,,,,,,,,,Metal box 1700X 1500X450 2VFD 4 PUMP,,Nos,Anand Engineering,40000.0,0.0,40000,,
+522.0,Metal Box,,1.0,,,,,,,,,,Metal box 1700X 1500X450 2VFD 3PUMP,,Nos,Anand Engineering,30000.0,0.0,30000,,
+523.0,METAL BOX,,VFD,,,,,,,,,,900x600x300 - 3 PUMP HMI 1VFD,,NOS,DB INDUSTRIES ,9000.0,0.0,9000,,
+524.0,Metal Box,,1.0,,,,,,,,,,Metal Box 850*1200*350 (1.2mm) (11KW 3 PUMP) CONTROL PANEL BOX,,Nos,Anand Engineering,15000.0,0.0,15000,,
+525.0,Metal Box,,1.0,,,,,,,,,,Metal Box 850*1200*350 (1.2mm) HMI PANEL(11KW 3 PUMP),,Nos,Anand Engineering,11000.0,0.0,11000,,
+526.0,METAL BOX,,PUMP,,,,,,,,,,700x600x200 - 3 PUMP,,NOS,DB INDUSTRIES ,6000.0,0.0,6000,,
+527.0,METAL BOX,,PANEL,,,,,,,,,,3 COMPARTMENT CONTROL PANEL,,NOS,DB INDUSTRIES ,42000.0,0.0,42000,,
+529.0,METAL BOX,,PANEL,,,,,,,,,,4 COMPARTMENT CONTROL PANEL,,NOS,DB INDUSTRIES ,56000.0,0.0,56000,,
+530.0,Metal Box,,1.0,,,,,,,,,,Metal Box 800*1300*350 HMI PANEL 2PUMP 20HP 2VFD,,Nos,DB INDUSTRIES ,16000.0,0.0,16000,,
+531.0,Metal Box,,1.0,,,,,,,,,,METAL BOX 700*1000*320 HMI 3 PUMP 10PH WITH BYPASS,,Nos,DB INDUSTRIES ,15000.0,0.0,15000,,
+532.0,Metal Box,,1.0,,,,,,,,,,METAL BOX 800*1200*320 HMI 3 PUMP 10PH WITH BYPASS,,Nos,DB INDUSTRIES ,16000.0,0.0,16000,,
+533.0,Metal Box,,1.0,,,,,,,,,, 2 PUMP COMPARTMENTAL PANEL 1500x1000x400,,Nos,DB INDUSTRIES ,35000.0,0.0,35000,,
+534.0,Metal Box,,1.0,,,,,,,,,, 2 PUMP COMPARTMENTAL PANEL,,Nos,DB INDUSTRIES ,25000.0,0.0,25000,,
+535.0,Metal Box,,1.0,,,,,,,,,,Metal Box 800*1300*400 HMI PANEL 2PUMP 12.5HP 2VFD,,Nos,DB INDUSTRIES ,17000.0,0.0,17000,,
+536.0,METAL BOX,,1.0,,,,,,,,,,7.5HP AND 10 HP OUTDOOR PANEL BOX ,,Nos,DB INDUSTRIES ,8000.0,0.0,8000,,
+537.0,METAL BOX,,VFD,,,,,,,,,,1000(H)X850(W)X320(D) 15HP 4 VFD,,NOS,DB INDUSTRIES ,15000.0,0.0,15000,,
+538.0,METAL BOX,,VFD,,,,,,,,,,1500(H)X1000(W)X320(D) 15HP 6 VFD,,NOS,DB INDUSTRIES ,40000.0,0.0,40000,,
+539.0,METAL BOX,,VFD,,,,,,,,,,1500(H)X1000(W)X320(D) 20HP 3 VFD,,NOS,DB INDUSTRIES ,35000.0,0.0,35000,,
+540.0,METAL BOX,,VFD,,,,,,,,,,1500(H)X1000(W)X320(D) 25HP 3 VFD,,NOS,DB INDUSTRIES ,30000.0,0.0,30000,,
+541.0,METAL BOX,,VFD,,,,,,,,,,1500(H)X1000(W)X320(D) 35HP 2 VFD,,NOS,DB INDUSTRIES ,35000.0,0.0,35000,,
+542.0,METAL BOX,,BOX,,,,,,,,,,8 PUMP 4 VFD METAL BOX,,NOS,DB INDUSTRIES ,35000.0,0.0,35000,,
+548.0,METAL BOX,,VFD,,,,,,,,,,1500(H)X1000(W)X320(D)  6 VFD,,NOS,DB INDUSTRIES ,20000.0,0.0,20000,,
+549.0,METAL BOX,,PANEL,,,,,,,,,,METAL BOX 40 HP 3 VFD COMPARTMENT PANEL ,,NOS,DB INDUSTRIES ,40000.0,0.0,40000,,
+551.0,METAL BOX,,PANEL,,,,,,,,,,METAL BOX 75 HP 3 VFD COMPARTMENT PANEL ,,NOS,DB INDUSTRIES ,70000.0,0.0,70000,,
+647.0,METAL BOX,,MB,,,,,,,,,,DLC OUTDOOR BOX 2 PUMP ,,NOS,,3000.0,0.0,3000,,
+663.0,METAL BOX ,,BOX,,,,,,,,,,400 X 600 X 250 MM UPTO 5 HP METAL BOX ,,NOS,,3000.0,0.0,3000,,
+671.0,METAL BOX,,DEWATERING,,,,,,,,,,METAL BOX FOR DEWATERING ,,NOS,DB ,1500.0,0.0,1500,,
+675.0,METAL BOX,,PANEL,,,,,,,,,,METAL BOX 100 HP 3 VFD COMPARTMENT PANEL ,,NOS,DB INDUSTRIES ,70000.0,0.0,70000,,
+144.0,Fan,,4.0,,,,,,,,,,"Exaust Fan 4"" 230VAC",4.0,Nos,Anuroop,370.0,0.0,370,,370
+146.0,Tube,,1.0,,,,,,,,,,TUBE LIGHT 1 FEET,1.0,Nos,Anuroop,130.0,0.0,130,,130
+148.0,Wire,,RED,88.0,,,,,,,,,WIRE 35 SQMM RED,88.0,Meter,Thakur,1275.0,50.0,637.5,,
+149.0,Wire,,YELLOW,88.0,,,,,,,,,WIRE 35 SQMM YELLOW,88.0,Meter,Thakur,1275.0,50.0,637.5,,
+150.0,Wire,,BLUE,88.0,,,,,,,,,WIRE 35 SQMM BLUE,88.0,Meter,Thakur,1275.0,50.0,637.5,,
+151.0,Wire,,BLACK,88.0,,,,,,,,,WIRE 35 SQMM BLUE,88.0,Meter,Thakur,1275.0,50.0,637.5,,
+152.0,Wire,,RED,70.0,,,,,,,,,WIRE 25 SQMM RED,70.0,Meter,Thakur,1175.0,50.0,587.5,,
+153.0,Wire,,YELLOW,70.0,,,,,,,,,WIRE 25 SQMM YELLOW,70.0,Meter,Thakur,1175.0,50.0,587.5,,
+154.0,Wire,,BLUE,70.0,,,,,,,,,WIRE 25 SQMM BLUE,70.0,Meter,Thakur,1175.0,50.0,587.5,,
+155.0,Wire,,BLACK,70.0,,,,,,,,,WIRE 25 SQMM BLACK,70.0,Meter,Thakur,1175.0,50.0,587.5,,
+156.0,Wire,,RED,57.0,,,,,,,,,WIRE 16 SQMM RED,57.0,Meter,Thakur,975.0,50.0,487.5,,
+157.0,Wire,,YELLOW,57.0,,,,,,,,,WIRE 16 SQMM YELLOW,57.0,Meter,Thakur,975.0,50.0,487.5,,
+158.0,Wire,,BLUE,57.0,,,,,,,,,WIRE 16 SQMM BLUE,57.0,Meter,Thakur,975.0,50.0,487.5,,
+159.0,Wire,,BLACK,57.0,,,,,,,,,WIRE 16 SQMM BLACK,57.0,Meter,Thakur,975.0,50.0,487.5,,
+160.0,Wire,,RED,42.0,,,,,,,,,WIRE 10 SQMM RED,42.0,Meter,Thakur,675.0,50.0,337.5,,
+161.0,Wire,,YELLOW,42.0,,,,,,,,,WIRE  10 SQMM YELLOW,42.0,Meter,Thakur,675.0,50.0,337.5,,
+162.0,Wire,,BLUE,42.0,,,,,,,,,WIRE 10 SQMM BLUE,42.0,Meter,Thakur,675.0,50.0,337.5,,
+163.0,Wire,,BLACK,42.0,,,,,,,,,WIRE 10 SQMM BLACK,42.0,Meter,Thakur,675.0,50.0,337.5,,
+164.0,Wire,,RED,31.0,,,,,,,,,WIRE 6 SQMM RED,31.0,Meter,Thakur,576.0,50.0,288,,
+165.0,Wire,,YELLOW,31.0,,,,,,,,,WIRE 6 SQMM YELLOW,31.0,Meter,Thakur,576.0,50.0,288,,
+166.0,Wire,,BLUE,31.0,,,,,,,,,WIRE 6 SQMM BLUE,31.0,Meter,Thakur,576.0,50.0,288,,
+167.0,Wire,,BLACK,31.0,,,,,,,,,WIRE 6 SQMM BLACK,31.0,Meter,Thakur,576.0,50.0,288,,
+168.0,Wire,,RED,26.0,,,,,,,,,WIRE 4 SQMM RED,26.0,Meter,Thakur,150.0,50.0,75,,
+169.0,Wire,,YELLOW,26.0,,,,,,,,,WIRE 4 SQMM YELLOW,26.0,Meter,Thakur,150.0,50.0,75,,
+170.0,Wire,,BLUE,26.0,,,,,,,,,WIRE 4 SQMM BLUE,26.0,Meter,Thakur,150.0,50.0,75,,
+171.0,Wire,,BLACK,26.0,,,,,,,,,WIRE 4 SQMM BLACK,26.0,Meter,Thakur,150.0,50.0,75,,
+172.0,Wire,,RED,19.0,,,,,,,,,WIRE 2.5 SQMM RED,19.0,Meter,Thakur,95.0,50.0,47.5,,
+173.0,Wire,,YELLOW,19.0,,,,,,,,,WIRE  2.5 SQMM YELLOW,19.0,Meter,Thakur,95.0,50.0,47.5,,
+174.0,Wire,,BLUE,19.0,,,,,,,,,WIRE 2.5 SQMM BLUE,19.0,Meter,Thakur,95.0,50.0,47.5,,
+175.0,Wire,,BLACK,19.0,,,,,,,,,WIRE 2.5 SQMM BLACK,19.0,Meter,Thakur,95.0,50.0,47.5,,
+176.0,Wire,,RED,3.5,,,,,,,,,WIRE 0.5 SQMM RED,3.5,Meter,Thakur,25.0,50.0,12.5,,
+177.0,Wire,,YELLOW,3.5,,,,,,,,,WIRE 0.5 SQMM YELLOW,3.5,Meter,Thakur,25.0,50.0,12.5,,
+178.0,Wire,,BLUE,3.5,,,,,,,,,WIRE 0.5 SQMM BLUE,3.5,Meter,Thakur,25.0,50.0,12.5,,
+179.0,Wire,,BLACK,3.5,,,,,,,,,WIRE 0.5 SQMM BLACK,3.5,Meter,Thakur,25.0,50.0,12.5,,
+180.0,Wire,,GREY,3.5,,,,,,,,,WIRE 0.5 SQMM GREY,3.5,Meter,Thakur,25.0,50.0,12.5,,
+181.0,Wire,,GREEN,3.5,,,,,,,,,WIRE 0.5 SQMM YELLOW -GREEN,3.5,Meter,Thakur,25.0,50.0,12.5,,
+182.0,Wire,,SHILLEDE,,,,,,,,,,2 core wire SHILLEDE,0.5,Meter,Thakur,33.3,0.0,33.3,,
+183.0,Wire,,SHILLEDE,,,,,,,,,,4 core wire 0.5 Sqmm poly cab ,0.5,Meter,Thakur,55.4,50.0,27.7,,
+321.0,Wire,,,,,,,,,,,,2 Core Shielded,,Meter,Thakur,25.0,0.0,25,,
+369.0,WIRE,,RED,,,,,,,,,,WIRE  35 SQMM RED,35.0,Nos,THAKUR,567.0,30.0,396.9,,
+370.0,WIRE,,YELLOW,,,,,,,,,,WIRE  35 SQMM YELLOW,,Nos,THAKUR,567.0,30.0,396.9,,
+371.0,WIRE,,BLUE,,,,,,,,,,WIRE  35 SQMM BLUE,,Nos,THAKUR,567.0,30.0,396.9,,
+372.0,WIRE,,BLACK,,,,,,,,,,WIRE  35 SQMM BLACK,,Nos,THAKUR,567.0,30.0,396.9,,
+554.0,Wire,,,,,,,,,,,,WIRE 35 SQMM RED,,Meter,Thakur,1375.0,50.0,687.5,,
+555.0,Wire,,,,,,,,,,,,WIRE 35 SQMM YELLOW,,Meter,Thakur,1375.0,50.0,687.5,,
+556.0,Wire,,,,,,,,,,,,WIRE 35 SQMM BLUE,,Meter,Thakur,1375.0,50.0,687.5,,
+557.0,Wire,,,,,,,,,,,,WIRE 35 SQMM BLACK,,Meter,Thakur,1375.0,50.0,687.5,,
+558.0,Wire,,,,,,,,,,,,WIRE 35 SQMM GREY,,Meter,Thakur,1375.0,50.0,687.5,,
+184.0,Lugs,,single,,,,,,,,,,Lugs End Sleeve 0.5 Sqmm,0.5,Nos,Anuroop,1.0,50.0,0.5,,
+185.0,Lugs,,twin,,,,,,,,,,Lugs End Sleeve 0.5 Sqmm twin ,,Nos,Anuroop,1.0,50.0,0.5,,
+186.0,Lugs,,single,,,,,,,,,,Lugs End Sleeve 2.5 Sqmm,,Nos,Anuroop,1.5,50.0,0.75,,
+187.0,Lugs,,Twin,,,,,,,,,,Lugs End Sleeve 2.5 Sqmm Twin,,Nos,Anuroop,2.5,50.0,1.25,,
+188.0,Lugs,,single,,,,,,,,,,Lugs End Sleeve 4 Sqmm,4.0,Nos,Anuroop,3.0,50.0,1.5,,
+189.0,Lugs,,Twin,,,,,,,,,,Lugs End Sleeve 4 Sqmm Twin,,Nos,Anuroop,3.5,50.0,1.75,,
+190.0,Lugs,,COPPER,,,,,,,,,,LUGS 6 SQMM PIN COPPER,6.0,Nos,Anuroop,3.0,0.0,3,,
+191.0,Lugs,,COPPER,,,,,,,,,,LUGS 6 SQMM RING COPPER,,Nos,Anuroop,4.0,0.0,4,,
+192.0,Lugs,,COPPER,,,,,,,,,,LUGS 10 SQMM PIN COPPER,,Nos,Anuroop,8.0,0.0,8,,
+193.0,Lugs,,COPPER,,,,,,,,,,LUGS 10 SQMM RING COPPER,,Nos,Anuroop,8.0,0.0,8,,
+194.0,Lugs,,COPPER,,,,,,,,,,LUGS 16 SQMM PIN COPPER,,Nos,Anuroop,8.0,0.0,8,,
+195.0,Lugs,,COPPER,,,,,,,,,,LUGS 16 SQMM RING COPPER,,Nos,Anuroop,8.02,30.0,5.614,,
+196.0,Lugs,,COPPER,,,,,,,,,,LUGS 25 SQMM PIN COPPER,,Nos,Anuroop,12.0,0.0,12,,
+197.0,Lugs,,COPPER,,,,,,,,,,LUGS 25 SQMM RING COPPER,,Nos,Anuroop,18.0,30.0,12.6,,
+198.0,Lugs,,COPPER,,,,,,,,,,LUGS 30 SQMM PIN COPPER,,Nos,Anuroop,40.0,0.0,40,,
+199.0,Lugs,,COPPER,,,,,,,,,,LUGS 30 SQMM RING COPPER,,Nos,Anuroop,60.0,30.0,42,,
+336.0,Lugs,,,,,,,,,,,,Lugs End Sleeve 1 Sqmm,,Nos,Anuroop,1.0,0.0,1,,
+374.0,Lugs,,1.0,,,,,,,,,,LUGS  RING TYPE  COPPER ,,Nos,,15.0,0.0,15,,
+552.0,Lugs,,,,,,,,,,,,LUGS 35 SQMM PIN COPPER,,Nos,Anuroop,60.0,0.0,60,,
+553.0,Lugs,,,,,,,,,,,,LUGS 35 SQMM RING COPPER,,Nos,Anuroop,90.0,30.0,63,,
+200.0,Spiral,,1.0,,,,,,,,,,Spiral Sleeve 9mm,9.0,Meter,Bharat Trading Co.,7.2,0.0,7.2,,
+201.0,Spiral,,1.0,,,,,,,,,,Spiral Sleeve 10mm,,Meter,Bharat Trading Co.,7.2,0.0,7.2,,
+202.0,Spiral,,1.0,,,,,,,,,,Spiral Sleeve 6mm,,Meter,Bharat Trading Co.,6.0,0.0,6,,
+203.0,Spiral,,1.0,,,,,,,,,,Spiral Sleeve 3mm,,Meter,Bharat Trading Co.,5.0,0.0,5,,
+204.0,Cable Tie,,1.0,,,,,,,,,,Cable Tie 2.5 X 100,1.0,Nos,Anuroop,4.0,70.0,1.2,,
+205.0,Cable Tie,,1.0,,,,,,,,,,Cable Tie 2.5 X 150,2.0,Nos,Anuroop,5.0,70.0,1.5,,
+206.0,Gasket,,1.0,,,,,,,,,,Gasket 25X5,3.0,Meter,Ajitesh,10.0,10.0,9,,
+207.0,Screw,,Tap,,,,,,,,,,Screw 8*13 Self Tap,1.0,Nos,Mayura Traders,1.0,0.0,1,,
+208.0,Screw,,Tap,,,,,,,,,,Screw 8*19 Self Tap,2.0,Nos,Mayura Traders,1.0,0.0,1,,
+209.0,Screw,,plate,,,,,,,,,,Screw 6*12 base plate ,3.0,Nos,Mayura Traders,1.7,0.0,1.7,,
+210.0,Screw,,plate,,,,,,,,,,Screw M3X6,4.0,Nos,Mayura Traders,1.0,0.0,1,,
+211.0,Screw,,plate,,,,,,,,,,SELF TAP SCREW 6X9.5,5.0,Nos,Mayura Traders,0.5,0.0,0.5,,
+222.0,Lock,,Door,,,,,,,,,,Door Lock (25MM),25.0,Nos,Anuroop,35.0,0.0,35,,
+223.0, Lock,,Door,,,,,,,,,,Door Lock (20MM),20.0,Nos,Siddhivinayak,30.0,0.0,30,,
+224.0,Key,,Door,,,,,,,,,,Door Key,1.0,Nos,Ajitesh,25.0,0.0,25,,
+227.0,Ferrule,,PRINT,,,,,,,,,,FERRULE SOFT SLEEVE 3.2 MM,3.2,Nos,Anuroop,70.0,0.0,70,,
+228.0,Ferrule,,PRINT,,,,,,,,,,FERRULE SOFT SLEEVE 4.2 MM,,Nos,Anuroop,70.0,0.0,70,,
+229.0,Ferrule,,PRINT,,,,,,,,,,FERRULE SOFT SLEEVE 3.7 MM,,Nos,Anuroop,70.0,0.0,70,,
+230.0,Ferrule,,PRINT,,,,,,,,,,FERRULE SOFT SLEEVE 5.2 MM,,Nos,Anuroop,70.0,0.0,70,,
+231.0,Ferrule,,PRINT,,,,,,,,,,FERRULE SOFT SLEEVE 6.5 MM,,Nos,Anuroop,70.0,0.0,70,,
+232.0,Ferrule,,PRINT,,,,,,,,,,FERRULE SOFT SLEEVE 4.6 MM,,Nos,Anuroop,70.0,0.0,70,,
+233.0,Ferrule,,PRINT,,,,,,,,,,FERRULE COSTEBLE,,Nos,Anuroop,70.0,0.0,70,,
+234.0,Sensor,,FLOAT SWITCH,,,,,,,,,,FLOAT SWITCH 3 MTR ICP ,3.0,Nos,Anuroop,370.0,32.5,249.75,270.0,
+243.0,Sensor,,HUMIDITY SENSOR,,,,,,,,,,HUMIDITY SENSOR ,1.0,Nos,Anuroop,5480.0,37.0,3452.4,,
+235.0,Relay,,RELAY BASE,,,,,,,,,,RELAY BASE SALZER 4 POL,4.0,Nos,Anuroop,50.0,0.0,50,,
+236.0,Relay,,RELAY BASE,,,,,,,,,,RELAY BASE SALZER 11 POL,11.0,Nos,Anuroop,50.0,0.0,50,,
+237.0,Relay,,12.0,,,,,,,,,,2 changeover 12cdc relay salzer ,2.0,Nos,Anuroop,125.0,0.0,125,,
+238.0,Relay,,12.0,,,,,,,,,,3 pole Salzer relay (BASE PLATE MOUNT),3.0,Nos,Anuroop,375.0,37.0,236.25,,
+268.0,Relay,,12VRELAY,,,,,,,,,,12V Change over Relay ,,Nos,Satyam,260.0,0.0,260,,
+516.0,RELAY,,SALZER,,,,,,,,,,MSP 2P 240 VAC 8PIN RELAY SALZER,,NOS,ANUROOP,283.0,0.0,283,,
+239.0,fuse,,fuse,,,,,,,,,,FUSE TB ,1.0,Nos,Anuroop,41.5,37.0,26.145,,
+240.0,fuse,,fuse,,,,,,,,,,GLASS FUSE (2A) ,2.0,Nos,Anuroop,5.0,37.0,3.15,,
+501.0,FUSE,,TUBE,,,,,,,,,,SFU FUSE TUBE,,NOS,AJITESH( L& T),1000.0,0.0,1000,,
+241.0,Add On Block,,schneider,,,,,,,,,,ADD ON BOLCK (1 NO 1 NC ) ,11.0,Nos,Anuroop,160.0,0.0,160,,
+242.0,Add On Block,,schneider,,,,,,,,,,ADD ON BOLCK  (2NO 2NC),22.0,Nos,Anuroop,190.0,0.0,190,,
+368.0,ADD ON BLOCK,,1.0,,,,,,,,,,ADD ON BLOCK,,Nos,,190.0,0.0,190,,
+244.0,PG Gland,,PG,,,,,,,,,,PG 7,7.0,Nos,Anuroop,6.5,70.0,1.95,,
+245.0,PG Gland,,PG,,,,,,,,,,PG 9,9.0,Nos,Anuroop,7.0,70.0,2.1,,
+246.0,PG Gland,,PG,,,,,,,,,,PG 11,,Nos,Anuroop,11.25,70.0,3.375,,
+247.0,PG Gland,,PG,,,,,,,,,,PG 13.5,,Nos,Anuroop,12.5,70.0,3.75,,
+248.0,PG Gland,,PG,,,,,,,,,,PG 16,,Nos,Anuroop,15.0,70.0,4.5,,
+249.0,PG Gland,,PG,,,,,,,,,,PG 21,,Nos,Anuroop,25.0,70.0,7.5,,
+250.0,PG Gland,,PG,,,,,,,,,,PG 25,,Nos,Anuroop,27.5,70.0,8.25,,
+251.0,PG Gland,,PG,,,,,,,,,,PG 29,,Nos,Anuroop,41.25,70.0,12.375,,
+252.0,PG Gland,,PG,,,,,,,,,,PG 36,,Nos,Anuroop,57.5,70.0,17.25,,
+253.0,PG Gland,,PG,,,,,,,,,,PG 42,,Nos,Anuroop,82.5,70.0,24.75,,
+254.0,PG Gland,,PG,,,,,,,,,,PG 48,,Nos,Anuroop,90.5,70.0,27.15,,
+255.0,PG Gland,,PG,,,,,,,,,,PG 63,,Nos,Anuroop,192.0,70.0,57.6,,
+317.0,Timer,,TIMER MULTISPAN,,,,,,,,,,TIMER MULTISPAN 60S,60.0,Nos,Anuroop,870.0,30.0,609,,
+318.0,Timer,,TIMER MULTISPAN,,,,,,,,,,TIMER MULTISPAN 30S,30.0,Nos,Anuroop,870.0,30.0,609,,
+319.0,Z Clamp,,Z Clamp,,,,,,,,,,Z CLAMP ,1.0,Nos,Anuroop,11.0,0.0,11,,
+320.0,BUSBAR,,,,,,,,,,,,BUSBAR ,1.0,Nos,,450.0,0.0,450,,
+467.0,BUSBAR,,X,,,,,,,,,,BUSBAR 50X20,,NOS,FIRE,3000.0,0.0,3000,,
+351.0,INSULATOR,,1.0,,,,,,,,,,L TYPE INSULATOR ,,Nos,,20.0,0.0,20,,
+352.0,INSULATOR,,1.0,,,,,,,,,,Z TYPE INSULATOR,,Nos,,20.0,0.0,20,,
+353.0,INSULATOR,,1.0,,,,,,,,,,CONICAL TYPE INSULATOR 40MM,,Nos,,20.0,0.0,20,,
+354.0,SLEEVE,,RED,,,,,,,,,,BUS BAR SLEEVE RED,,METER,,15.0,0.0,15,,
+355.0,SLEEVE,,YELLOW,,,,,,,,,,BUS BAR SLEEVE YELLOW,,METER,,15.0,0.0,15,,
+356.0,SLEEVE,,BLUE,,,,,,,,,,BUS BAR SLEEVE BLUE,,METER,,15.0,0.0,15,,
+357.0,SLEEVE,,BLACK,,,,,,,,,,BUS BAR SLEEVE BLACK,,METER,,15.0,0.0,15,,
+364.0,SOCKET,,1.0,,,,,,,,,,3 PIN  SOCKET,,Nos,,1500.0,0.0,1500,,
+375.0,Nuts ,,1.0,,,,,,,,,,nut bolt 8*12 ,,Nos,,5.0,0.0,5,,
+376.0,Nuts ,,1.0,,,,,,,,,,nut bolt 6*10 ,,nos,,5.0,0.0,5,,
+378.0,board,,1.0,,,,,,,,,,Switch board ,,Nos,,200.0,0.0,200,,
+382.0,ATS,,1.0,,,,,,,,,,ATS 75hp (ELMEASURE 160A),,Nos,,27709.0,0.0,27709,,
+383.0,CT,,1.0,,,,,,,,,,Ammeter 0-150A (Multispan),,Nos,,785.0,0.0,785,,
+384.0,CT,,1.0,,,,,,,,,,C.T.150/5A (Std.),,Nos,,200.0,0.0,200,,
+479.0,CT,,CT,,,,,,,,,,C.T.100/5A (Std.),,Nos,,400.0,0.0,400,,
+388.0,Transformer,,T,,,,,,,,,,Transformer ,,Nos,,200.0,0.0,200,,
+460.0,Soft Starter ,,LNT,,,,,,,,,,15 HP L&T SOFT STARTER ,,NOS,AGC,45837.0,0.0,45837,,
+461.0,Soft Starter ,,LNT,,,,,,,,,,20 HP L&T SOFT STARTER,,NOS,AGC,47000.0,0.0,47000,,
+462.0,Soft Starter ,,LNT,,,,,,,,,,30 HP L&T SOFT STARTER,,NOS,AGC,50825.0,0.0,50825,,
+463.0,Soft Starter ,,LNT,,,,,,,,,,40 HP L&T SOFT STARTER,,NOS,AGC,52773.0,0.0,52773,,
+464.0,Soft Starter ,,LNT,,,,,,,,,,50 HP L&T SOFT STARTER,,NOS,AGC,52773.0,0.0,52773,,
+465.0,STP METAL BOX,,STAND,,,,,,,,,,"FABRICATION, POWDER COATING PANEL WITH STAND ",,NOS,DB,52773.0,0.0,52773,,
+466.0,FIRE,,system,,,,,,,,,,fire suppression system,,NOS,FIRE,25000.0,0.0,25000,,
+496.0,DVM,,ammeter,,,,,,,,,,Digital voltmeter ammeter,,NOS,,2500.0,0.0,2500,,
+498.0,DVM,,meter,,,,,,,,,,DVM Multy function meter,,NOS,,2500.0,0.0,2500,,
+500.0,SFU,,BOS,,,,,,,,,,SWITCH FUSE UNIT (OPEN BOS),,NOS,AJITESH( L& T),12000.0,0.0,12000,,
+508.0,SFU,,SIEMENS,,,,,,,,,,3KL8221-5TA00 125A SFU OPEN SIEMENS,,NOS,ANUROOP ,12245.0,45.0,6734.75,,
+512.0,MFM,,PLUS,,,,,,,,,,MULTY FUNCTION METER PM 130 EH PLUS,,NOS,ANUROOP ,20000.0,0.0,20000,,
+513.0,PANEL BOX,,D,,,,,,,,,, PANEL BOX 600 W * 600 H * 350 D,,NOS,DHUPPAR BROTHERS.,17000.0,0.0,17000,,
+,,,COIL TYPE ,MODEL NUMBER ,CURRENT CAPACITY ,SUGGEST HP ,,CONATCT TYPE ,MODEL NUMBER ,,,,,,,,,,,,
+,,,,current  carriaing capacity amp ,,,,,,,,,,,,,,,,,
+,,,,FORM ,TO ,CONTACTOR USED FORM ,CONTACTOR USED TO,SERIAL NUMBER ,,,,,,,,,,,,,
+,,,,Breaking Capacity,Rated Current,model number ,pole ,,,,,,,,,,,,,,
+358.0,,,,,,,,,,,,,,,,,,,,,
+359.0,,,,,,,,,,,,,,,,,,,,,
+360.0,,,,,,,,,,,,,,,,,,,,,
+361.0,,,,,,,,,,,,,,,,,,,,,
+362.0,,,,,,,,,,,,,,,,,,,,,
+543.0,,,CLOCK,,,,,,,,,,REAL TIME CLOCK ,,NOS,,2000.0,,2000.0,,
+545.0,,,PANEL,,,,,,,,,,CP2P_1HP_INDOOR_DLC_CONTROL_PANEL ,,NOS,SAARK,15200.0,0.0,15200,,1276.0
+546.0,,,PANEL,,,,,,,,,,CP2P_2HP_INDOOR_DLC_CONTROL_PANEL ,,NOS,SAARK,15200.0,0.0,15200,,
+,,,,MODEL NUMBER ,FORM ,TO ,,,,,,,,,,,,,,,
+676.0,,,TRANSFORMER,,,,,,,,,,ISOLATION TRANSFORMER,,NOS,DB INDUSTRIES ,2000.0,0.0,2000,,
+677.0,,,,,,,,,,,,,,,,,,,,,
+678.0,,,,,,,,,,,,,,,,,,,,,
+679.0,,,,,,,,,,,,,,,,,,,,,
+680.0,,,,,,,,,,,,,,,,,,,,,
+681.0,,,,,,,,,,,,,,,,,,,,,
+682.0,,,,,,,,,,,,,,,,,,,,,
+683.0,,,,,,,,,,,,,,,,,,,,,
+684.0,,,,,,,,,,,,,,,,,,,,,
+685.0,,,,,,,,,,,,,,,,,,,,,
+686.0,,,,,,,,,,,,,,,,,,,,,
+687.0,,,,,,,,,,,,,,,,,,,,,
+688.0,,,,,,,,,,,,,,,,,,,,,
+689.0,,,,,,,,,,,,,,,,,,,,,
+690.0,,,,,,,,,,,,,,,,,,,,,
+691.0,,,,,,,,,,,,,,,,,,,,,
+692.0,,,,,,,,,,,,,,,,,,,,,
+693.0,,,,,,,,,,,,,,,,,,,,,
+694.0,,,,,,,,,,,,,,,,,,,,,
+695.0,,,,,,,,,,,,,,,,,,,,,
+696.0,,,,,,,,,,,,,,,,,,,,,
+697.0,,,,,,,,,,,,,,,,,,,,,
+698.0,,,,,,,,,,,,,,,,,,,,,
+699.0,,,,,,,,,,,,,,,,,,,,,
+700.0,,,,,,,,,,,,,,,,,,,,,
+701.0,,,,,,,,,,,,,,,,,,,,,
+702.0,,,,,,,,,,,,,,,,,,,,,
+703.0,,,,,,,,,,,,,,,,,,,,,
+704.0,,,,,,,,,,,,,,,,,,,,,
+705.0,,,,,,,,,,,,,,,,,,,,,
+706.0,,,,,,,,,,,,,,,,,,,,,
+707.0,,,,,,,,,,,,,,,,,,,,,
+708.0,,,,,,,,,,,,,,,,,,,,,
+709.0,,,,,,,,,,,,,,,,,,,,,
+710.0,,,,,,,,,,,,,,,,,,,,,
+711.0,,,,,,,,,,,,,,,,,,,,,
+712.0,,,,,,,,,,,,,,,,,,,,,
+713.0,,,,,,,,,,,,,,,,,,,,,
+714.0,,,,,,,,,,,,,,,,,,,,,
+715.0,,,,,,,,,,,,,,,,,,,,,
+716.0,,,,,,,,,,,,,,,,,,,,,
+717.0,,,,,,,,,,,,,,,,,,,,,
+718.0,,,,,,,,,,,,,,,,,,,,,
+719.0,,,,,,,,,,,,,,,,,,,,,
+720.0,,,,,,,,,,,,,,,,,,,,,
+721.0,,,,,,,,,,,,,,,,,,,,,
+722.0,,,,,,,,,,,,,,,,,,,,,
+723.0,,,,,,,,,,,,,,,,,,,,,
+724.0,,,,,,,,,,,,,,,,,,,,,
+725.0,,,,,,,,,,,,,,,,,,,,,
+726.0,,,,,,,,,,,,,,,,,,,,,
+727.0,,,,,,,,,,,,,,,,,,,,,
+728.0,,,,,,,,,,,,,,,,,,,,,
+729.0,,,,,,,,,,,,,,,,,,,,,
+730.0,,,,,,,,,,,,,,,,,,,,,
+731.0,,,,,,,,,,,,,,,,,,,,,
+732.0,,,,,,,,,,,,,,,,,,,,,
+733.0,,,,,,,,,,,,,,,,,,,,,
+734.0,,,,,,,,,,,,,,,,,,,,,
+735.0,,,,,,,,,,,,,,,,,,,,,
+736.0,,,,,,,,,,,,,,,,,,,,,
+737.0,,,,,,,,,,,,,,,,,,,,,
+738.0,,,,,,,,,,,,,,,,,,,,,
+739.0,,,,,,,,,,,,,,,,,,,,,
+740.0,,,,,,,,,,,,,,,,,,,,,
+741.0,,,,,,,,,,,,,,,,,,,,,
+742.0,,,,,,,,,,,,,,,,,,,,,
+743.0,,,,,,,,,,,,,,,,,,,,,
+744.0,,,,,,,,,,,,,,,,,,,,,
+745.0,,,,,,,,,,,,,,,,,,,,,
+746.0,,,,,,,,,,,,,,,,,,,,,
+747.0,,,,,,,,,,,,,,,,,,,,,
+748.0,,,,,,,,,,,,,,,,,,,,,
+749.0,,,,,,,,,,,,,,,,,,,,,
+750.0,,,,,,,,,,,,,,,,,,,,,
+751.0,,,,,,,,,,,,,,,,,,,,,
+752.0,,,,,,,,,,,,,,,,,,,,,
+753.0,,,,,,,,,,,,,,,,,,,,,
+754.0,,,,,,,,,,,,,,,,,,,,,
+755.0,,,,,,,,,,,,,,,,,,,,,
+756.0,,,,,,,,,,,,,,,,,,,,,
+757.0,,,,,,,,,,,,,,,,,,,,,
+758.0,,,,,,,,,,,,,,,,,,,,,
+759.0,,,,,,,,,,,,,,,,,,,,,
+760.0,,,,,,,,,,,,,,,,,,,,,
+761.0,,,,,,,,,,,,,,,,,,,,,
+762.0,,,,,,,,,,,,,,,,,,,,,
+763.0,,,,,,,,,,,,,,,,,,,,,
+764.0,,,,,,,,,,,,,,,,,,,,,
+765.0,,,,,,,,,,,,,,,,,,,,,
+766.0,,,,,,,,,,,,,,,,,,,,,
+767.0,,,,,,,,,,,,,,,,,,,,,
+768.0,,,,,,,,,,,,,,,,,,,,,
+769.0,,,,,,,,,,,,,,,,,,,,,
+770.0,,,,,,,,,,,,,,,,,,,,,
+771.0,,,,,,,,,,,,,,,,,,,,,
+772.0,,,,,,,,,,,,,,,,,,,,,
+773.0,,,,,,,,,,,,,,,,,,,,,
+774.0,,,,,,,,,,,,,,,,,,,,,
+775.0,,,,,,,,,,,,,,,,,,,,,
+776.0,,,,,,,,,,,,,,,,,,,,,
+777.0,,,,,,,,,,,,,,,,,,,,,
+778.0,,,,,,,,,,,,,,,,,,,,,
+779.0,,,,,,,,,,,,,,,,,,,,,
+780.0,,,,,,,,,,,,,,,,,,,,,
+781.0,,,,,,,,,,,,,,,,,,,,,
+782.0,,,,,,,,,,,,,,,,,,,,,
+783.0,,,,,,,,,,,,,,,,,,,,,
+784.0,,,,,,,,,,,,,,,,,,,,,
+785.0,,,,,,,,,,,,,,,,,,,,,
+786.0,,,,,,,,,,,,,,,,,,,,,
+787.0,,,,,,,,,,,,,,,,,,,,,
+788.0,,,,,,,,,,,,,,,,,,,,,
+789.0,,,,,,,,,,,,,,,,,,,,,
+790.0,,,,,,,,,,,,,,,,,,,,,
+791.0,,,,,,,,,,,,,,,,,,,,,
+792.0,,,,,,,,,,,,,,,,,,,,,
+793.0,,,,,,,,,,,,,,,,,,,,,
+794.0,,,,,,,,,,,,,,,,,,,,,
+795.0,,,,,,,,,,,,,,,,,,,,,
+796.0,,,,,,,,,,,,,,,,,,,,,
+797.0,,,,,,,,,,,,,,,,,,,,,
+798.0,,,,,,,,,,,,,,,,,,,,,
+799.0,,,,,,,,,,,,,,,,,,,,,
+800.0,,,,,,,,,,,,,,,,,,,,,
+801.0,,,,,,,,,,,,,,,,,,,,,
+802.0,,,,,,,,,,,,,,,,,,,,,
+803.0,,,,,,,,,,,,,,,,,,,,,
+804.0,,,,,,,,,,,,,,,,,,,,,
+805.0,,,,,,,,,,,,,,,,,,,,,
+806.0,,,,,,,,,,,,,,,,,,,,,
+807.0,,,,,,,,,,,,,,,,,,,,,
+808.0,,,,,,,,,,,,,,,,,,,,,
+809.0,,,,,,,,,,,,,,,,,,,,,
+810.0,,,,,,,,,,,,,,,,,,,,,
+811.0,,,,,,,,,,,,,,,,,,,,,
+812.0,,,,,,,,,,,,,,,,,,,,,
+813.0,,,,,,,,,,,,,,,,,,,,,
+814.0,,,,,,,,,,,,,,,,,,,,,
+815.0,,,,,,,,,,,,,,,,,,,,,
+816.0,,,,,,,,,,,,,,,,,,,,,
+817.0,,,,,,,,,,,,,,,,,,,,,
+818.0,,,,,,,,,,,,,,,,,,,,,
+819.0,,,,,,,,,,,,,,,,,,,,,
+820.0,,,,,,,,,,,,,,,,,,,,,
+821.0,,,,,,,,,,,,,,,,,,,,,
+822.0,,,,,,,,,,,,,,,,,,,,,
+823.0,,,,,,,,,,,,,,,,,,,,,
+824.0,,,,,,,,,,,,,,,,,,,,,
+825.0,,,,,,,,,,,,,,,,,,,,,
+826.0,,,,,,,,,,,,,,,,,,,,,
+827.0,,,,,,,,,,,,,,,,,,,,,
+828.0,,,,,,,,,,,,,,,,,,,,,
+829.0,,,,,,,,,,,,,,,,,,,,,
+830.0,,,,,,,,,,,,,,,,,,,,,
+831.0,,,,,,,,,,,,,,,,,,,,,
+832.0,,,,,,,,,,,,,,,,,,,,,
+833.0,,,,,,,,,,,,,,,,,,,,,
+834.0,,,,,,,,,,,,,,,,,,,,,
+835.0,,,,,,,,,,,,,,,,,,,,,
+836.0,,,,,,,,,,,,,,,,,,,,,
+837.0,,,,,,,,,,,,,,,,,,,,,
+838.0,,,,,,,,,,,,,,,,,,,,,
+839.0,,,,,,,,,,,,,,,,,,,,,
+840.0,,,,,,,,,,,,,,,,,,,,,
+841.0,,,,,,,,,,,,,,,,,,,,,
+842.0,,,,,,,,,,,,,,,,,,,,,
+843.0,,,,,,,,,,,,,,,,,,,,,
+844.0,,,,,,,,,,,,,,,,,,,,,
+845.0,,,,,,,,,,,,,,,,,,,,,
+846.0,,,,,,,,,,,,,,,,,,,,,
+847.0,,,,,,,,,,,,,,,,,,,,,
+848.0,,,,,,,,,,,,,,,,,,,,,
+849.0,,,,,,,,,,,,,,,,,,,,,
+850.0,,,,,,,,,,,,,,,,,,,,,
+851.0,,,,,,,,,,,,,,,,,,,,,
+852.0,,,,,,,,,,,,,,,,,,,,,
+853.0,,,,,,,,,,,,,,,,,,,,,
+854.0,,,,,,,,,,,,,,,,,,,,,
+855.0,,,,,,,,,,,,,,,,,,,,,
+856.0,,,,,,,,,,,,,,,,,,,,,
+857.0,,,,,,,,,,,,,,,,,,,,,
+858.0,,,,,,,,,,,,,,,,,,,,,
+859.0,,,,,,,,,,,,,,,,,,,,,
+860.0,,,,,,,,,,,,,,,,,,,,,
+861.0,,,,,,,,,,,,,,,,,,,,,
+862.0,,,,,,,,,,,,,,,,,,,,,
+863.0,,,,,,,,,,,,,,,,,,,,,
+864.0,,,,,,,,,,,,,,,,,,,,,
+865.0,,,,,,,,,,,,,,,,,,,,,
+866.0,,,,,,,,,,,,,,,,,,,,,
+867.0,,,,,,,,,,,,,,,,,,,,,
+868.0,,,,,,,,,,,,,,,,,,,,,
+869.0,,,,,,,,,,,,,,,,,,,,,
+870.0,,,,,,,,,,,,,,,,,,,,,
+871.0,,,,,,,,,,,,,,,,,,,,,
+872.0,,,,,,,,,,,,,,,,,,,,,
+873.0,,,,,,,,,,,,,,,,,,,,,
+874.0,,,,,,,,,,,,,,,,,,,,,
+875.0,,,,,,,,,,,,,,,,,,,,,
+876.0,,,,,,,,,,,,,,,,,,,,,
+877.0,,,,,,,,,,,,,,,,,,,,,
+878.0,,,,,,,,,,,,,,,,,,,,,
+879.0,,,,,,,,,,,,,,,,,,,,,
+880.0,,,,,,,,,,,,,,,,,,,,,
+881.0,,,,,,,,,,,,,,,,,,,,,
+882.0,,,,,,,,,,,,,,,,,,,,,
+883.0,,,,,,,,,,,,,,,,,,,,,
+884.0,,,,,,,,,,,,,,,,,,,,,
+885.0,,,,,,,,,,,,,,,,,,,,,
+886.0,,,,,,,,,,,,,,,,,,,,,
+887.0,,,,,,,,,,,,,,,,,,,,,
+888.0,,,,,,,,,,,,,,,,,,,,,
+889.0,,,,,,,,,,,,,,,,,,,,,
+890.0,,,,,,,,,,,,,,,,,,,,,
+891.0,,,,,,,,,,,,,,,,,,,,,
+892.0,,,,,,,,,,,,,,,,,,,,,
+893.0,,,,,,,,,,,,,,,,,,,,,
+894.0,,,,,,,,,,,,,,,,,,,,,
+895.0,,,,,,,,,,,,,,,,,,,,,
+896.0,,,,,,,,,,,,,,,,,,,,,
+897.0,,,,,,,,,,,,,,,,,,,,,
+898.0,,,,,,,,,,,,,,,,,,,,,
+899.0,,,,,,,,,,,,,,,,,,,,,
+900.0,,,,,,,,,,,,,,,,,,,,,
+901.0,,,,,,,,,,,,,,,,,,,,,
+902.0,,,,,,,,,,,,,,,,,,,,,
+903.0,,,,,,,,,,,,,,,,,,,,,
+904.0,,,,,,,,,,,,,,,,,,,,,
+905.0,,,,,,,,,,,,,,,,,,,,,
+906.0,,,,,,,,,,,,,,,,,,,,,
+907.0,,,,,,,,,,,,,,,,,,,,,
+908.0,,,,,,,,,,,,,,,,,,,,,
+909.0,,,,,,,,,,,,,,,,,,,,,
+910.0,,,,,,,,,,,,,,,,,,,,,
+911.0,,,,,,,,,,,,,,,,,,,,,
+912.0,,,,,,,,,,,,,,,,,,,,,
+913.0,,,,,,,,,,,,,,,,,,,,,
+914.0,,,,,,,,,,,,,,,,,,,,,
+915.0,,,,,,,,,,,,,,,,,,,,,
+916.0,,,,,,,,,,,,,,,,,,,,,
+917.0,,,,,,,,,,,,,,,,,,,,,
+918.0,,,,,,,,,,,,,,,,,,,,,
+919.0,,,,,,,,,,,,,,,,,,,,,
+920.0,,,,,,,,,,,,,,,,,,,,,
+921.0,,,,,,,,,,,,,,,,,,,,,
+922.0,,,,,,,,,,,,,,,,,,,,,
+923.0,,,,,,,,,,,,,,,,,,,,,
+924.0,,,,,,,,,,,,,,,,,,,,,
+925.0,,,,,,,,,,,,,,,,,,,,,
+926.0,,,,,,,,,,,,,,,,,,,,,
+927.0,,,,,,,,,,,,,,,,,,,,,
+928.0,,,,,,,,,,,,,,,,,,,,,
+929.0,,,,,,,,,,,,,,,,,,,,,
+930.0,,,,,,,,,,,,,,,,,,,,,
+931.0,,,,,,,,,,,,,,,,,,,,,
+932.0,,,,,,,,,,,,,,,,,,,,,
+933.0,,,,,,,,,,,,,,,,,,,,,
+934.0,,,,,,,,,,,,,,,,,,,,,
+935.0,,,,,,,,,,,,,,,,,,,,,
+936.0,,,,,,,,,,,,,,,,,,,,,
+937.0,,,,,,,,,,,,,,,,,,,,,
+938.0,,,,,,,,,,,,,,,,,,,,,
+939.0,,,,,,,,,,,,,,,,,,,,,
+940.0,,,,,,,,,,,,,,,,,,,,,
+941.0,,,,,,,,,,,,,,,,,,,,,
+942.0,,,,,,,,,,,,,,,,,,,,,
+943.0,,,,,,,,,,,,,,,,,,,,,
+944.0,,,,,,,,,,,,,,,,,,,,,
+945.0,,,,,,,,,,,,,,,,,,,,,
+946.0,,,,,,,,,,,,,,,,,,,,,
+947.0,,,,,,,,,,,,,,,,,,,,,
+948.0,,,,,,,,,,,,,,,,,,,,,
+949.0,,,,,,,,,,,,,,,,,,,,,
+950.0,,,,,,,,,,,,,,,,,,,,,
+951.0,,,,,,,,,,,,,,,,,,,,,
+952.0,,,,,,,,,,,,,,,,,,,,,
+953.0,,,,,,,,,,,,,,,,,,,,,
+954.0,,,,,,,,,,,,,,,,,,,,,
+955.0,,,,,,,,,,,,,,,,,,,,,
+956.0,,,,,,,,,,,,,,,,,,,,,
+957.0,,,,,,,,,,,,,,,,,,,,,
+958.0,,,,,,,,,,,,,,,,,,,,,
+959.0,,,,,,,,,,,,,,,,,,,,,
+960.0,,,,,,,,,,,,,,,,,,,,,
+961.0,,,,,,,,,,,,,,,,,,,,,
+962.0,,,,,,,,,,,,,,,,,,,,,
+963.0,,,,,,,,,,,,,,,,,,,,,
+964.0,,,,,,,,,,,,,,,,,,,,,
+965.0,,,,,,,,,,,,,,,,,,,,,
+966.0,,,,,,,,,,,,,,,,,,,,,
+967.0,,,,,,,,,,,,,,,,,,,,,
+968.0,,,,,,,,,,,,,,,,,,,,,
+969.0,,,,,,,,,,,,,,,,,,,,,
+970.0,,,,,,,,,,,,,,,,,,,,,
+971.0,,,,,,,,,,,,,,,,,,,,,
+972.0,,,,,,,,,,,,,,,,,,,,,
+973.0,,,,,,,,,,,,,,,,,,,,,
+974.0,,,,,,,,,,,,,,,,,,,,,
+975.0,,,,,,,,,,,,,,,,,,,,,
+976.0,,,,,,,,,,,,,,,,,,,,,
+977.0,,,,,,,,,,,,,,,,,,,,,
+978.0,,,,,,,,,,,,,,,,,,,,,
+979.0,,,,,,,,,,,,,,,,,,,,,
+980.0,,,,,,,,,,,,,,,,,,,,,
+981.0,,,,,,,,,,,,,,,,,,,,,
+982.0,,,,,,,,,,,,,,,,,,,,,
+983.0,,,,,,,,,,,,,,,,,,,,,
+984.0,,,,,,,,,,,,,,,,,,,,,
+985.0,,,,,,,,,,,,,,,,,,,,,
+986.0,,,,,,,,,,,,,,,,,,,,,
+987.0,,,,,,,,,,,,,,,,,,,,,
+988.0,,,,,,,,,,,,,,,,,,,,,
+989.0,,,,,,,,,,,,,,,,,,,,,
+990.0,,,,,,,,,,,,,,,,,,,,,
+991.0,,,,,,,,,,,,,,,,,,,,,
+992.0,,,,,,,,,,,,,,,,,,,,,
+993.0,,,,,,,,,,,,,,,,,,,,,
+994.0,,,,,,,,,,,,,,,,,,,,,
+995.0,,,,,,,,,,,,,,,,,,,,,
+996.0,,,,,,,,,,,,,,,,,,,,,
+997.0,,,,,,,,,,,,,,,,,,,,,
+998.0,,,,,,,,,,,,,,,,,,,,,
+999.0,,,,,,,,,,,,,,,,,,,,,
+365.0,AIR FILTER,,1.0,,,,,,,,,,AIR FILTER (PEACOCK),,Nos,,47.0,30.0,32.9,,
+499.0,CHOCK,,CHOKE,,,,,,,,,,30KW 40HP 8A CHOKE ,,NOS,,13000.0,0.0,13000,,
+505.0,Choke,,AMP,,,,,,,,,, VFD CHOKE (20 HP 15KW  (CHOKE CURRENT  40 AMP)) ,,NOS,RAJ ELECTRICAL ,6785,0.0,6785,,
+145.0,Filter,,4.0,,,,,,,,,,"FAN FILTER 4"" (AIR FILTER )",4.0,Nos,Anuroop,47.0,30.0,32.9,,47
+221.0,Label,,ALUMINIUM PLATE,,,,,,,,,,ALUMINIUM PLATE 22MM ,1.0,Nos,Mrugesh Engravers,9.0,0.0,9,,
+373.0,Luga,,1.0,,,,,,,,,,LUGS PIN TYPE  COPPER ,,Nos,,15.0,0.0,15,,
+323.0,Moadbus Pin,,,,,,,,,,,,Moadbus connector pin ,,Nos,,250.0,0.0,250,,
+379.0,MPR,,1.0,,,,,,,,,,Motor protection relay ,,Nos,,2000.0,0.0,2000,,
+470.0,PAKEGING,,SMALL,,,,,,,,,,RAPING ROLL SMALL,,NOS,FIRE,3000.0,0.0,3000,,
+471.0,PAKEGING,,BIG,,,,,,,,,,RAPING ROLL  BIG ,,NOS,FIRE,3000.0,0.0,3000,,
+322.0,Panel stickers,,,,,,,,,,,,Panel Guid Sticker,,Nos,,50.0,0.0,50,,
+413.0,power ,,SMPS,,,,,,,,,,SMPS,,NOS,,500.0,0.0,500,,
+544.0,PUSH BUTTON,,BUTTON,,,,,,,,,,START /STOP PUSH BUTTON,,NOS,,150.0,0.0,150,,
+502.0,SI,,AO,,,,,,,,,,SIGNAL ISOLATOR (4-20MA for AI & AO),,NOS,ANUROOP MULTISPAN ,4175.0,32.0,2839,,
+285.0,SPP,,SPP,,,,,,,,,,SPP 022,1.0,Nos,Ajitesh,555.0,37.0,349.65,,
+225.0,Sticker,,Door,,,,,,,,,,Open Close Sticker,2.0,Nos,Anuroop,4.0,0.0,4,,
+226.0,Sticker,,Door,,,,,,,,,,HOLE CLOSER,3.0,Nos,Anuroop,24.0,0.0,24,,
+497.0,stop button,,button,,,,,,,,,,Emergency stop push button,,NOS,,170.0,0.0,170,,
+528.0,VFD CHOKE,,1.0,,,,,,,,,,VFD CHOKE 20AMP,,Nos,,21440,0.0,21440,,
+377.0,WASHPR,,1.0,,,,,,,,,,Washor ,,Nos,,5.0,0.0,5,,

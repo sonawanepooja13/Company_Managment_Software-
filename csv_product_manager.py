@@ -5,6 +5,9 @@ import os
 import tkinter as tk
 from tkinter import filedialog, messagebox, simpledialog, ttk
 
+import openpyxl
+
+import category_order
 import config
 
 
@@ -37,6 +40,8 @@ class CSVProductManagerWindow(tk.Toplevel):
         top = ttk.Frame(root)
         top.pack(fill="x", pady=(12, 8))
         ttk.Button(top, text="Upload CSV File", command=self.choose_file).pack(side="left")
+        ttk.Button(top, text="⬆ Upload Excel", command=self.choose_excel_file).pack(side="left", padx=(8, 0))
+        ttk.Button(top, text="⬇ Download Excel", command=self.export_excel_file).pack(side="left", padx=(8, 0))
         ttk.Label(top, textvariable=self.file_name_var).pack(side="left", padx=12)
         ttk.Button(top, text="Save Changes", command=self.update_csv_file).pack(side="right", padx=(8, 0))
         ttk.Button(top, text="Reload", command=self.reload_file).pack(side="right")
@@ -80,6 +85,184 @@ class CSVProductManagerWindow(tk.Toplevel):
         if path:
             self.open_file(path)
 
+    def choose_excel_file(self):
+        """Select an Excel workbook whose sheet will update the price list."""
+        path = filedialog.askopenfilename(
+            parent=self,
+            title="Upload Excel Price List",
+            filetypes=(
+                ("Excel files", "*.xlsx *.xlsm"),
+                ("All files", "*.*"),
+            ),
+        )
+        if path:
+            self.import_excel_to_price_list(path)
+
+    def import_excel_to_price_list(self, excel_path):
+        """Read an Excel sheet and save it as the active price list CSV."""
+        try:
+            workbook = openpyxl.load_workbook(excel_path, data_only=True)
+        except Exception as error:
+            messagebox.showerror(
+                "Cannot Open Excel",
+                f"Could not open this Excel file:\n{error}",
+                parent=self,
+            )
+            return
+
+        sheet_name = self.pick_excel_sheet(workbook, os.path.basename(excel_path))
+        if not sheet_name:
+            return
+
+        worksheet = workbook[sheet_name]
+        rows = [
+            ["" if value is None else value for value in row]
+            for row in worksheet.iter_rows(values_only=True)
+        ]
+        rows = [row for row in rows if any(str(value).strip() for value in row)]
+        if not rows:
+            messagebox.showwarning(
+                "Empty Sheet",
+                "The selected worksheet does not contain any data.",
+                parent=self,
+            )
+            return
+        if not any(str(value).strip() for value in rows[0]):
+            messagebox.showwarning(
+                "Missing Headers",
+                "The first row of the worksheet must contain column names.",
+                parent=self,
+            )
+            return
+
+        # Arrange the uploaded sheet category-wise before saving.
+        rows = category_order.sort_rows_by_category(rows)
+
+        target_path = self.file_path or config.PRODUCT_PRICE_CALCULATOR_CSV
+        if not messagebox.askyesno(
+            "Update Price List",
+            "Replace the current price list with the uploaded Excel sheet?\n\n"
+            f"Target file:\n{target_path}",
+            parent=self,
+        ):
+            return
+
+        try:
+            os.makedirs(os.path.dirname(target_path), exist_ok=True)
+            with open(target_path, "w", newline="", encoding="utf-8-sig") as file:
+                csv.writer(file).writerows(rows)
+        except PermissionError:
+            messagebox.showerror(
+                "File Is Open",
+                "Close the price list CSV in another program, then upload again.",
+                parent=self,
+            )
+            return
+        except OSError as error:
+            messagebox.showerror(
+                "Excel Upload Failed",
+                f"Could not update the price list:\n{error}",
+                parent=self,
+            )
+            return
+
+        self.open_file(target_path)
+        messagebox.showinfo(
+            "Excel Uploaded",
+            f"The sheet '{sheet_name}' was uploaded and the price list was updated:\n{target_path}",
+            parent=self,
+        )
+
+    def pick_excel_sheet(self, workbook, file_name):
+        """Ask which worksheet to upload. Returns the sheet name or None."""
+        sheet_names = workbook.sheetnames
+        if not sheet_names:
+            messagebox.showwarning(
+                "No Worksheets",
+                f"The workbook '{file_name}' does not contain any worksheets.",
+                parent=self,
+            )
+            return None
+        if len(sheet_names) == 1:
+            return sheet_names[0]
+
+        dialog = tk.Toplevel(self)
+        dialog.title("Select Worksheet")
+        dialog.geometry("440x180")
+        dialog.resizable(False, False)
+        dialog.transient(self)
+        dialog.grab_set()
+        dialog.lift()
+        dialog.focus_force()
+
+        active_title = workbook.active.title if workbook.active else sheet_names[0]
+        selected = tk.StringVar(value=active_title)
+
+        content = ttk.Frame(dialog, padding=18)
+        content.pack(fill="both", expand=True)
+        ttk.Label(
+            content,
+            text=f"Choose the worksheet to upload from '{file_name}':",
+            wraplength=400,
+        ).pack(anchor="w", pady=(0, 12))
+        ttk.Combobox(
+            content,
+            textvariable=selected,
+            values=sheet_names,
+            state="readonly",
+            width=42,
+        ).pack(fill="x")
+
+        result = {"sheet": None}
+
+        def confirm():
+            result["sheet"] = selected.get()
+            dialog.destroy()
+
+        buttons = ttk.Frame(content)
+        buttons.pack(anchor="e", pady=(18, 0))
+        ttk.Button(buttons, text="Upload", command=confirm).pack(side="left", padx=(0, 8))
+        ttk.Button(buttons, text="Cancel", command=dialog.destroy).pack(side="left")
+
+        dialog.wait_window()
+        return result["sheet"]
+
+    def export_excel_file(self):
+        """Save the currently open price list to an Excel workbook."""
+        if not self.headers:
+            messagebox.showwarning("Upload Needed", "Open a price list first.", parent=self)
+            return
+
+        destination = filedialog.asksaveasfilename(
+            parent=self,
+            title="Download Price List as Excel",
+            defaultextension=".xlsx",
+            initialfile="price_list.xlsx",
+            filetypes=(("Excel workbook", "*.xlsx"),),
+        )
+        if not destination:
+            return
+
+        try:
+            workbook = openpyxl.Workbook()
+            worksheet = workbook.active
+            worksheet.title = "Price List"
+            worksheet.append(self.headers)
+            for row in self.rows:
+                worksheet.append([row.get(header, "") for header in self.headers])
+            workbook.save(destination)
+            messagebox.showinfo(
+                "Excel Downloaded",
+                f"The price list was saved to:\n{destination}",
+                parent=self,
+            )
+        except Exception as error:
+            messagebox.showerror(
+                "Excel Export Failed",
+                f"Could not download the price list:\n{error}",
+                parent=self,
+            )
+
     def open_file(self, path):
         try:
             with open(path, newline="", encoding="utf-8-sig") as file:
@@ -103,6 +286,8 @@ class CSVProductManagerWindow(tk.Toplevel):
             ]
             if not self.headers:
                 raise ValueError("The CSV file does not have a header row.")
+            # Keep the list arranged category-wise every time it is opened.
+            self.rows = category_order.sort_rows_by_category(self.rows)
             self.file_path = path
             self.file_name_var.set(os.path.basename(path))
             self.build_editor()

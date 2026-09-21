@@ -6,6 +6,9 @@ import shutil
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 import auth_manager
+import config
+
+_DATA_DIR = getattr(config, "DATA_DIR", os.path.dirname(os.path.abspath(__file__)))
 
 try:
     import openpyxl
@@ -110,7 +113,7 @@ def collect_tested_ok_records(root_dir):
 
 def get_csv_data_production_dir(base_dir=None):
     """Return the shared csv_data/production folder used for saved CSV exports."""
-    target_dir = base_dir or os.path.join(os.getcwd(), "csv_data", "production")
+    target_dir = base_dir or os.path.join(_DATA_DIR, "csv_data", "production")
     os.makedirs(target_dir, exist_ok=True)
     return target_dir
 
@@ -425,7 +428,7 @@ class ProductTestingWindow(tk.Toplevel):
                 self.lbl_back.config(text=os.path.basename(file_path))
 
     def get_product_photo_folder(self):
-        base_target_dir = self.batch_folder_path if self.batch_folder_path and os.path.exists(self.batch_folder_path) else os.path.join(os.getcwd(), "Production")
+        base_target_dir = self.batch_folder_path if self.batch_folder_path and os.path.exists(self.batch_folder_path) else os.path.join(_DATA_DIR, "Production")
         prod_id = self.product_id_var.get().strip()
         if not prod_id:
             return None
@@ -503,7 +506,7 @@ class ProductTestingWindow(tk.Toplevel):
             messagebox.showwarning("Validation Error", "Please enter a Product ID to search.", parent=self)
             return
 
-        base_target_dir = self.batch_folder_path if self.batch_folder_path and os.path.exists(self.batch_folder_path) else os.path.join(os.getcwd(), "Production")
+        base_target_dir = self.batch_folder_path if self.batch_folder_path and os.path.exists(self.batch_folder_path) else os.path.join(_DATA_DIR, "Production")
         csv_file = os.path.join(base_target_dir, "product_testing_log.csv")
 
         record_found = False
@@ -628,7 +631,7 @@ class ProductTestingWindow(tk.Toplevel):
             messagebox.showwarning("Validation Error", "Please enter a valid Product ID.", parent=self)
             return
 
-        base_target_dir = self.batch_folder_path if self.batch_folder_path and os.path.exists(self.batch_folder_path) else os.path.join(os.getcwd(), "Production")
+        base_target_dir = self.batch_folder_path if self.batch_folder_path and os.path.exists(self.batch_folder_path) else os.path.join(_DATA_DIR, "Production")
         prod_folder = os.path.join(base_target_dir, "Product_Testing_Records", prod_id)
         os.makedirs(prod_folder, exist_ok=True)
 
@@ -813,7 +816,7 @@ class ProductionView(ttk.Frame):
         os.makedirs(self.prod_dir, exist_ok=True)
         os.makedirs(self.new_prod_dir, exist_ok=True)
 
-        legacy_csv_path = os.path.join(os.getcwd(), "Production", "products_list.csv")
+        legacy_csv_path = os.path.join(_DATA_DIR, "Production", "products_list.csv")
         if not os.path.exists(self.csv_path) and os.path.exists(legacy_csv_path):
             shutil.copy2(legacy_csv_path, self.csv_path)
 
@@ -911,7 +914,7 @@ class ProductionView(ttk.Frame):
 
     def get_dispatch_log_rows(self):
         dispatch_log = get_dispatch_log_path()
-        legacy_dispatch_log = os.path.join(os.getcwd(), "Production", "Dispatch_Records", "tested_ok_dispatch_log.csv")
+        legacy_dispatch_log = os.path.join(_DATA_DIR, "Production", "Dispatch_Records", "tested_ok_dispatch_log.csv")
         if not os.path.exists(dispatch_log) and os.path.exists(legacy_dispatch_log):
             dispatch_log = legacy_dispatch_log
         if not os.path.exists(dispatch_log):

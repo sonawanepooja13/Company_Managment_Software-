@@ -7,8 +7,14 @@ from datetime import datetime
 import openpyxl
 from openpyxl import Workbook
 
-USERS_FILE = "users.csv"
-PO_EXCEL_FILE = "Purchase_Orders.xlsx"
+import config
+
+# Resolve data-file locations to the writable data directory.
+# In frozen (PyInstaller) mode DATA_DIR is a per-user location; in
+# development it is the project root, so relative behaviour is preserved.
+DATA_DIR = getattr(config, "DATA_DIR", os.path.dirname(os.path.abspath(__file__)))
+USERS_FILE = os.path.join(DATA_DIR, "users.csv")
+PO_EXCEL_FILE = os.path.join(DATA_DIR, "Purchase_Orders.xlsx")
 
 # Complete CSV Header Schema supporting all modules and sub-window actions.
 HEADERS = [

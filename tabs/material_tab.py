@@ -8,6 +8,7 @@ from tkinter import filedialog, messagebox, ttk
 import openpyxl
 
 import bom_engine
+import category_order
 import config
 import views
 from csv_product_manager import CSVProductManagerWindow
@@ -27,6 +28,8 @@ class MaterialTab(ttk.Frame):
         )
         self.vfd_make_values = self.load_vfd_makes()
         self.switch_gear_make_values = self.load_switch_gear_makes()
+        self.mccb_make_values = self.load_mccb_makes()
+        self.current_breaker_details = {}
 
         self.build_ui()
         
@@ -98,6 +101,21 @@ class MaterialTab(ttk.Frame):
             self.m_switch_gear_make_combo.set(self.switch_gear_make_values[0])
         row += 1
 
+        ttk.Label(form_frame, text="MCCB Make:").grid(row=row, column=0, sticky="w", pady=4)
+        self.m_mccb_make_combo = ttk.Combobox(
+            form_frame, values=self.mccb_make_values, width=18, state="readonly"
+        )
+        self.m_mccb_make_combo.grid(row=row, column=1, sticky="e", pady=4)
+        if self.mccb_make_values:
+            self.m_mccb_make_combo.set(self.mccb_make_values[0])
+        ttk.Label(form_frame, text="Breaking Capacity (kA):").grid(row=row, column=2, sticky="w", padx=(30, 0), pady=4)
+        self.m_breaking_capacity_combo = ttk.Combobox(
+            form_frame, values=["25 kA", "36 kA", "50 kA"], width=18, state="readonly"
+        )
+        self.m_breaking_capacity_combo.grid(row=row, column=3, sticky="e", pady=4)
+        self.m_breaking_capacity_combo.set("36 kA")
+        row += 1
+
         ttk.Label(form_frame, text="Number of Pumps:").grid(row=row, column=0, sticky="w", pady=4)
         self.m_pumps_combo = ttk.Combobox(form_frame, values=["1", "2", "3", "4", "5"], width=18, state="readonly")
         self.m_pumps_combo.grid(row=row, column=1, sticky="e", pady=4)
@@ -154,6 +172,8 @@ class MaterialTab(ttk.Frame):
         self.m_panel_class_combo = ttk.Combobox(form_frame, values=["Industrial", "Domestic"], width=18, state="readonly")
         self.m_panel_class_combo.grid(row=row, column=1, sticky="e", pady=4)
         self.m_panel_class_combo.set("Industrial")
+        self.m_panel_class_combo.bind("<<ComboboxSelected>>", self.update_breaking_capacity_default)
+        self.update_breaking_capacity_default()
         row += 1
 
         ttk.Label(form_frame, text="OLR Requirement:").grid(row=row, column=0, sticky="w", pady=4)
@@ -174,6 +194,12 @@ class MaterialTab(ttk.Frame):
         calc_btn = ttk.Button(action_frame, text="Calculate Material List & BOM", command=self.calculate_materials)
         calc_btn.pack(side="left", padx=5)
 
+        auto_calc_btn = ttk.Button(action_frame, text="Auto Calculator", command=self.auto_calculate_bom)
+        auto_calc_btn.pack(side="left", padx=5)
+
+        auto_calc2_btn = ttk.Button(action_frame, text="Auto Calculator2", command=self.open_auto_calculator2)
+        auto_calc2_btn.pack(side="left", padx=5)
+
         export_btn = ttk.Button(action_frame, text="💾 Export BOM to CSV", command=self.export_bom_to_csv)
         export_btn.pack(side="left", padx=5)
 
@@ -192,6 +218,10 @@ class MaterialTab(ttk.Frame):
 
         output_frame.grid_rowconfigure(0, weight=1)
         output_frame.grid_columnconfigure(0, weight=1)
+
+    def update_breaking_capacity_default(self, _event=None):
+        default_capacity = "36 kA" if self.m_panel_class_combo.get().strip().lower() == "industrial" else "25 kA"
+        self.m_breaking_capacity_combo.set(default_capacity)
 
     def populate_from_price_list(self):
         """Populate fields from Price List Search data."""
@@ -223,6 +253,17 @@ class MaterialTab(ttk.Frame):
 
         if 'switch_gear_make' in self.price_tab_data and self.price_tab_data['switch_gear_make'] in self.switch_gear_make_values:
             self.m_switch_gear_make_combo.set(self.price_tab_data['switch_gear_make'])
+
+        if 'mccb_make' in self.price_tab_data and self.price_tab_data['mccb_make'] in self.mccb_make_values:
+            self.m_mccb_make_combo.set(self.price_tab_data['mccb_make'])
+
+        if 'panel_class' in self.price_tab_data:
+            self.m_panel_class_combo.set(self.price_tab_data['panel_class'])
+        self.update_breaking_capacity_default()
+        if 'breaking_capacity' in self.price_tab_data:
+            capacity = str(self.price_tab_data['breaking_capacity']).strip()
+            if capacity in {"25 kA", "36 kA", "50 kA"}:
+                self.m_breaking_capacity_combo.set(capacity)
         
         # Copy Main Incomer (convert from Yes/No to 1 - Yes/0 - No)
         if 'main_incomer' in self.price_tab_data:
@@ -274,7 +315,8 @@ class MaterialTab(ttk.Frame):
         # Copy Panel Class
         if 'panel_class' in self.price_tab_data:
             self.m_panel_class_combo.set(self.price_tab_data['panel_class'])
-        
+        self.update_breaking_capacity_default()
+
         # Show message that data has been copied
         self.output_text.insert(tk.END, "✓ Data copied from Price List Search\n")
         self.output_text.insert(tk.END, "✓ Click 'Calculate Material List & BOM' to get the cost breakdown\n")
@@ -358,6 +400,9 @@ class MaterialTab(ttk.Frame):
             if not rows or not any(value not in (None, "") for value in rows[0]):
                 raise ValueError("The first worksheet does not contain a header row.")
 
+            # Arrange the list category-wise before saving
+            rows = self.sort_rows_by_category(rows)
+
             os.makedirs(os.path.dirname(self.product_price_csv), exist_ok=True)
             with open(self.product_price_csv, "w", newline="", encoding="utf-8-sig") as output:
                 csv.writer(output).writerows(rows)
@@ -387,6 +432,8 @@ class MaterialTab(ttk.Frame):
         try:
             with open(self.product_price_csv, newline="", encoding="utf-8-sig") as source:
                 rows = list(csv.reader(source))
+            # Download the list sorted category-wise
+            rows = self.sort_rows_by_category(rows)
             workbook = openpyxl.Workbook()
             worksheet = workbook.active
             worksheet.title = "Price List"
@@ -404,6 +451,15 @@ class MaterialTab(ttk.Frame):
                 f"Could not download the Excel price list:\n{error}",
                 parent=self.winfo_toplevel(),
             )
+
+    @staticmethod
+    def sort_rows_by_category(rows):
+        """Arrange rows by the Category column, keeping the header row first.
+
+        Uses the shared preferred category order so every upload is arranged
+        the same way (MCB, MCCB, RCCB, MPCB, Contactor, ...).
+        """
+        return category_order.sort_rows_by_category(rows)
 
     def calculate_materials(self):
         selection_window = tk.Toplevel(self.winfo_toplevel())
@@ -592,6 +648,12 @@ class MaterialTab(ttk.Frame):
 
         ttk.Button(
             actions,
+            text="⚡ Auto Calculate",
+            command=lambda: (selection_window.destroy(), self.calculate_materials_now()),
+        ).pack(side="right", padx=(8, 0))
+
+        ttk.Button(
+            actions,
             text="Calculate Material List & BOM",
             command=calculate_selected_materials,
         ).pack(side="right")
@@ -601,6 +663,8 @@ class MaterialTab(ttk.Frame):
             "pump_type": self.m_pump_type_combo.get().strip(),
             "pump_current": self.m_current_entry.get().strip(),
             "switch_gear_make": self.m_switch_gear_make_combo.get().strip(),
+            "mccb_make": self.m_mccb_make_combo.get().strip(),
+            "breaking_capacity": self.m_breaking_capacity_combo.get().strip(),
             "num_pumps": self.m_pumps_combo.get().strip(),
             "num_vfd": self.m_vfd_combo.get().strip(),
             "vfd_make": self.m_vfd_make_combo.get().strip(),
@@ -645,6 +709,8 @@ class MaterialTab(ttk.Frame):
             f"OLR{numeric_value(values['olr'])}",
             f"ILR{numeric_value(values['indicator_light'])}",
             f"SGM{option_code(values['switch_gear_make'], self.switch_gear_make_values)}",
+            f"MCM{option_code(values['mccb_make'], self.mccb_make_values)}",
+            f"BC{option_code(values['breaking_capacity'], ['25 kA', '36 kA', '50 kA'])}",
         ]
         return "AD | " + " | ".join(id_values)
 
@@ -691,11 +757,16 @@ class MaterialTab(ttk.Frame):
             pass
         return categories or ["General"]
 
+    def auto_calculate_bom(self):
+        self.calculate_materials_now()
+
     def calculate_materials_now(self, component_selections=None):
         try:
             pump_type = self.m_pump_type_combo.get()
             pump_current = float(self.m_current_entry.get().strip())
             switch_gear_make = self.m_switch_gear_make_combo.get().strip()
+            mccb_make = self.m_mccb_make_combo.get().strip()
+            breaking_capacity = self.m_breaking_capacity_combo.get().strip()
             num_pumps = int(self.m_pumps_combo.get().strip())
             num_vfd = int(self.m_vfd_combo.get().strip())
             vfd_make = self.m_vfd_make_combo.get().strip()
@@ -707,8 +778,10 @@ class MaterialTab(ttk.Frame):
             bypass = self.m_bypass_combo.get()
             panel_type = self.m_panel_type_combo.get()
             panel_class = self.m_panel_class_combo.get()
+            if pump_current <= 0 or num_pumps <= 0:
+                raise ValueError
         except ValueError:
-            messagebox.showerror("Input Error", "Please ensure all numerical input fields contain valid values.")
+            messagebox.showerror("Input Error", "Pump current and number of pumps must be positive values.")
             return
 
         pump_hp = (pump_current * 1.732 * 415 * 0.85) / 746
@@ -716,7 +789,7 @@ class MaterialTab(ttk.Frame):
         controller_type = "AIPCU OR HMI" if num_vfd > 0 else "DOL/STAR-DELTA"
         mcb_mccb_type = "MCCB" if total_panel_current > 63 else "MCB"
         breaker_qty = 1
-        raw_breaker_rating = total_panel_current * 1.25
+        raw_breaker_rating = total_panel_current
 
         fan_qty = 2 if num_vfd > 1 else (1 if num_vfd == 1 else 0)
         filter_qty = fan_qty
@@ -726,8 +799,16 @@ class MaterialTab(ttk.Frame):
             controller_type, num_pumps, num_vfd, pump_hp, olr_req, light_req,
             fan_qty, filter_qty, endlock_qty, mcb_mccb_type, breaker_qty,
             raw_breaker_rating, incomer_req, door_mount_req, total_panel_current,
-            vfd_make, "3P",
+            vfd_make, "3P", panel_class, mccb_make, breaking_capacity,
+            switch_gear_make,
         )
+        self.current_breaker_details = {
+            "total_current": total_panel_current,
+            "breaker_type": mcb_mccb_type,
+            "panel_class": panel_class,
+            "mccb_make": mccb_make,
+            "breaking_capacity": breaking_capacity,
+        }
 
         if isinstance(component_selections, dict):
             breaker_category = "MCCB" if mcb_mccb_type == "MCCB" else "MCB"
@@ -802,12 +883,40 @@ class MaterialTab(ttk.Frame):
         out.append(f"  Main Incomer: {'Yes' if incomer_req else 'No'}")
         out.append(f"  OLR Requirement: {'Yes' if olr_req else 'No'}")
         out.append(f"  Indicator Light: {'Yes' if light_req else 'No'}")
+        out.append("")
+        out.append("AUTO BREAKER SELECTION:")
+        out.append(f"  Total Current = {pump_current:g} A x {num_pumps} = {total_panel_current:g} A")
+        selected_breaker = next(
+            (item for item in self.current_bom if item["Category"] in {"MCB", "MCCB"}),
+            None,
+        )
+        if total_panel_current <= 63:
+            out.append("  Result: NO MCCB")
+            out.append("  Selected: Next standard 3P MCB rating >= total current")
+            if selected_breaker:
+                out.append(f"  Selected MCB Rating: {selected_breaker['Capacity']}")
+        else:
+            is_industrial = panel_class.strip().lower() == "industrial"
+            out.append("  Result: MCCB REQUIRED")
+            out.append(f"  Panel Application: {panel_class}")
+            out.append(f"  MCCB Poles: {'4P' if is_industrial else '3P'}")
+            out.append(f"  Phase/Neutral: {'R+Y+B+N' if is_industrial else 'R+Y+B + Neutral'}")
+            if is_industrial:
+                out.append("  Busbars: 4 (R+Y+B+N)")
+            else:
+                out.append("  Neutral Protection: 6A SP MCB")
+            out.append(f"  MCCB Make: {mccb_make or 'Not specified'}")
+            out.append(f"  Breaking Capacity: {breaking_capacity}")
+            if selected_breaker:
+                out.append(f"  Selected MCCB Rating: {selected_breaker['Capacity']}")
         if isinstance(component_selections, list):
             out.append("  Selected Materials:")
             for material in component_selections:
                 out.append(
                     f"    - {material['category']}: {material['item']} (Qty {material['quantity']})"
                 )
+        elif component_selections is None:
+            out.append("  [✓ Auto-Calculated] BOM generated automatically from panel inputs")
         out.append("=" * 80)
         out.append("")
         
@@ -833,13 +942,33 @@ class MaterialTab(ttk.Frame):
         export_file = config.BOM_EXPORT_CSV
         try:
             with open(export_file, mode="w", newline="", encoding="utf-8") as f:
-                writer = csv.DictWriter(f, fieldnames=["Item_Name", "Category", "SUB Category", "Capacity", "Qty", "DP"])
+                writer = csv.DictWriter(
+                    f,
+                    fieldnames=[
+                        "Item_Name",
+                        "Category",
+                        "SUB Category",
+                        "Capacity",
+                        "Qty",
+                        "DP",
+                        "Make",
+                        "Breaking Capacity",
+                        "Application",
+                        "Phase/Neutral",
+                    ],
+                )
                 writer.writeheader()
                 for item in self.current_bom:
                     writer.writerow(item)
             messagebox.showinfo("Export Success", f"BOM export saved successfully to:\n{export_file}")
         except Exception as e:
             messagebox.showerror("Export Error", f"Could not export BOM CSV: {e}")
+
+    def open_auto_calculator2(self):
+        """Open the Auto Calculator2 window for VFD BOM calculations."""
+        from vfd_bom_calculator_window import VFDBOMCalculatorWindow
+        calculator_window = VFDBOMCalculatorWindow(self)
+        calculator_window.grab_set()
 
     def load_vfd_makes(self):
         makes = []
@@ -892,6 +1021,20 @@ class MaterialTab(ttk.Frame):
             pass
         return options
 
+    def load_mccb_makes(self):
+        make_values = []
+        try:
+            with open(self.product_price_csv, newline="", encoding="utf-8-sig") as file:
+                for row in csv.DictReader(file):
+                    if str(row.get("Category", "")).strip().lower() != "mccb":
+                        continue
+                    make = str(row.get("make", "")).strip()
+                    if make and make.lower() not in {value.lower() for value in make_values}:
+                        make_values.append(make)
+        except (OSError, csv.Error):
+            pass
+        return make_values or list(self.switch_gear_make_values) or ["Not specified"]
+
     def load_switch_gear_makes(self):
         make_values = []
         try:
@@ -905,4 +1048,3 @@ class MaterialTab(ttk.Frame):
         except (OSError, csv.Error):
             pass
         return make_values or ["Not specified"]
-    

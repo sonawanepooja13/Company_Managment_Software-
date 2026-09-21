@@ -1,5 +1,6 @@
 import csv
 import os
+import sys
 import tempfile
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
@@ -983,15 +984,18 @@ class MainApp:
         categories = [
             "Customer CRM & Leads",
             "Saark Product Sector",
-            "Booster Pump Control Panel", 
+            "Booster Pump Control Panel",
             "STP Panel",
             "Water Meter",
-            "BMS"
+            "BMS",
+            "Trading",
         ]
 
         for category in categories:
             button_label = (
-                "Booster Pump Control Panel Desing,Materil & Price Calculator"
+                "welcome to trading"
+                if category == "Trading"
+                else "Booster Pump Control Panel Desing,Materil & Price Calculator"
                 if category == "Booster Pump Control Panel"
                 else category
             )
@@ -1008,7 +1012,7 @@ class MainApp:
         self.create_back_header(
             "Sales & Marketing - Saark Product Sector",
             self.show_product_category_selector,
-            "â¬… Back to Categories",
+            "⬅ Back to Categories",
         )
 
         notebook = ttk.Notebook(self.content_frame)
@@ -1644,7 +1648,7 @@ class MainApp:
                     notebook.add(tab_material, text=" Material & Labor Calculator ")
                     self.material_tab_instance = tab_material  # Store reference
 
-            elif category in ["STP Panel", "Water Meter", "BMS"]:
+            elif category in ["STP Panel", "Water Meter", "BMS", "Trading"]:
                 # Placeholder for future categories
                 placeholder_frame = ttk.Frame(self.content_frame, padding=40)
                 placeholder_frame.pack(expand=True)
@@ -2042,6 +2046,8 @@ class MainApp:
 
 
 if __name__ == "__main__":
+    if getattr(sys, "frozen", False):
+        os.chdir(config.DATA_DIR)
     root = tk.Tk()
     app = MainApp(root)
     root.mainloop()

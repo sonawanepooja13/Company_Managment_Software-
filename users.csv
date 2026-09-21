@@ -8,4 +8,8 @@ SE-0101,ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb,,,,Sale
 SE,ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb,,,,Sales,Active,False,False,True,True,True,False,False,False,True,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False
 q,8e35c2cd3bf6641bdb0e2050b76932cbb2e6034a0ddacc1d9bea82a6ba57f7cf,,,,Admin,Active,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True
 w,50e721e49c013f00c62cf59f2163542a9d8df02464efeb615d31051b0fddc326,,,,Admin,Active,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True
+<<<<<<< HEAD
 t,e3b98a4da31a127d4bde6e43033f66ba274cab0eb7eb1c70ec41402bf6273dd8,,,,User,Active,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True
+=======
+r,454349e422f05297191ead13e21d3db520e5abef52055e4964b82fb213f593a1,,,,User,Active,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True
+>>>>>>> 0f0b1b26930511781ef8be6c803cba69bb0bddf5
