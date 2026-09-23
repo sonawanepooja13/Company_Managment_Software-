@@ -3,8 +3,17 @@ import os
 import sys
 import tempfile
 import tkinter as tk
-from tkinter import filedialog, messagebox, ttk
+from tkinter import filedialog, messagebox, ttk, simpledialog
 import webbrowser
+import zipfile
+import shutil
+import subprocess
+from datetime import datetime
+import pandas as pd
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib import colors
 
 import auth_manager
 import config
@@ -25,8 +34,6 @@ import warehouse_management
 import qc_qa
 import help as app_help
 import crm_engine
-import subprocess
-import datetime
 
 import sales_marketing_window
 import accounts_finance_window
@@ -816,6 +823,8 @@ class MainApp:
                 )
             if os.environ.get("APP_OPEN_TASK_MANAGER") == "1":
                 self.root.after(250, self.show_task_manager_view)
+            if os.environ.get("APP_OPEN_SALES") == "1":
+                self.root.after(250, self.show_sales_marketing_view)
         else:
             messagebox.showerror(
                 "Access Denied",
@@ -830,6 +839,173 @@ class MainApp:
 
         self.content_frame = ttk.Frame(self.root)
         self.content_frame.pack(fill="both", expand=True)
+
+    def csv_to_excel(self, csv_file, excel_file):
+        """Convert CSV file to Excel format."""
+        try:
+            df = pd.read_csv(csv_file, encoding='utf-8-sig')
+            df.to_excel(excel_file, index=False, engine='openpyxl')
+            return True
+        except Exception as e:
+            print(f"Error converting {csv_file} to Excel: {e}")
+            return False
+
+    def csv_to_pdf(self, csv_file, pdf_file):
+        """Convert CSV file to PDF format."""
+        try:
+            df = pd.read_csv(csv_file, encoding='utf-8-sig')
+            
+            # Create PDF document
+            doc = SimpleDocTemplate(pdf_file, pagesize=letter)
+            elements = []
+            styles = getSampleStyleSheet()
+            
+            # Add title
+            title = f"CSV Export: {os.path.basename(csv_file)}"
+            elements.append(Paragraph(title, styles['Title']))
+            
+            # Convert DataFrame to table
+            data = [df.columns.tolist()] + df.values.tolist()
+            table = Table(data)
+            
+            # Style the table
+            table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('FONTSIZE', (0, 0), (-1, 0), 12),
+                ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                ('GRID', (0, 0), (-1, -1), 1, colors.black),
+            ]))
+            
+            elements.append(table)
+            doc.build(elements)
+            return True
+        except Exception as e:
+            print(f"Error converting {csv_file} to PDF: {e}")
+            return False
+
+    def download_database(self):
+        """Download all CSV files as Excel and PDF with password protection."""
+        # Password protection
+        password = simpledialog.askstring("Password Required", "Enter password to download database:")
+        if password != "28300191":
+            messagebox.showerror("Access Denied", "Incorrect password. Access denied.")
+            return
+
+        try:
+            # Get all CSV files from the project directory
+            csv_files = []
+            csv_dir = os.path.join(config.SCRIPT_DIR, "csv_data")
+            
+            # Collect all CSV files recursively
+            for root, dirs, files in os.walk(csv_dir):
+                for file in files:
+                    if file.endswith('.csv'):
+                        csv_files.append(os.path.join(root, file))
+            
+            # Also include CSV files in the main directory
+            for file in os.listdir(config.SCRIPT_DIR):
+                if file.endswith('.csv') and file not in ['.kilo']:
+                    csv_files.append(os.path.join(config.SCRIPT_DIR, file))
+            
+            # Include Production directory
+            production_dir = os.path.join(config.SCRIPT_DIR, "Production")
+            if os.path.exists(production_dir):
+                for root, dirs, files in os.walk(production_dir):
+                    for file in files:
+                        if file.endswith('.csv'):
+                            csv_files.append(os.path.join(root, file))
+            
+            # Include project_management_exports directory
+            pm_exports_dir = os.path.join(config.SCRIPT_DIR, "project_management_exports")
+            if os.path.exists(pm_exports_dir):
+                for file in os.listdir(pm_exports_dir):
+                    if file.endswith('.csv'):
+                        csv_files.append(os.path.join(pm_exports_dir, file))
+            
+            if not csv_files:
+                messagebox.showinfo("No Files", "No CSV files found to download.")
+                return
+
+            # Ask user for save location
+            save_dir = filedialog.askdirectory(title="Select folder to save database files")
+            if not save_dir:
+                return
+
+            # Create timestamp for folder name
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            db_folder = os.path.join(save_dir, f"Saark_Database_{timestamp}")
+            os.makedirs(db_folder, exist_ok=True)
+
+            # Create subfolders for different formats
+            csv_folder = os.path.join(db_folder, "CSV_Files")
+            excel_folder = os.path.join(db_folder, "Excel_Files")
+            pdf_folder = os.path.join(db_folder, "PDF_Files")
+            
+            os.makedirs(csv_folder, exist_ok=True)
+            os.makedirs(excel_folder, exist_ok=True)
+            os.makedirs(pdf_folder, exist_ok=True)
+
+            # Convert and save files in different formats
+            converted_count = 0
+            for csv_file in csv_files:
+                try:
+                    # Get relative path and filename
+                    relative_path = os.path.relpath(csv_file, config.SCRIPT_DIR)
+                    filename = os.path.splitext(os.path.basename(csv_file))[0]
+                    
+                    # Copy original CSV
+                    csv_dest = os.path.join(csv_folder, os.path.basename(csv_file))
+                    shutil.copy2(csv_file, csv_dest)
+                    
+                    # Convert to Excel
+                    excel_dest = os.path.join(excel_folder, f"{filename}.xlsx")
+                    if self.csv_to_excel(csv_file, excel_dest):
+                        converted_count += 1
+                    
+                    # Convert to PDF
+                    pdf_dest = os.path.join(pdf_folder, f"{filename}.pdf")
+                    if self.csv_to_pdf(csv_file, pdf_dest):
+                        converted_count += 1
+                    
+                except Exception as e:
+                    print(f"Error processing {csv_file}: {e}")
+
+            # Create a summary file
+            summary_file = os.path.join(db_folder, "DATABASE_SUMMARY.txt")
+            with open(summary_file, 'w') as f:
+                f.write(f"Saark Enterprise Database Export\n")
+                f.write(f"Export Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+                f.write(f"Total CSV Files: {len(csv_files)}\n")
+                f.write(f"Converted Files: {converted_count}\n\n")
+                f.write("Files included:\n")
+                for csv_file in csv_files:
+                    relative_path = os.path.relpath(csv_file, config.SCRIPT_DIR)
+                    f.write(f"- {relative_path}\n")
+
+            # Create ZIP file
+            zip_path = os.path.join(save_dir, f"Saark_Database_{timestamp}.zip")
+            with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+                for root, dirs, files in os.walk(db_folder):
+                    for file in files:
+                        file_path = os.path.join(root, file)
+                        arcname = os.path.relpath(file_path, db_folder)
+                        zipf.write(file_path, arcname)
+
+            # Clean up the temporary folder
+            shutil.rmtree(db_folder)
+
+            messagebox.showinfo("Download Complete", 
+                              f"Database downloaded successfully!\n\n"
+                              f"Total CSV Files: {len(csv_files)}\n"
+                              f"Converted Files: {converted_count}\n"
+                              f"Saved as: {zip_path}")
+
+        except Exception as e:
+            messagebox.showerror("Download Error", f"Failed to download database: {e}")
 
     def create_welcome_button(self, parent, text, command):
         bg = self.theme_colors["btn_bg"]
@@ -1001,6 +1177,19 @@ class MainApp:
                 pady=6,
                 sticky="ew",
             )
+
+        # Download Database button (password protected)
+        self.create_welcome_button(
+            module_grid,
+            "📥 Download Database",
+            self.download_database,
+        ).grid(
+            row=(len(all_modules) // 2) + 1,
+            column=1,
+            padx=10,
+            pady=6,
+            sticky="ew",
+        )
 
     def create_back_header(self, title_text, back_command=None, back_text="⬅ Back to Menu"):
         header_frame = ttk.Frame(self.content_frame, padding=8)

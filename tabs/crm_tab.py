@@ -130,10 +130,14 @@ class CrmTab(ttk.Frame):
         )
         self.photos_base_dir = os.path.join(config.SCRIPT_DIR, "Customer_Photos")
         os.makedirs(self.photos_base_dir, exist_ok=True)
+        
+        self.audio_base_dir = os.path.join(config.SCRIPT_DIR, "Customer_Audio_Recordings")
+        os.makedirs(self.audio_base_dir, exist_ok=True)
 
         self.selected_row_index = None
         self.all_rows = []
         self.selected_photo_paths = []
+        self.selected_audio_paths = []
         self.status_summary_frame = None
 
         # Initialize MQTT data manager if available
@@ -175,6 +179,10 @@ class CrmTab(ttk.Frame):
             "number_of_staff",
             "products_selected",
             "company_valuation",
+            "valuable_customer_percentage",
+            "customer_rating",
+            "activity_count",
+            "audio_recordings",
             "note",
             "call_conversion_time",
             "company_data_sent",
@@ -227,6 +235,12 @@ class CrmTab(ttk.Frame):
             clean_name = "Unnamed_Company"
         return os.path.join(self.photos_base_dir, clean_name)
 
+    def get_company_audio_dir(self, company_name):
+        clean_name = self.sanitize_folder_name(company_name)
+        if not clean_name:
+            clean_name = "Unnamed_Company"
+        return os.path.join(self.audio_base_dir, clean_name)
+
     def ensure_crm_csv_exists(self):
         headers = self.get_crm_headers()
         if not os.path.exists(self.crm_csv_path):
@@ -267,11 +281,33 @@ class CrmTab(ttk.Frame):
 
                     # Adjust row data length if columns were added or removed
                     if len(row) < len(headers):
-                        row.extend([""] * (len(headers) - len(row)))
+                        # Extend with empty strings, but set count fields to "0" if they're new
+                        for i in range(len(row), len(headers)):
+                            if headers[i] in ["activity_count", "mobile_recording_count"]:
+                                row.append("0")
+                            else:
+                                row.append("")
                         needs_rewrite = True
                     elif len(row) > len(headers):
                         row = row[: len(headers)]
                         needs_rewrite = True
+
+                    # Fix any existing "No" values in count fields to "0"
+                    try:
+                        activity_idx = headers.index("activity_count")
+                        if len(row) > activity_idx and row[activity_idx] == "No":
+                            row[activity_idx] = "0"
+                            needs_rewrite = True
+                    except ValueError:
+                        pass  # activity_count not in headers yet
+
+                    try:
+                        mobile_idx = headers.index("mobile_recording_count")
+                        if len(row) > mobile_idx and row[mobile_idx] == "No":
+                            row[mobile_idx] = "0"
+                            needs_rewrite = True
+                    except ValueError:
+                        pass  # mobile_recording_count not in headers yet
 
                     updated_rows.append(row)
 
@@ -360,6 +396,10 @@ class CrmTab(ttk.Frame):
             "Location",
             "Owner Name",
             "Products",
+            "Valuable %",
+            "Rating",
+            "Activity",
+            "Mobile Rec",
             "Data Sent",
             "Enquiry",
             "Call Time",
@@ -374,7 +414,16 @@ class CrmTab(ttk.Frame):
 
         for col in cols[1:]:
             self.crm_tree.heading(col, text=col)
-            self.crm_tree.column(col, width=80)
+            if col == "Valuable %":
+                self.crm_tree.column(col, width=60, anchor="center")
+            elif col == "Rating":
+                self.crm_tree.column(col, width=50, anchor="center")
+            elif col == "Activity":
+                self.crm_tree.column(col, width=50, anchor="center")
+            elif col == "Mobile Rec":
+                self.crm_tree.column(col, width=60, anchor="center")
+            else:
+                self.crm_tree.column(col, width=80)
 
         vsb_crm = ttk.Scrollbar(
             records_frame, orient="vertical", command=self.crm_tree.yview
@@ -606,9 +655,63 @@ class CrmTab(ttk.Frame):
         )
         self.chk_val_serious_base.grid(row=1, column=0, sticky="w", padx=2)
 
+        # Valuable Customer Percentage Field
+        percentage_frame = ttk.Frame(val_chk_grid)
+        percentage_frame.grid(row=2, column=0, columnspan=2, sticky="w", padx=2, pady=2)
+
+        ttk.Label(percentage_frame, text="Valuable Customer %:").pack(side="left")
+        self.crm_valuable_percentage = ttk.Entry(percentage_frame, width=6)
+        self.crm_valuable_percentage.pack(side="left", padx=2)
+        ttk.Label(percentage_frame, text="(0-100)", font=("Helvetica", 8)).pack(side="left")
+        
+        ttk.Button(percentage_frame, text="🧮 Auto-Calculate", width=12, 
+                  command=self.auto_calculate_valuable_percentage).pack(side="left", padx=2)
+
+        # Customer Rating Field
+        rating_frame = ttk.Frame(val_chk_grid)
+        rating_frame.grid(row=3, column=0, columnspan=2, sticky="w", padx=2, pady=2)
+
+        ttk.Label(rating_frame, text="Customer Rating:").pack(side="left")
+        self.crm_customer_rating = ttk.Entry(rating_frame, width=6)
+        self.crm_customer_rating.pack(side="left", padx=2)
+        ttk.Label(rating_frame, text="(0-100)", font=("Helvetica", 8)).pack(side="left")
+
+        # Activity Count Field
+        activity_frame = ttk.Frame(val_chk_grid)
+        activity_frame.grid(row=4, column=0, columnspan=2, sticky="w", padx=2, pady=2)
+
+        ttk.Label(activity_frame, text="Activity Count:").pack(side="left")
+        self.crm_activity_count = ttk.Entry(activity_frame, width=6, state="readonly")
+        self.crm_activity_count.pack(side="left", padx=2)
+        ttk.Label(activity_frame, text="(Auto-increments on activity)", font=("Helvetica", 8)).pack(side="left")
+
+        # Audio Recordings Field
+        audio_frame = ttk.Frame(val_chk_grid)
+        audio_frame.grid(row=5, column=0, columnspan=2, sticky="w", padx=2, pady=2)
+
+        ttk.Label(audio_frame, text="Audio Recordings:").pack(side="left")
+        self.audio_listbox = tk.Listbox(audio_frame, width=20, height=2)
+        self.audio_listbox.pack(side="left", fill="both", expand=True, padx=(0, 4))
+
+        audio_btn_frame = ttk.Frame(audio_frame)
+        audio_btn_frame.pack(side="right")
+
+        self.btn_add_audio = ttk.Button(
+            audio_btn_frame, text="🎤 Upload", width=11, command=self.select_audio_recordings
+        )
+        self.btn_add_audio.pack(pady=1)
+        self.btn_remove_audio = ttk.Button(
+            audio_btn_frame, text="❌ Remove", width=11, command=self.remove_selected_audio
+        )
+        self.btn_remove_audio.pack(pady=1)
+        self.btn_play_audio = ttk.Button(
+            audio_btn_frame, text="▶️ Play", width=11, command=self.play_selected_audio
+        )
+        self.btn_play_audio.pack(pady=1)
+
         # Distributor Field Row
         dist_subframe = ttk.Frame(val_chk_grid)
-        dist_subframe.grid(row=1, column=1, sticky="w", padx=2)
+        dist_subframe.grid(row=7, column=0, columnspan=2, sticky="w", padx=2, pady=2)
 
         self.chk_val_distributor = ttk.Checkbutton(
             dist_subframe,
@@ -625,7 +728,7 @@ class CrmTab(ttk.Frame):
 
         # Dealer Field Row
         dealer_subframe = ttk.Frame(val_chk_grid)
-        dealer_subframe.grid(row=2, column=0, columnspan=2, sticky="w", padx=2, pady=2)
+        dealer_subframe.grid(row=8, column=0, columnspan=2, sticky="w", padx=2, pady=2)
 
         self.chk_val_dealer = ttk.Checkbutton(
             dealer_subframe,
@@ -981,6 +1084,172 @@ class CrmTab(ttk.Frame):
             self.crm_dealer_name.delete(0, tk.END)
             self.crm_dealer_name.config(state="disabled")
 
+    def auto_calculate_valuable_percentage(self):
+        """Automatically calculate valuable customer percentage based on combined factors."""
+        try:
+            percentage = 0
+            
+            # Factor 1: Company Turnover (0-25 points)
+            turnover_str = self.crm_turnover.get().strip()
+            if turnover_str:
+                try:
+                    turnover = float(turnover_str.replace(',', '').replace('L', '').replace('l', ''))
+                    if turnover >= 100:  # 100L+ crore turnover
+                        percentage += 25
+                    elif turnover >= 50:  # 50-100L crore turnover
+                        percentage += 20
+                    elif turnover >= 10:  # 10-50L crore turnover
+                        percentage += 15
+                    elif turnover >= 5:   # 5-10L crore turnover
+                        percentage += 10
+                    elif turnover >= 1:   # 1-5L crore turnover
+                        percentage += 5
+                except (ValueError, AttributeError):
+                    pass
+            
+            # Factor 2: Products Selected (0-20 points)
+            selected_products = self.get_selected_products_str()
+            product_count = len([p for p in selected_products.split(',') if p.strip()])
+            if product_count >= 5:
+                percentage += 20
+            elif product_count >= 3:
+                percentage += 15
+            elif product_count >= 2:
+                percentage += 10
+            elif product_count >= 1:
+                percentage += 5
+            
+            # Factor 3: Company Valuation (0-20 points)
+            valuation_factors = 0
+            if self.var_val_vfd.get():
+                valuation_factors += 1
+            if self.var_val_dewatering.get():
+                valuation_factors += 1
+            if self.var_val_serious_base.get():
+                valuation_factors += 1
+            if self.var_val_distributor.get():
+                valuation_factors += 1
+            if self.var_val_dealer.get():
+                valuation_factors += 1
+            
+            if valuation_factors >= 4:
+                percentage += 20
+            elif valuation_factors >= 3:
+                percentage += 15
+            elif valuation_factors >= 2:
+                percentage += 10
+            elif valuation_factors >= 1:
+                percentage += 5
+            
+            # Factor 4: Engagement Metrics (0-20 points)
+            engagement_score = 0
+            
+            # Enquiry status
+            if self.crm_enquiry.get() == "Yes":
+                engagement_score += 8
+            
+            # Data sent
+            if self.crm_data_sent.get() == "Yes":
+                engagement_score += 7
+            
+            # Call duration
+            call_hours = int(self.crm_call_hours.get())
+            call_mins = int(self.crm_call_mins.get())
+            total_call_mins = call_hours * 60 + call_mins
+            if total_call_mins >= 30:
+                engagement_score += 5
+            elif total_call_mins >= 15:
+                engagement_score += 3
+            elif total_call_mins >= 5:
+                engagement_score += 1
+            
+            percentage += engagement_score
+            
+            # Factor 5: Number of Staff (0-15 points)
+            staff_str = self.crm_staff_count.get().strip()
+            if staff_str:
+                try:
+                    staff_count = int(staff_str)
+                    if staff_count >= 100:
+                        percentage += 15
+                    elif staff_count >= 50:
+                        percentage += 12
+                    elif staff_count >= 20:
+                        percentage += 8
+                    elif staff_count >= 10:
+                        percentage += 5
+                    elif staff_count >= 5:
+                        percentage += 3
+                except (ValueError, AttributeError):
+                    pass
+            
+            # Cap at 100%
+            percentage = min(percentage, 100)
+            
+            # Update the field
+            self.crm_valuable_percentage.delete(0, tk.END)
+            self.crm_valuable_percentage.insert(0, str(percentage))
+            
+            messagebox.showinfo("Auto-Calculation Complete", 
+                              f"Valuable Customer Percentage calculated as {percentage}%\n\n"
+                              f"Factors considered:\n"
+                              f"- Company Turnover\n"
+                              f"- Products Selected\n"
+                              f"- Company Valuation\n"
+                              f"- Engagement Metrics\n"
+                              f"- Number of Staff")
+            
+        except Exception as e:
+            messagebox.showerror("Calculation Error", f"Failed to auto-calculate: {e}")
+
+    def auto_increment_activity_count(self):
+        """Auto-increment the activity count when communication details are updated."""
+        try:
+            current_count = self.crm_activity_count.get().strip()
+            if not current_count or current_count == "No":
+                current_count = "0"
+            
+            # Try to convert to int, handle any conversion errors
+            try:
+                current_count_int = int(current_count)
+            except (ValueError, TypeError):
+                current_count_int = 0
+            
+            new_count = current_count_int + 1
+            self.crm_activity_count.config(state="normal")
+            self.crm_activity_count.delete(0, tk.END)
+            self.crm_activity_count.insert(0, str(new_count))
+            self.crm_activity_count.config(state="readonly")
+            
+            return new_count
+        except Exception as e:
+            print(f"Failed to auto-increment activity count: {e}")
+            return 0
+
+    def increment_mobile_recording_count(self):
+        """Increment the mobile recording count for the current customer."""
+        try:
+            current_count = self.crm_mobile_recording_count.get().strip()
+            if not current_count or current_count == "No":
+                current_count = "0"
+            
+            # Try to convert to int, handle any conversion errors
+            try:
+                current_count_int = int(current_count)
+            except (ValueError, TypeError):
+                current_count_int = 0
+            
+            new_count = current_count_int + 1
+            self.crm_mobile_recording_count.config(state="normal")
+            self.crm_mobile_recording_count.delete(0, tk.END)
+            self.crm_mobile_recording_count.insert(0, str(new_count))
+            self.crm_mobile_recording_count.config(state="readonly")
+            
+            messagebox.showinfo("Mobile Recording Count Updated", 
+                              f"Mobile recording count incremented to {new_count}")
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to increment mobile recording count: {e}")
+
     def select_photos(self):
         file_paths = filedialog.askopenfilenames(
             title="Select Photos",
@@ -1029,6 +1298,73 @@ class CrmTab(ttk.Frame):
                 "Folder Error", f"Could not open folder:\n{e}"
             )
 
+    def select_audio_recordings(self):
+        file_paths = filedialog.askopenfilenames(
+            title="Select Audio Recordings",
+            filetypes=[
+                ("Audio Files", "*.mp3 *.wav *.m4a *.aac *.ogg"),
+                ("All Files", "*.*"),
+            ],
+        )
+        if file_paths:
+            for path in file_paths:
+                filename = os.path.basename(path)
+                if path not in self.selected_audio_paths:
+                    self.selected_audio_paths.append(path)
+                    self.audio_listbox.insert(tk.END, filename)
+
+    def remove_selected_audio(self):
+        selected_indices = self.audio_listbox.curselection()
+        if not selected_indices:
+            return
+        idx = selected_indices[0]
+        self.audio_listbox.delete(idx)
+        if idx < len(self.selected_audio_paths):
+            del self.selected_audio_paths[idx]
+
+    def play_selected_audio(self):
+        selected_indices = self.audio_listbox.curselection()
+        if not selected_indices:
+            messagebox.showwarning("No Selection", "Please select an audio file to play.")
+            return
+        
+        idx = selected_indices[0]
+        if idx < len(self.selected_audio_paths):
+            audio_path = self.selected_audio_paths[idx]
+            try:
+                if sys.platform == "win32":
+                    os.startfile(audio_path)
+                elif sys.platform == "darwin":
+                    subprocess.Popen(["open", audio_path])
+                else:
+                    subprocess.Popen(["xdg-open", audio_path])
+            except Exception as e:
+                messagebox.showerror("Playback Error", f"Could not play audio file:\n{e}")
+
+    def open_company_audio_folder(self):
+        company_name = self.crm_company.get().strip()
+        if not company_name:
+            messagebox.showwarning(
+                "Company Name Required",
+                "Please enter or load a company name to open its audio folder.",
+            )
+            return
+
+        folder_path = self.get_company_audio_dir(company_name)
+        os.makedirs(folder_path, exist_ok=True)
+
+        try:
+            if sys.platform == "win32":
+                os.startfile(folder_path)
+            elif sys.platform == "darwin":
+                subprocess.Popen(["open", folder_path])
+            else:
+                subprocess.Popen(["xdg-open", folder_path])
+        except Exception as e:
+            messagebox.showerror(
+                "Folder Error", f"Could not open folder:\n{e}"
+            )
+
     def process_and_save_photos(self, company_name):
         if not company_name:
             return ""
@@ -1038,6 +1374,26 @@ class CrmTab(ttk.Frame):
 
         saved_filenames = []
         for src_path in self.selected_photo_paths:
+            if os.path.exists(src_path):
+                fname = os.path.basename(src_path)
+                dest_path = os.path.join(target_dir, fname)
+                if os.path.abspath(src_path) != os.path.abspath(dest_path):
+                    shutil.copy2(src_path, dest_path)
+                saved_filenames.append(fname)
+            else:
+                saved_filenames.append(os.path.basename(src_path))
+
+        return "|".join(saved_filenames)
+
+    def process_and_save_audio(self, company_name):
+        if not company_name:
+            return ""
+
+        target_dir = self.get_company_audio_dir(company_name)
+        os.makedirs(target_dir, exist_ok=True)
+
+        saved_filenames = []
+        for src_path in self.selected_audio_paths:
             if os.path.exists(src_path):
                 fname = os.path.basename(src_path)
                 dest_path = os.path.join(target_dir, fname)
@@ -1242,6 +1598,10 @@ class CrmTab(ttk.Frame):
         self.chk_val_distributor.config(state=chk_state)
         self.chk_val_dealer.config(state=chk_state)
         self.chk_val_serious_base.config(state=chk_state)
+        self.crm_valuable_percentage.config(state=target_state)
+        self.crm_customer_rating.config(state=target_state)
+        self.crm_activity_count.config(state="readonly")
+        self.crm_mobile_recording_count.config(state="readonly")
 
         if self.var_val_distributor.get() and state == "normal":
             self.crm_distributor_name.config(state="normal")
@@ -1297,6 +1657,46 @@ class CrmTab(ttk.Frame):
             f"{self.crm_call_hours.get()} hrs {self.crm_call_mins.get()} mins"
         )
 
+        # Validate and get valuable customer percentage
+        percentage_str = self.crm_valuable_percentage.get().strip()
+        if percentage_str:
+            try:
+                percentage = float(percentage_str)
+                if percentage < 0 or percentage > 100:
+                    messagebox.showwarning("Input Error", "Valuable Customer Percentage must be between 0 and 100.")
+                    return None
+                percentage_str = str(percentage)
+            except ValueError:
+                messagebox.showwarning("Input Error", "Valuable Customer Percentage must be a valid number.")
+                return None
+        else:
+            percentage_str = "0"
+
+        # Validate and get customer rating
+        rating_str = self.crm_customer_rating.get().strip()
+        if rating_str:
+            try:
+                rating = float(rating_str)
+                if rating < 0 or rating > 100:
+                    messagebox.showwarning("Input Error", "Customer Rating must be between 0 and 100.")
+                    return None
+                rating_str = str(rating)
+            except ValueError:
+                messagebox.showwarning("Input Error", "Customer Rating must be a valid number.")
+                return None
+        else:
+            rating_str = "0"
+
+        # Get activity count
+        activity_count_str = self.crm_activity_count.get().strip()
+        if not activity_count_str:
+            activity_count_str = "0"
+
+        # Get mobile recording count
+        mobile_recording_count_str = self.crm_mobile_recording_count.get().strip()
+        if not mobile_recording_count_str:
+            mobile_recording_count_str = "0"
+
         data = [
             company,
             self.crm_gst.get().strip(),
@@ -1313,6 +1713,10 @@ class CrmTab(ttk.Frame):
             self.crm_staff_count.get().strip(),
             self.get_selected_products_str(),
             self.get_company_valuation_str(),
+            percentage_str,
+            rating_str,
+            activity_count_str,
+            mobile_recording_count_str,
             self.crm_notes_text.get("1.0", tk.END).strip(),
             call_time_str,
             self.crm_data_sent.get(),
@@ -1369,16 +1773,32 @@ class CrmTab(ttk.Frame):
         self.crm_staff_count.insert(0, r[12] if len(r) > 12 else "")
         self.set_products_from_str(r[13] if len(r) > 13 else "")
         self.set_company_valuation_from_str(r[14] if len(r) > 14 else "")
-        self.crm_notes_text.insert("1.0", r[15] if len(r) > 15 else "")
-        self.set_call_time_from_str(r[16] if len(r) > 16 else "")
-        self.crm_data_sent.set(r[17] if len(r) > 17 and r[17] else "No")
-        self.crm_enquiry.set(r[18] if len(r) > 18 and r[18] else "No")
-        self.crm_comm_text.insert("1.0", r[19] if len(r) > 19 else "")
-        self.crm_meeting_time.insert(0, r[20] if len(r) > 20 else "")
-        self.crm_meeting_agenda.insert(0, r[21] if len(r) > 21 else "")
-        self.crm_meeting_outcome_text.insert("1.0", r[22] if len(r) > 22 else "")
+        self.crm_valuable_percentage.insert(0, r[15] if len(r) > 15 else "0")
+        self.crm_customer_rating.insert(0, r[16] if len(r) > 16 else "0")
+        self.crm_activity_count.config(state="normal")
+        activity_val = r[17] if len(r) > 17 else "0"
+        # Handle "No" or other non-numeric values in activity count
+        if activity_val == "No" or not activity_val.strip():
+            activity_val = "0"
+        self.crm_activity_count.insert(0, activity_val)
+        self.crm_activity_count.config(state="readonly")
+        self.crm_mobile_recording_count.config(state="normal")
+        mobile_val = r[18] if len(r) > 18 else "0"
+        # Handle "No" or other non-numeric values in mobile recording count
+        if mobile_val == "No" or not mobile_val.strip():
+            mobile_val = "0"
+        self.crm_mobile_recording_count.insert(0, mobile_val)
+        self.crm_mobile_recording_count.config(state="readonly")
+        self.crm_notes_text.insert("1.0", r[19] if len(r) > 19 else "")
+        self.set_call_time_from_str(r[20] if len(r) > 20 else "")
+        self.crm_data_sent.set(r[21] if len(r) > 21 and r[21] else "No")
+        self.crm_enquiry.set(r[22] if len(r) > 22 and r[22] else "No")
+        self.crm_comm_text.insert("1.0", r[23] if len(r) > 23 else "")
+        self.crm_meeting_time.insert(0, r[24] if len(r) > 24 else "")
+        self.crm_meeting_agenda.insert(0, r[25] if len(r) > 25 else "")
+        self.crm_meeting_outcome_text.insert("1.0", r[26] if len(r) > 26 else "")
 
-        photo_str = r[23] if len(r) > 23 else ""
+        photo_str = r[27] if len(r) > 27 else ""
         if photo_str:
             photo_dir = self.get_company_photos_dir(company_name)
             for fname in photo_str.split("|"):
@@ -1412,9 +1832,21 @@ class CrmTab(ttk.Frame):
             )
             return
 
+        # Check if communication details have changed
+        current_comm = self.crm_comm_text.get("1.0", tk.END).strip()
+        old_comm = self.all_rows[self.selected_row_index][23] if len(self.all_rows[self.selected_row_index]) > 23 else ""
+        
         row_data = self.get_form_data()
         if not row_data:
             return
+
+        # Auto-increment activity count if communication details changed
+        if current_comm != old_comm and current_comm:
+            new_count = self.auto_increment_activity_count()
+            # Update the activity count in the row data (index 17 is activity_count)
+            if len(row_data) > 17:
+                row_data[17] = str(new_count)
+            print(f"Activity count auto-incremented to {new_count} due to communication update")
 
         self.all_rows[self.selected_row_index] = row_data
         self.save_all_rows_to_csv()
@@ -1436,6 +1868,15 @@ class CrmTab(ttk.Frame):
         row_data = self.get_form_data()
         if not row_data:
             return
+
+        # Auto-increment activity count if communication details are present
+        current_comm = self.crm_comm_text.get("1.0", tk.END).strip()
+        if current_comm:
+            new_count = self.auto_increment_activity_count()
+            # Update the activity count in the row data (index 17 is activity_count)
+            if len(row_data) > 17:
+                row_data[17] = str(new_count)
+            print(f"Activity count auto-incremented to {new_count} for new entry")
 
         try:
             with open(
@@ -1528,6 +1969,14 @@ class CrmTab(ttk.Frame):
 
         self.set_products_from_str("")
         self.set_company_valuation_from_str("")
+        self.crm_valuable_percentage.delete(0, tk.END)
+        self.crm_customer_rating.delete(0, tk.END)
+        self.crm_activity_count.config(state="normal")
+        self.crm_activity_count.delete(0, tk.END)
+        self.crm_activity_count.config(state="readonly")
+        self.crm_mobile_recording_count.config(state="normal")
+        self.crm_mobile_recording_count.delete(0, tk.END)
+        self.crm_mobile_recording_count.config(state="readonly")
 
         self.crm_call_hours.set("00")
         self.crm_call_mins.set("00")
@@ -1589,10 +2038,20 @@ class CrmTab(ttk.Frame):
             location = r[9] if len(r) > 9 else ""
             owner = r[11] if len(r) > 11 else ""
             products = r[13] if len(r) > 13 else ""
-            data_sent = r[17] if len(r) > 17 else "No"
-            enquiry = r[18] if len(r) > 18 else "No"
-            call_time = r[16] if len(r) > 16 else ""
-            meeting_time = r[20] if len(r) > 20 else ""
+            valuable_percentage = r[15] if len(r) > 15 else "0"
+            customer_rating = r[16] if len(r) > 16 else "0"
+            activity_count = r[17] if len(r) > 17 else "0"
+            # Handle "No" or other non-numeric values in activity count
+            if activity_count == "No" or not str(activity_count).strip():
+                activity_count = "0"
+            mobile_recording_count = r[18] if len(r) > 18 else "0"
+            # Handle "No" or other non-numeric values in mobile recording count
+            if mobile_recording_count == "No" or not str(mobile_recording_count).strip():
+                mobile_recording_count = "0"
+            data_sent = r[20] if len(r) > 20 else "No"
+            enquiry = r[21] if len(r) > 21 else "No"
+            call_time = r[19] if len(r) > 19 else ""
+            meeting_time = r[23] if len(r) > 23 else ""
 
             self.crm_tree.insert(
                 "",
@@ -1609,6 +2068,10 @@ class CrmTab(ttk.Frame):
                     location,
                     owner,
                     products,
+                    valuable_percentage,
+                    customer_rating,
+                    activity_count,
+                    mobile_recording_count,
                     data_sent,
                     enquiry,
                     call_time,
@@ -1636,6 +2099,10 @@ class CrmTab(ttk.Frame):
             or (len(r) > 11 and query in r[11].lower())
             or (len(r) > 13 and query in r[13].lower())
             or (len(r) > 14 and query in r[14].lower())
+            or (len(r) > 15 and query in r[15].lower())
+            or (len(r) > 16 and query in r[16].lower())
+            or (len(r) > 17 and query in r[17].lower())
+            or (len(r) > 18 and query in r[18].lower())
         ]
         self.populate_tree(filtered)
 
