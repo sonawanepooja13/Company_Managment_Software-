@@ -1428,7 +1428,7 @@ class TaskManagerView(ttk.Frame):
             input_panel = tk.Frame(chat_window, bg="#f3f4f6")
             input_panel.pack(fill="x", padx=0, pady=0)
 
-            mention_frame = tk.Frame(input_panel, bg="#f3f4f6", padx=12, pady=(10, 4))
+            mention_frame = tk.Frame(input_panel, bg="#f3f4f6", padx=12, pady=(10))
             mention_frame.pack(fill="x")
             ttk.Label(mention_frame, text="Mention:", background="#f3f4f6").pack(side="left")
             mention_values = [user.name for user in sorted(allowed_contacts, key=lambda user: user.name.lower())]
