@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>BOM Engine</h2>
+    <div>
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addBomModal">
+            <i class="bi bi-plus-circle"></i> New BOM
+        </button>
+    </div>
+</div>
+
+<!-- BOM Table -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Bill of Materials</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>BOM ID</th>
+                        <th>Product Name</th>
+                        <th>Version</th>
+                        <th>Components</th>
+                        <th>Total Cost</th>
+                        <th>Created By</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="bomTableBody">
+                    <tr>
+                        <td colspan="7" class="text-center">Loading BOMs...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Add BOM Modal -->
+<div class="modal fade" id="addBomModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Bill of Materials</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="bomForm">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">BOM ID *</label>
+                            <input type="text" class="form-control" name="bom_id" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Product Name *</label>
+                            <input type="text" class="form-control" name="product_name" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Version</label>
+                            <input type="text" class="form-control" name="version">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Total Cost</label>
+                            <input type="number" class="form-control" name="total_cost" step="0.01">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Components</label>
+                        <textarea class="form-control" name="components" rows="4" placeholder="Enter components as JSON or comma-separated list"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Created By</label>
+                        <input type="text" class="form-control" name="created_by">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveBom()">Save BOM</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function loadBoms() {
+        const boms = await apiCall('/api/bom');
+        
+        if (boms.success !== false) {
+            renderBomTable(boms);
+        } else {
+            document.getElementById('bomTableBody').innerHTML = 
+                '<tr><td colspan="7" class="text-center text-danger">Failed to load BOMs</td></tr>';
+        }
+    }
+
+    function renderBomTable(boms) {
+        const tbody = document.getElementById('bomTableBody');
+        
+        if (boms.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" class="text-center">No BOMs found</td></tr>';
+            return;
+        }
+        
+        tbody.innerHTML = boms.map(bom => `
+            <tr>
+                <td><strong>${bom.bom_id}</strong></td>
+                <td>${bom.product_name}</td>
+                <td>${bom.version}</td>
+                <td>${bom.components}</td>
+                <td>₹${bom.total_cost}</td>
+                <td>${bom.created_by}</td>
+                <td>
+                    <button class="btn btn-sm btn-info" onclick="editBom(${bom.id})">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteBom(${bom.id})">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    async function saveBom() {
+        const form = document.getElementById('bomForm');
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+        
+        const result = await apiCall('/api/bom', 'POST', data);
+        
+        if (result.success) {
+            showNotification('BOM added successfully');
+            $('#addBomModal').modal('hide');
+            form.reset();
+            loadBoms();
+        } else {
+            showNotification('Failed to add BOM: ' + result.error, 'danger');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadBoms);
+</script>
+{% endblock %}

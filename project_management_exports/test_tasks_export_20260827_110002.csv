@@ -1,0 +1,9 @@
+TaskUID,TaskID,ParentTaskUID,Project,Title,Description,Assignee,AssignedGroup,Status,Priority,DueDate,CreatedBy,CreatedAt,UpdatedAt
+1,1,,SDFSDF,dsdklfjfsdf,sdklfjsdlkfjlk,admin,sunny,Open,Low,123123,a,2026-08-27T10:39:51.081520,
+2,2,,asdf,,,,,,,,a,2026-08-27T10:42:36.930614,
+3,3,,BMS Project,Install sensors,Install sensors across building,bob,,Open,High,2026-09-10 12:00,tester,2026-08-27T10:56:05.797014,
+3-1,4,3,BMS Project,Mount sensor brackets,Mount brackets at locations,carol,,Open,Medium,2026-09-05 10:00,tester,2026-08-27T10:56:05.803011,
+3-1-1,5,3-1,BMS Project,Fasten brackets,Use screws to fasten,dave,,Open,Low,2026-09-05 15:00,tester,2026-08-27T10:56:05.808838,
+6,6,,BMS Project,Install sensors,Install sensors across building,bob,,Open,High,2026-09-10 12:00,tester,2026-08-27T11:00:02.418554,
+3-2,7,3,BMS Project,Mount sensor brackets,Mount brackets at locations,carol,,Open,Medium,2026-09-05 10:00,tester,2026-08-27T11:00:02.425317,
+3-1-2,8,3-1,BMS Project,Fasten brackets,Use screws to fasten,dave,,Open,Low,2026-09-05 15:00,tester,2026-08-27T11:00:02.433255,

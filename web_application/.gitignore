@@ -1,0 +1,66 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv
+
+# Database - Keep structure but not actual data
+web_data/databases/*.db
+web_data/databases/*.db-journal
+web_data/customer_photos/*
+web_data/production_docs/*
+web_data/exports/*
+web_data/reports/*
+web_data/Production/*
+web_data/warehouse/*
+web_data/finance/*
+web_data/hr/*
+web_data/projects/*
+web_data/rnd/*
+web_data/legal/*
+web_data/qc/*
+web_data/it/*
+web_data/supply_chain/*
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment variables
+.env
+.env.local
+
+# Session data
+instance/

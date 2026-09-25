@@ -1,0 +1,6 @@
+pyinstaller
+openpyxl
+reportlab
+tkcalendar
+Pillow
+pandas

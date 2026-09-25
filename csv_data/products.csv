@@ -1,0 +1,6 @@
+﻿pump_type,pump_current,switch_gear_make,num_pumps,num_vfd,vfd_make,bypass,panel_type,panel_size,panel_class,main_incomer,olr_required,indicator_light,price
+,10,SNY,1,0,CG,With Bypass,Indoor,400x300,Industrial,Yes,Yes,Yes,10.00
+,10,SNY,1,0,CG,With Bypass,Indoor,400x300,Industrial,Yes,Yes,Yes,10.00
+,1,SNY,1,0,CG,With Bypass,Indoor,400x300,Industrial,Yes,Yes,Yes,1.00
+3 Phase,1,SNY,1,0,DANFOS,With Bypass,Indoor,400x300,Industrial,Yes,Yes,Yes,2.00
+3 Phase,1,Not specified,1,0,CG,With Bypass,Indoor,400x300,Industrial,Yes,Yes,Yes,1.00

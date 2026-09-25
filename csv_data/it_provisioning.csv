@@ -1,0 +1,3 @@
+employee_name,department,requested_date,laptop_model,software_stack,email_access,status
+Aisha Verma,Engineering,2026-08-24,Dell Latitude 7440,"Microsoft 365, Jira, Slack",Enabled,Ready
+Daniel Lee,Sales,2026-08-25,HP EliteBook 840,"Microsoft 365, Salesforce",Enabled,In Progress
