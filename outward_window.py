@@ -20,7 +20,19 @@ from tkcalendar import DateEntry
 
 OUTWARD_CSV = os.path.join(config.CSV_DIR, "outward_entries.csv")
 OUTWARD_HEADERS = ["document_type", "document_date", "document_no", "customer", "department", "item_description", "quantity", "rate", "amount", "notes"]
-DOCUMENT_TYPES = ("Quotation", "Proforma Invoice", "Invoice", "Delivery Challan", "Returnable / Retainable Challan")
+DOCUMENT_TYPES = (
+    "Quotation",
+    "Proforma Invoice",
+    "Invoice",
+    "Delivery Challan",
+    "Returnable / Retainable Challan",
+    "Sales Order",
+    "Purchase Order",
+    "Job Work",
+    "Credit Note",
+    "Debit Note",
+    "Service Request",
+)
 DEPARTMENTS = ("Production", "R&D", "Panel Department", "Office", "Sales", "Marketing", "Other")
 CUSTOMERS_CSV = os.path.join(config.CSV_DIR, "customers_detailed.csv")
 OUTWARD_OUTPUT_DIR = os.path.join(config.SCRIPT_DIR, "outward_documents")
@@ -76,15 +88,16 @@ def next_document_number(document_type, document_date):
 
 
 class OutwardWindow(ttk.Frame):
-    def __init__(self, parent, on_complete=None):
+    def __init__(self, parent, on_complete=None, document_type=None):
         super().__init__(parent)
         self.on_complete = on_complete or (lambda: None)
+        default_document_type = document_type if document_type in DOCUMENT_TYPES else DOCUMENT_TYPES[0]
         self.catalog = load_catalog()
         self.catalog_labels = list(self.catalog)
         self.customers = load_customers()
         self.customer_matches = []
         self.items = []
-        self.doc_vars = {"document_type": tk.StringVar(value="Quotation"), "document_date": tk.StringVar(value=date.today().isoformat()), "document_no": tk.StringVar(), "customer": tk.StringVar(), "department": tk.StringVar()}
+        self.doc_vars = {"document_type": tk.StringVar(value=default_document_type), "document_date": tk.StringVar(value=date.today().isoformat()), "document_no": tk.StringVar(), "customer": tk.StringVar(), "department": tk.StringVar()}
         self._setting_document_number = False
         self._document_number_is_manual = False
         self.item_vars = {"catalog": tk.StringVar(), "description": tk.StringVar(), "quantity": tk.StringVar(value="1"), "rate": tk.StringVar(value="0")}

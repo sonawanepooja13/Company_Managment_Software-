@@ -1,13 +1,53 @@
 import csv
 import datetime
+import io
 import os
+import re
 import shutil
 import subprocess
 import sys
+import threading
+import time
+import zlib
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 
 import config
+import locations
+import company_file_import
+
+try:
+    import crm_engine
+except ImportError:
+    crm_engine = None
+
+try:
+    from .company_sorting import CompanySortingMixin
+except ImportError:
+    try:
+        from tabs.company_sorting import CompanySortingMixin
+    except ImportError:
+        try:
+            from company_sorting import CompanySortingMixin
+        except ImportError:
+            class CompanySortingMixin:
+                def show_company_sorting(self):
+                    from tkinter import messagebox
+                    messagebox.showinfo("Info", "Company Sorting module not found.")
+
+try:
+    from .company_graph import CompanyGraphMixin
+except ImportError:
+    try:
+        from tabs.company_graph import CompanyGraphMixin
+    except ImportError:
+        try:
+            from company_graph import CompanyGraphMixin
+        except ImportError:
+            class CompanyGraphMixin:
+                def show_company_graph(self):
+                    from tkinter import messagebox
+                    messagebox.showinfo("Info", "Graph module not found.")
 
 # Try to import MQTT components (optional - for centralized data)
 try:
@@ -119,7 +159,7 @@ class DateTimePickerPopup(tk.Toplevel):
         self.destroy()
 
 
-class CrmTab(ttk.Frame):
+class CrmTab(CompanySortingMixin, CompanyGraphMixin, ttk.Frame):
 
     def __init__(self, parent):
         super().__init__(parent)
@@ -131,14 +171,51 @@ class CrmTab(ttk.Frame):
         self.photos_base_dir = os.path.join(config.SCRIPT_DIR, "Customer_Photos")
         os.makedirs(self.photos_base_dir, exist_ok=True)
         
-        self.audio_base_dir = os.path.join(config.SCRIPT_DIR, "Customer_Audio_Recordings")
+        # Audio recordings are stored inside csv_data, separated per customer folder.
+        self.audio_base_dir = os.path.join(config.CSV_DIR, "Customer_Audio_Recordings")
         os.makedirs(self.audio_base_dir, exist_ok=True)
 
         self.selected_row_index = None
+        self.location_fields_locked = False
+        self._location_choices = {
+            "country": tuple(locations.COUNTRY_NAMES),
+            "state": (),
+            "district": (),
+        }
+        self._location_popup_open = {
+            "country": False,
+            "state": False,
+            "district": False,
+        }
+        self._location_post_scheduled = {
+            "country": False,
+            "state": False,
+            "district": False,
+        }
+        self._location_suggestion_popups = {
+            "country": None,
+            "state": None,
+            "district": None,
+        }
+        self._location_suggestion_listboxes = {
+            "country": None,
+            "state": None,
+            "district": None,
+        }
+        self._location_suggestion_values = {
+            "country": (),
+            "state": (),
+            "district": (),
+        }
+        self._location_preferences = self._read_location_preferences()
         self.all_rows = []
         self.selected_photo_paths = []
         self.selected_audio_paths = []
         self.status_summary_frame = None
+        self.notified_meetings = set()
+        # Per-company CSV folder: csv_data/Company_Wise/<Company>.csv
+        self.company_wise_dir = os.path.join(config.CSV_DIR, "Company_Wise")
+        os.makedirs(self.company_wise_dir, exist_ok=True)
 
         # Initialize MQTT data manager if available
         self.mqtt_manager = None
@@ -160,6 +237,53 @@ class CrmTab(ttk.Frame):
 
         self.setup_scrollable_container()
         self.build_ui()
+        # background alarm: popup 15 min before next meeting
+        try:
+            self.start_meeting_reminder_thread()
+        except Exception:
+            pass
+
+    def _read_location_preferences(self):
+        """Read the last confirmed location selection from SQLite."""
+        defaults = {"country": "India", "state": "", "district": ""}
+        if crm_engine is None:
+            return defaults
+        try:
+            crm_engine.init_crm_db()
+            stored = crm_engine.get_location_preferences()
+            return {
+                key: (stored.get(key) or defaults[key])
+                for key in defaults
+            }
+        except Exception as exc:
+            print(f"Could not load location defaults: {exc}")
+            return defaults
+
+    def _save_location_preferences(self):
+        """Persist the last confirmed location selection to SQLite."""
+        if crm_engine is None or not hasattr(self, "crm_country"):
+            return
+        try:
+            country = self.crm_country.get().strip()
+            state = self.crm_state.get().strip()
+            district = self.crm_district.get().strip()
+            crm_engine.save_location_preferences(country, state, district)
+            self._location_preferences = {
+                "country": country,
+                "state": state,
+                "district": district,
+            }
+        except Exception as exc:
+            print(f"Could not save location defaults: {exc}")
+
+    def _load_default_location_values(self):
+        """Apply the last confirmed location as the new-record default."""
+        preferences = self._location_preferences
+        self._set_location_values(
+            preferences.get("country") or "India",
+            preferences.get("state", ""),
+            preferences.get("district", ""),
+        )
 
     def get_crm_headers(self):
         """Returns row 1 header structure exactly matching get_form_data() output index order."""
@@ -182,17 +306,39 @@ class CrmTab(ttk.Frame):
             "valuable_customer_percentage",
             "customer_rating",
             "activity_count",
-            "audio_recordings",
+            "mobile_recording_count",
             "note",
             "call_conversion_time",
+            "call_conversion_date",
             "company_data_sent",
+            "data_type_name",
             "enquiry_received",
+            "enquiry_type",
             "communication_details",
+            "communication_date",
             "meeting_schedule_time",
+            "next_meeting_datetime",
             "meeting_agenda",
             "meeting_completed_details",
             "photo_files",
+            "audio_files",
+            "country",
         ]
+
+    # ---------- Company-wise CSV + reminder helpers ----------
+    def _safe_company_filename(self, company_name):
+        safe = "".join(
+            c if (c.isalnum() or c in (" ", "-", "_")) else "_"
+            for c in (company_name or "").strip()
+        ).strip()
+        safe = "_".join(safe.split())
+        return safe[:80] if safe else "Unknown_Company"
+
+    def get_company_csv_path(self, company_name):
+        return os.path.join(
+            self.company_wise_dir,
+            f"{self._safe_company_filename(company_name)}.csv",
+        )
 
     def setup_scrollable_container(self):
         self.canvas = tk.Canvas(self, borderwidth=0, highlightthickness=0)
@@ -225,6 +371,121 @@ class CrmTab(ttk.Frame):
     def _on_mousewheel(self, event):
         if self.canvas.winfo_exists():
             self.canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+
+    def save_company_wise_csv(self, row_dict):
+        try:
+            company = (row_dict.get("company_name") or "").strip() or "Unknown_Company"
+            path = self.get_company_csv_path(company)
+            headers = self.get_crm_headers()
+            if os.path.exists(path):
+                try:
+                    with open(path, "r", newline="", encoding="utf-8-sig") as f:
+                        reader = csv.DictReader(f)
+                        existing = list(reader) if reader.fieldnames else []
+                        old_fields = reader.fieldnames or []
+                    key_new = (row_dict.get("company_name", ""), row_dict.get("contact_number", ""))
+                    merged = False
+                    for ex in existing:
+                        key_ex = (ex.get("company_name", ""), ex.get("contact_number", ""))
+                        if key_ex == key_new:
+                            ex.update(row_dict)
+                            merged = True
+                            break
+                    if not merged:
+                        existing.append(row_dict)
+                    all_fields = list(dict.fromkeys(list(old_fields) + headers + list(row_dict.keys())))
+                    with open(path, "w", newline="", encoding="utf-8-sig") as f:
+                        w = csv.DictWriter(f, fieldnames=all_fields, extrasaction="ignore")
+                        w.writeheader()
+                        for ex in existing:
+                            w.writerow({k: ex.get(k, "") for k in all_fields})
+                    return path
+                except Exception:
+                    pass
+            with open(path, "a", newline="", encoding="utf-8-sig") as f:
+                w = csv.DictWriter(f, fieldnames=headers, extrasaction="ignore")
+                if f.tell() == 0:
+                    w.writeheader()
+                w.writerow({k: row_dict.get(k, "") for k in headers})
+            return path
+        except Exception as e:
+            print(f"Company-wise CSV save failed: {e}")
+            return None
+
+    def parse_meeting_dt(self, s):
+        s = (s or "").strip()
+        if not s:
+            return None
+        fmts = ["%Y-%m-%d %I:%M %p", "%Y-%m-%d %H:%M", "%d-%m-%Y %I:%M %p",
+                "%d-%m-%Y %H:%M", "%Y/%m/%d %I:%M %p", "%Y-%m-%d", "%d-%m-%Y"]
+        for fmt in fmts:
+            try:
+                return datetime.datetime.strptime(s, fmt)
+            except ValueError:
+                continue
+        return None
+
+    def start_meeting_reminder_thread(self):
+        def _loop():
+            while True:
+                try:
+                    self.check_meeting_reminders()
+                except Exception as e:
+                    print(f"Reminder check failed: {e}")
+                time.sleep(30)
+        threading.Thread(target=_loop, daemon=True).start()
+
+    def check_meeting_reminders(self):
+        now = datetime.datetime.now()
+        for row in list(self.all_rows):
+            try:
+                d = row if isinstance(row, dict) else dict(zip(self.get_crm_headers(), row))
+            except Exception:
+                continue
+            nxt = d.get("next_meeting_datetime", "") or d.get("meeting_schedule_time", "")
+            cname = d.get("company_name", "Unknown")
+            if not nxt:
+                continue
+            mt = self.parse_meeting_dt(str(nxt))
+            if not mt:
+                continue
+            delta_min = (mt - now).total_seconds() / 60.0
+            key = f"{cname}|{nxt}"
+            if 14.0 <= delta_min <= 16.5 and key not in self.notified_meetings:
+                self.notified_meetings.add(key)
+                msg = f"Meeting in ~15 minutes!\n\nCompany: {cname}\nAt: {nxt}"
+                try:
+                    self.after(0, lambda m=msg: messagebox.showwarning("Meeting Reminder", m))
+                    self.after(0, lambda m=msg: self._flash_reminder_popup(m))
+                except Exception:
+                    pass
+
+    def _flash_reminder_popup(self, msg):
+        pop = tk.Toplevel(self)
+        pop.title("Meeting Reminder - 15 min left")
+        pop.geometry("380x200")
+        pop.attributes("-topmost", True)
+        try:
+            pop.bell()
+        except Exception:
+            pass
+        ttk.Label(pop, text="Next Meeting in 15 Minutes",
+                  font=("Helvetica", 12, "bold"), foreground="red").pack(pady=10)
+        ttk.Label(pop, text=msg, wraplength=340, justify="left").pack(pady=5, padx=12)
+        ttk.Button(pop, text="OK", command=pop.destroy).pack(pady=10)
+
+    def _get_date_str(self, widget, default_today=True):
+        """DateEntry-safe getter: always returns YYYY-MM-DD string."""
+        try:
+            v = widget.get()
+        except Exception:
+            return datetime.date.today().strftime("%Y-%m-%d") if default_today else ""
+        try:
+            if hasattr(v, "strftime"):
+                return v.strftime("%Y-%m-%d")
+            return str(v).strip()
+        except Exception:
+            return datetime.date.today().strftime("%Y-%m-%d") if default_today else ""
 
     def sanitize_folder_name(self, name):
         return "".join(c for c in name if c.isalnum() or c in (" ", "_", "-")).strip()
@@ -269,47 +530,37 @@ class CrmTab(ttk.Frame):
 
             with open(self.crm_csv_path, mode="r", encoding="utf-8-sig") as f:
                 reader = csv.reader(f)
-                file_headers = next(reader, None)
-
-                # Check if headers match the correct layout
-                if file_headers != headers:
-                    needs_rewrite = True
+                file_headers = next(reader, None) or []
+                file_headers = [str(header).strip() for header in file_headers]
+                needs_rewrite = file_headers != headers
 
                 for row in reader:
                     if not row or not any(row):
                         continue
 
-                    # Adjust row data length if columns were added or removed
-                    if len(row) < len(headers):
-                        # Extend with empty strings, but set count fields to "0" if they're new
-                        for i in range(len(row), len(headers)):
-                            if headers[i] in ["activity_count", "mobile_recording_count"]:
-                                row.append("0")
-                            else:
-                                row.append("")
+                    # Map by the header names so legacy files with a shorter
+                    # schema (created by the BOM startup helper) are not shifted
+                    # into the wrong CRM fields when the country column is added.
+                    row_by_header = {
+                        name: row[index]
+                        for index, name in enumerate(file_headers)
+                        if index < len(row)
+                    }
+                    migrated_row = [
+                        "" if row_by_header.get(field) is None else row_by_header[field]
+                        for field in headers
+                    ]
+
+                    for field in ("activity_count", "mobile_recording_count"):
+                        index = headers.index(field)
+                        if migrated_row[index] == "No" or (
+                            field not in file_headers and not migrated_row[index]
+                        ):
+                            migrated_row[index] = "0"
+
+                    if len(row) > len(file_headers):
                         needs_rewrite = True
-                    elif len(row) > len(headers):
-                        row = row[: len(headers)]
-                        needs_rewrite = True
-
-                    # Fix any existing "No" values in count fields to "0"
-                    try:
-                        activity_idx = headers.index("activity_count")
-                        if len(row) > activity_idx and row[activity_idx] == "No":
-                            row[activity_idx] = "0"
-                            needs_rewrite = True
-                    except ValueError:
-                        pass  # activity_count not in headers yet
-
-                    try:
-                        mobile_idx = headers.index("mobile_recording_count")
-                        if len(row) > mobile_idx and row[mobile_idx] == "No":
-                            row[mobile_idx] = "0"
-                            needs_rewrite = True
-                    except ValueError:
-                        pass  # mobile_recording_count not in headers yet
-
-                    updated_rows.append(row)
+                    updated_rows.append(migrated_row)
 
             if needs_rewrite:
                 with open(
@@ -333,6 +584,12 @@ class CrmTab(ttk.Frame):
         ttk.Button(
             nav_frame, text="❓ Enquiry Management", command=self.show_enquiry_management
         ).pack(side="left", padx=5)
+        ttk.Button(
+            nav_frame, text="🏢 Company Sorting", command=self.show_company_sorting
+        ).pack(side="left", padx=5)
+        ttk.Button(
+            nav_frame, text="📊 Graph", command=self.show_company_graph
+        ).pack(side="left", padx=5)
 
         # Main container for different views
         self.view_container = ttk.Frame(self.content_frame)
@@ -340,6 +597,302 @@ class CrmTab(ttk.Frame):
 
         # Build CRM Management view (default)
         self.build_crm_management()
+
+    def on_data_sent_change(self, event=None):
+        """Handle data sent combobox change."""
+        if hasattr(self, 'crm_data_sent') and hasattr(self, 'crm_data_type_name'):
+            if self.crm_data_sent.get() == "Yes":
+                self.crm_data_type_name.config(state="normal")
+            else:
+                self.crm_data_type_name.config(state="disabled")
+                self.crm_data_type_name.delete(0, tk.END)
+
+    def on_enquiry_change(self, event=None):
+        """Handle enquiry combobox change."""
+        if hasattr(self, 'crm_enquiry') and hasattr(self, 'crm_enquiry_type'):
+            if self.crm_enquiry.get() == "Yes":
+                self.crm_enquiry_type.config(state="normal")
+            else:
+                self.crm_enquiry_type.config(state="disabled")
+                self.crm_enquiry_type.delete(0, tk.END)
+
+    @staticmethod
+    def _with_saved_choice(options, saved_value):
+        """Keep a historical value selectable when the data set changes."""
+        saved_value = (saved_value or "").strip()
+        if not saved_value or saved_value in options:
+            return options
+        return (saved_value, *options)
+
+    def _update_location_suggestions(self, field, widget, values):
+        """Refresh the visible suggestion list without taking focus."""
+        values = tuple(values)
+        self._location_suggestion_values[field] = values
+        listbox = self._location_suggestion_listboxes.get(field)
+        popup = self._location_suggestion_popups.get(field)
+        if listbox is None or popup is None:
+            return
+        try:
+            if not listbox.winfo_exists() or not popup.winfo_exists():
+                return
+            listbox.delete(0, tk.END)
+            displayed = values or ("No matching location",)
+            for value in displayed[:8]:
+                listbox.insert(tk.END, value)
+            height = min(180, max(32, len(displayed[:8]) * 23 + 6))
+            width = max(180, widget.winfo_width())
+            x = widget.winfo_rootx()
+            y = widget.winfo_rooty() + widget.winfo_height()
+            popup.geometry(f"{width}x{height}+{x}+{y}")
+            popup.deiconify()
+            popup.lift()
+        except tk.TclError:
+            pass
+
+    def _post_location_dropdown(self, field, widget):
+        """Show or refresh a non-focus-stealing suggestion popup."""
+        self._location_post_scheduled[field] = False
+        if getattr(self, "location_fields_locked", False):
+            return
+        if str(widget.cget("state")) == "disabled":
+            return
+
+        popup = self._location_suggestion_popups.get(field)
+        values = tuple(widget.cget("values") or ())
+        if popup is not None:
+            try:
+                if popup.winfo_exists():
+                    self._location_popup_open[field] = True
+                    self._update_location_suggestions(field, widget, values)
+                    return
+            except tk.TclError:
+                pass
+
+        popup = tk.Toplevel(self)
+        popup.withdraw()
+        popup.overrideredirect(True)
+        popup.attributes("-topmost", True)
+        listbox = tk.Listbox(
+            popup,
+            height=6,
+            width=24,
+            exportselection=False,
+            relief="solid",
+            borderwidth=1,
+            activestyle="none",
+        )
+        listbox.pack(fill="both", expand=True)
+        listbox.bind(
+            "<<ListboxSelect>>",
+            lambda event, field=field: self._select_location_suggestion(field),
+        )
+        listbox.bind(
+            "<Return>",
+            lambda event, field=field: self._select_location_suggestion(field),
+        )
+        self._location_suggestion_popups[field] = popup
+        self._location_suggestion_listboxes[field] = listbox
+        self._location_popup_open[field] = True
+        self._update_location_suggestions(field, widget, values)
+
+    def _select_location_suggestion(self, field, event=None):
+        """Apply a suggestion selected from the visible list."""
+        listbox = self._location_suggestion_listboxes.get(field)
+        values = self._location_suggestion_values.get(field, ())
+        if listbox is None or not values:
+            return "break"
+        try:
+            selection = listbox.curselection()
+        except tk.TclError:
+            return "break"
+        if not selection or selection[0] >= len(values):
+            return "break"
+        value = values[selection[0]]
+        self._close_location_dropdown(field)
+        if field == "country":
+            self._set_location_values(value)
+        elif field == "state":
+            self._set_location_values(self.crm_country.get(), value)
+        else:
+            self._set_location_values(
+                self.crm_country.get(), self.crm_state.get(), value
+            )
+        self._save_location_preferences()
+        return "break"
+
+    def _close_location_dropdown(self, field, event=None):
+        """Close the visible suggestions and allow them to reopen."""
+        popup = self._location_suggestion_popups.get(field)
+        if popup is not None:
+            try:
+                if popup.winfo_exists():
+                    popup.destroy()
+            except tk.TclError:
+                pass
+        self._location_suggestion_popups[field] = None
+        self._location_suggestion_listboxes[field] = None
+        self._location_suggestion_values[field] = ()
+        self._location_popup_open[field] = False
+        self._location_post_scheduled[field] = False
+        try:
+            widget = getattr(self, f"crm_{field}")
+            self.tk.call("ttk::combobox::Unpost", str(widget))
+        except (AttributeError, tk.TclError):
+            pass
+        return "break"
+
+    def _location_focus_in(self, field, event=None):
+        """Reset popup state when the user returns to a location textbox."""
+        if not getattr(self, "location_fields_locked", False):
+            self._location_popup_open[field] = False
+            self._location_post_scheduled[field] = False
+
+    @staticmethod
+    def _location_text_matches(choice, query):
+        """Match full text or any combination of typed words."""
+        tokens = query.casefold().split()
+        normalized_choice = choice.casefold()
+        return not tokens or all(token in normalized_choice for token in tokens)
+
+    def _filter_location_dropdown(self, field, event=None):
+        """Filter choices as the user types and show the matching popup."""
+        widget = getattr(self, f"crm_{field}")
+        if getattr(self, "location_fields_locked", False):
+            return
+        if str(widget.cget("state")) == "disabled":
+            return
+
+        query = widget.get().strip()
+        choices = self._location_choices.get(field, ())
+        if query:
+            filtered = tuple(
+                choice
+                for choice in choices
+                if self._location_text_matches(choice, query)
+            )
+        else:
+            filtered = tuple(choices)
+        widget.config(values=filtered)
+        if not self._location_post_scheduled.get(field):
+            self._location_post_scheduled[field] = True
+            self.after_idle(
+                lambda field=field, widget=widget: self._post_location_dropdown(
+                    field, widget
+                )
+            )
+
+    def _resolve_location_text(self, field):
+        """Resolve a typed value to one unique available choice."""
+        widget = getattr(self, f"crm_{field}")
+        typed_value = widget.get().strip()
+        current_choices = tuple(widget.cget("values") or ())
+        choices = current_choices or self._location_choices.get(field, ())
+        match = locations.canonical_name(typed_value, choices)
+        if not match and typed_value:
+            partial_matches = [
+                choice
+                for choice in choices
+                if self._location_text_matches(choice, typed_value)
+            ]
+            if len(partial_matches) == 1:
+                match = partial_matches[0]
+        if match:
+            widget.set(match)
+        return match or typed_value
+
+    def _commit_location_text(self, field, event=None):
+        """Commit a typed location when Enter is pressed."""
+        self._close_location_dropdown(field)
+        value = self._resolve_location_text(field)
+        if field == "country":
+            self._set_location_values(value)
+        elif field == "state":
+            self._set_location_values(self.crm_country.get(), value)
+        elif field == "district":
+            self._set_location_values(
+                self.crm_country.get(), self.crm_state.get(), value
+            )
+        self._save_location_preferences()
+        return "break"
+
+    def _refresh_location_dropdown_states(self):
+        """Keep location fields editable while respecting parent selections."""
+        if not hasattr(self, "crm_country"):
+            return
+
+        if getattr(self, "location_fields_locked", False):
+            self.crm_country.config(state="disabled")
+            self.crm_state.config(state="disabled")
+            self.crm_district.config(state="disabled")
+            return
+
+        self.crm_country.config(state="normal")
+        self.crm_state.config(
+            state="normal" if self.crm_state.cget("values") else "disabled"
+        )
+        self.crm_district.config(
+            state="normal" if self.crm_district.cget("values") else "disabled"
+        )
+
+    def _set_location_values(self, country="", state="", district=""):
+        """Populate editable, dependent location dropdowns."""
+        for field in self._location_popup_open:
+            if self._location_suggestion_popups.get(field) is not None:
+                self._close_location_dropdown(field)
+            self._location_popup_open[field] = False
+            self._location_post_scheduled[field] = False
+        country = str(country or "").strip()
+        state = str(state or "").strip()
+        district = str(district or "").strip()
+
+        country_options = locations.COUNTRY_NAMES
+        if country and not locations.is_known_country(country):
+            country_options = (country, *country_options)
+        self._location_choices["country"] = tuple(country_options)
+        self.crm_country.config(values=country_options)
+        self.crm_country.set(country)
+
+        state_options = locations.states_for_country(country)
+        selected_state = locations.canonical_name(state, state_options)
+        if not selected_state:
+            selected_state = state
+        state_choices = self._with_saved_choice(state_options, selected_state)
+        self._location_choices["state"] = tuple(state_choices)
+        self.crm_state.config(values=state_choices)
+        self.crm_state.set(selected_state)
+
+        district_options = locations.districts_for_country(country, selected_state)
+        selected_district = locations.canonical_name(
+            district, district_options
+        )
+        if not selected_district:
+            selected_district = district
+        district_choices = self._with_saved_choice(
+            district_options, selected_district
+        )
+        self._location_choices["district"] = tuple(district_choices)
+        self.crm_district.config(values=district_choices)
+        self.crm_district.set(selected_district)
+        self._refresh_location_dropdown_states()
+
+    def on_country_change(self, event=None):
+        """Reset state and district when a different country is selected."""
+        self._location_popup_open["country"] = False
+        self._set_location_values(self.crm_country.get())
+        self._save_location_preferences()
+
+    def on_state_change(self, event=None):
+        """Reset district when a different state is selected."""
+        self._location_popup_open["state"] = False
+        self._set_location_values(
+            self.crm_country.get(), self.crm_state.get()
+        )
+        self._save_location_preferences()
+
+    def on_district_change(self, event=None):
+        """Remember the last confirmed district selection."""
+        self._location_popup_open["district"] = False
+        self._save_location_preferences()
 
     def build_crm_management(self):
         """Build the main CRM management view."""
@@ -362,7 +915,7 @@ class CrmTab(ttk.Frame):
 
         ttk.Label(
             search_frame,
-            text="Search Company / GST / Contact / Owner / Product / State / District / Location:",
+            text="Search Company / GST / Contact / Owner / Country / State / District / Location:",
             font=("Helvetica", 9, "bold"),
         ).pack(side="left", padx=5)
         self.search_entry = ttk.Entry(search_frame, width=25)
@@ -391,6 +944,7 @@ class CrmTab(ttk.Frame):
             "Contact Person",
             "Designation",
             "Contact Number",
+            "Country",
             "State",
             "District",
             "Location",
@@ -403,7 +957,9 @@ class CrmTab(ttk.Frame):
             "Data Sent",
             "Enquiry",
             "Call Time",
+            "Conv Date",
             "Meeting Time",
+            "Next Meeting",
         )
         self.crm_tree = ttk.Treeview(
             records_frame, columns=cols, show="headings", height=4
@@ -450,6 +1006,11 @@ class CrmTab(ttk.Frame):
             text="🗑️ Delete Selected Record",
             command=self.delete_crm_customer,
         ).pack(side="left", padx=3)
+        ttk.Button(
+            tbl_ctrl_frame,
+            text="📥 Import Excel / CSV / PDF",
+            command=self.import_company_data,
+        ).pack(side="left", padx=3)
 
         # SECTION 3: FORM (2-COLUMN LAYOUT)
         self.form_frame = ttk.LabelFrame(
@@ -485,6 +1046,11 @@ class CrmTab(ttk.Frame):
         )
         self.crm_gst = ttk.Entry(left_info_frame, width=24)
         self.crm_gst.grid(row=1, column=1, sticky="ew", pady=2, padx=4)
+        self.crm_gst.bind("<FocusOut>", lambda e: self.on_gst_entered())
+        self.crm_gst.bind("<Return>", lambda e: self.on_gst_entered())
+        gst_btn = ttk.Button(left_info_frame, text="🔍",
+            width=3, command=self.on_gst_entered)
+        gst_btn.grid(row=1, column=2, padx=2)
 
         ttk.Label(left_info_frame, text="Contact Person:").grid(
             row=2, column=0, sticky="w", pady=2
@@ -516,41 +1082,111 @@ class CrmTab(ttk.Frame):
         self.crm_address = ttk.Entry(left_info_frame, width=24)
         self.crm_address.grid(row=6, column=1, sticky="ew", pady=2, padx=4)
 
-        ttk.Label(left_info_frame, text="State:").grid(
+        ttk.Label(left_info_frame, text="Country:").grid(
             row=7, column=0, sticky="w", pady=2
         )
-        self.crm_state = ttk.Entry(left_info_frame, width=24)
-        self.crm_state.grid(row=7, column=1, sticky="ew", pady=2, padx=4)
+        self.crm_country = ttk.Combobox(
+            left_info_frame,
+            values=locations.COUNTRY_NAMES,
+            width=24,
+            state="normal",
+        )
+        self.crm_country.grid(row=7, column=1, sticky="ew", pady=2, padx=4)
+        self.crm_country.bind(
+            "<<ComboboxSelected>>", self.on_country_change
+        )
+        self.crm_country.bind(
+            "<FocusIn>",
+            lambda event: self._location_focus_in("country", event),
+        )
+        self.crm_country.bind(
+            "<KeyRelease>",
+            lambda event: self._filter_location_dropdown("country", event),
+        )
+        self.crm_country.bind(
+            "<Return>",
+            lambda event: self._commit_location_text("country", event),
+        )
+        self.crm_country.bind(
+            "<Escape>",
+            lambda event: self._close_location_dropdown("country", event),
+        )
 
-        ttk.Label(left_info_frame, text="District:").grid(
+        ttk.Label(left_info_frame, text="State:").grid(
             row=8, column=0, sticky="w", pady=2
         )
-        self.crm_district = ttk.Entry(left_info_frame, width=24)
-        self.crm_district.grid(row=8, column=1, sticky="ew", pady=2, padx=4)
+        self.crm_state = ttk.Combobox(
+            left_info_frame, width=24, state="disabled"
+        )
+        self.crm_state.grid(row=8, column=1, sticky="ew", pady=2, padx=4)
+        self.crm_state.bind("<<ComboboxSelected>>", self.on_state_change)
+        self.crm_state.bind(
+            "<FocusIn>",
+            lambda event: self._location_focus_in("state", event),
+        )
+        self.crm_state.bind(
+            "<KeyRelease>",
+            lambda event: self._filter_location_dropdown("state", event),
+        )
+        self.crm_state.bind(
+            "<Return>",
+            lambda event: self._commit_location_text("state", event),
+        )
+        self.crm_state.bind(
+            "<Escape>",
+            lambda event: self._close_location_dropdown("state", event),
+        )
 
-        ttk.Label(left_info_frame, text="Location:").grid(
+        ttk.Label(left_info_frame, text="District:").grid(
             row=9, column=0, sticky="w", pady=2
         )
-        self.crm_location = ttk.Entry(left_info_frame, width=24)
-        self.crm_location.grid(row=9, column=1, sticky="ew", pady=2, padx=4)
+        self.crm_district = ttk.Combobox(
+            left_info_frame, width=24, state="disabled"
+        )
+        self.crm_district.grid(row=9, column=1, sticky="ew", pady=2, padx=4)
+        self.crm_district.bind(
+            "<<ComboboxSelected>>", self.on_district_change
+        )
+        self.crm_district.bind(
+            "<FocusIn>",
+            lambda event: self._location_focus_in("district", event),
+        )
+        self.crm_district.bind(
+            "<KeyRelease>",
+            lambda event: self._filter_location_dropdown("district", event),
+        )
+        self.crm_district.bind(
+            "<Return>",
+            lambda event: self._commit_location_text("district", event),
+        )
+        self.crm_district.bind(
+            "<Escape>",
+            lambda event: self._close_location_dropdown("district", event),
+        )
 
-        ttk.Label(left_info_frame, text="Company Turnover:").grid(
+        ttk.Label(left_info_frame, text="Location:").grid(
             row=10, column=0, sticky="w", pady=2
         )
-        self.crm_turnover = ttk.Entry(left_info_frame, width=24)
-        self.crm_turnover.grid(row=10, column=1, sticky="ew", pady=2, padx=4)
+        self.crm_location = ttk.Entry(left_info_frame, width=24)
+        self.crm_location.grid(row=10, column=1, sticky="ew", pady=2, padx=4)
 
-        ttk.Label(left_info_frame, text="Owner Name:").grid(
+        ttk.Label(left_info_frame, text="Company Turnover:").grid(
             row=11, column=0, sticky="w", pady=2
         )
-        self.crm_owner_name = ttk.Entry(left_info_frame, width=24)
-        self.crm_owner_name.grid(row=11, column=1, sticky="ew", pady=2, padx=4)
+        self.crm_turnover = ttk.Entry(left_info_frame, width=24)
+        self.crm_turnover.grid(row=11, column=1, sticky="ew", pady=2, padx=4)
 
-        ttk.Label(left_info_frame, text="Number of Staff:").grid(
+        ttk.Label(left_info_frame, text="Owner Name:").grid(
             row=12, column=0, sticky="w", pady=2
         )
+        self.crm_owner_name = ttk.Entry(left_info_frame, width=24)
+        self.crm_owner_name.grid(row=12, column=1, sticky="ew", pady=2, padx=4)
+
+        ttk.Label(left_info_frame, text="Number of Staff:").grid(
+            row=13, column=0, sticky="w", pady=2
+        )
         self.crm_staff_count = ttk.Entry(left_info_frame, width=24)
-        self.crm_staff_count.grid(row=12, column=1, sticky="ew", pady=2, padx=4)
+        self.crm_staff_count.grid(row=13, column=1, sticky="ew", pady=2, padx=4)
 
         left_info_frame.columnconfigure(1, weight=1)
 
@@ -573,55 +1209,55 @@ class CrmTab(ttk.Frame):
         self.var_pump_skid = tk.BooleanVar()
         self.var_pump_sensor_panel = tk.BooleanVar()
 
-        self.chk_booster = ttk.Checkbutton(prod_frame, text="Booster Pump", variable=self.var_booster)
+        self.chk_booster = tk.Checkbutton(prod_frame, text="Booster Pump", variable=self.var_booster, onvalue=True, offvalue=False, selectcolor="white", activebackground="#f0f0f0", anchor="w")
         self.chk_booster.grid(row=0, column=0, sticky="w", padx=2)
-        self.chk_stp = ttk.Checkbutton(prod_frame, text="STP", variable=self.var_stp)
+        self.chk_stp = tk.Checkbutton(prod_frame, text="STP", variable=self.var_stp, onvalue=True, offvalue=False, selectcolor="white", activebackground="#f0f0f0", anchor="w")
         self.chk_stp.grid(row=0, column=1, sticky="w", padx=2)
-        self.chk_water_meter = ttk.Checkbutton(prod_frame, text="Water Meter", variable=self.var_water_meter)
+        self.chk_water_meter = tk.Checkbutton(prod_frame, text="Water Meter", variable=self.var_water_meter, onvalue=True, offvalue=False, selectcolor="white", activebackground="#f0f0f0", anchor="w")
         self.chk_water_meter.grid(row=0, column=2, sticky="w", padx=2)
 
-        self.chk_bms = ttk.Checkbutton(prod_frame, text="BMS", variable=self.var_bms)
+        self.chk_bms = tk.Checkbutton(prod_frame, text="BMS", variable=self.var_bms, onvalue=True, offvalue=False, selectcolor="white", activebackground="#f0f0f0", anchor="w")
         self.chk_bms.grid(row=1, column=0, sticky="w", padx=2)
-        self.chk_wtp = ttk.Checkbutton(prod_frame, text="WTP", variable=self.var_wtp)
+        self.chk_wtp = tk.Checkbutton(prod_frame, text="WTP", variable=self.var_wtp, onvalue=True, offvalue=False, selectcolor="white", activebackground="#f0f0f0", anchor="w")
         self.chk_wtp.grid(row=1, column=1, sticky="w", padx=2)
-        self.chk_ro = ttk.Checkbutton(prod_frame, text="RO", variable=self.var_ro)
+        self.chk_ro = tk.Checkbutton(prod_frame, text="RO", variable=self.var_ro, onvalue=True, offvalue=False, selectcolor="white", activebackground="#f0f0f0", anchor="w")
         self.chk_ro.grid(row=1, column=2, sticky="w", padx=2)
 
-        self.chk_fire_panel = ttk.Checkbutton(prod_frame, text="Fire Panel", variable=self.var_fire_panel)
+        self.chk_fire_panel = tk.Checkbutton(prod_frame, text="Fire Panel", variable=self.var_fire_panel, onvalue=True, offvalue=False, selectcolor="white", activebackground="#f0f0f0", anchor="w")
         self.chk_fire_panel.grid(row=2, column=0, sticky="w", padx=2)
-        self.chk_dewatering_panel = ttk.Checkbutton(prod_frame, text="De-watering Panel", variable=self.var_dewatering_panel)
+        self.chk_dewatering_panel = tk.Checkbutton(prod_frame, text="De-watering Panel", variable=self.var_dewatering_panel, onvalue=True, offvalue=False, selectcolor="white", activebackground="#f0f0f0", anchor="w")
         self.chk_dewatering_panel.grid(row=2, column=1, sticky="w", padx=2)
-        self.chk_water_softener = ttk.Checkbutton(prod_frame, text="Water Softener", variable=self.var_water_softener)
+        self.chk_water_softener = tk.Checkbutton(prod_frame, text="Water Softener", variable=self.var_water_softener, onvalue=True, offvalue=False, selectcolor="white", activebackground="#f0f0f0", anchor="w")
         self.chk_water_softener.grid(row=2, column=2, sticky="w", padx=2)
 
-        self.chk_choice_a = ttk.Checkbutton(prod_frame, text="Choice A", variable=self.var_choice_a)
+        self.chk_choice_a = tk.Checkbutton(prod_frame, text="Choice A", variable=self.var_choice_a, onvalue=True, offvalue=False, selectcolor="white", activebackground="#f0f0f0", anchor="w")
         self.chk_choice_a.grid(row=3, column=0, sticky="w", padx=2)
-        self.chk_pump_skid = ttk.Checkbutton(prod_frame, text="Pump Skid", variable=self.var_pump_skid)
+        self.chk_pump_skid = tk.Checkbutton(prod_frame, text="Pump Skid", variable=self.var_pump_skid, onvalue=True, offvalue=False, selectcolor="white", activebackground="#f0f0f0", anchor="w")
         self.chk_pump_skid.grid(row=3, column=1, sticky="w", padx=2)
-        self.chk_pump_sensor_panel = ttk.Checkbutton(prod_frame, text="Sensor Panel", variable=self.var_pump_sensor_panel)
+        self.chk_pump_sensor_panel = tk.Checkbutton(prod_frame, text="Sensor Panel", variable=self.var_pump_sensor_panel, onvalue=True, offvalue=False, selectcolor="white", activebackground="#f0f0f0", anchor="w")
         self.chk_pump_sensor_panel.grid(row=3, column=2, sticky="w", padx=2)
 
         # --- RIGHT COLUMN FIELDS ---
-        # Photos Frame
-        photos_frame = ttk.LabelFrame(right_column, text=" Photos ", padding="4")
+        # Photos Frame (small compact box)
+        photos_frame = ttk.LabelFrame(right_column, text=" Photos ", padding="2")
         photos_frame.pack(fill="x", pady=(0, 4))
 
-        self.photo_listbox = tk.Listbox(photos_frame, width=20, height=3)
+        self.photo_listbox = tk.Listbox(photos_frame, width=18, height=2)
         self.photo_listbox.pack(side="left", fill="both", expand=True, padx=(0, 4))
 
         photo_btn_frame = ttk.Frame(photos_frame)
         photo_btn_frame.pack(side="right")
 
         self.btn_add_photos = ttk.Button(
-            photo_btn_frame, text="📷 Add", width=11, command=self.select_photos
+            photo_btn_frame, text="📷 Add", width=9, command=self.select_photos
         )
         self.btn_add_photos.pack(pady=1)
         self.btn_remove_photo = ttk.Button(
-            photo_btn_frame, text="❌ Remove", width=11, command=self.remove_selected_photo
+            photo_btn_frame, text="❌ Remove", width=9, command=self.remove_selected_photo
         )
         self.btn_remove_photo.pack(pady=1)
         self.btn_open_folder = ttk.Button(
-            photo_btn_frame, text="📁 Open", width=11, command=self.open_company_photos_folder
+            photo_btn_frame, text="📁 Open", width=9, command=self.open_company_photos_folder
         )
         self.btn_open_folder.pack(pady=1)
 
@@ -640,24 +1276,34 @@ class CrmTab(ttk.Frame):
         val_chk_grid = ttk.Frame(valuation_frame)
         val_chk_grid.pack(fill="x")
 
-        self.chk_val_vfd = ttk.Checkbutton(
-            val_chk_grid, text="Work in VFD Panel", variable=self.var_val_vfd
+        self.chk_val_vfd = tk.Checkbutton(
+            val_chk_grid, text="Work in VFD Panel", variable=self.var_val_vfd, onvalue=True, offvalue=False, selectcolor="white", activebackground="#f0f0f0", anchor="w"
         )
         self.chk_val_vfd.grid(row=0, column=0, sticky="w", padx=2)
 
-        self.chk_val_dewatering = ttk.Checkbutton(
-            val_chk_grid, text="Work in Dewatering", variable=self.var_val_dewatering
+        self.chk_val_dewatering = tk.Checkbutton(
+            val_chk_grid, text="Work in Dewatering", variable=self.var_val_dewatering, onvalue=True, offvalue=False, selectcolor="white", activebackground="#f0f0f0", anchor="w"
         )
         self.chk_val_dewatering.grid(row=0, column=1, sticky="w", padx=2)
 
-        self.chk_val_serious_base = ttk.Checkbutton(
-            val_chk_grid, text="Serious Base", variable=self.var_val_serious_base
+        self.chk_val_distributor = tk.Checkbutton(
+            val_chk_grid, text="Distributor", variable=self.var_val_distributor, onvalue=True, offvalue=False, selectcolor="white", activebackground="#f0f0f0", anchor="w"
         )
-        self.chk_val_serious_base.grid(row=1, column=0, sticky="w", padx=2)
+        self.chk_val_distributor.grid(row=1, column=0, sticky="w", padx=2)
+
+        self.chk_val_dealer = tk.Checkbutton(
+            val_chk_grid, text="Dealer", variable=self.var_val_dealer, onvalue=True, offvalue=False, selectcolor="white", activebackground="#f0f0f0", anchor="w"
+        )
+        self.chk_val_dealer.grid(row=1, column=1, sticky="w", padx=2)
+
+        self.chk_val_serious_base = tk.Checkbutton(
+            val_chk_grid, text="Serious Base", variable=self.var_val_serious_base, onvalue=True, offvalue=False, selectcolor="white", activebackground="#f0f0f0", anchor="w"
+        )
+        self.chk_val_serious_base.grid(row=2, column=0, sticky="w", padx=2)
 
         # Valuable Customer Percentage Field
         percentage_frame = ttk.Frame(val_chk_grid)
-        percentage_frame.grid(row=2, column=0, columnspan=2, sticky="w", padx=2, pady=2)
+        percentage_frame.grid(row=3, column=0, columnspan=2, sticky="ew", padx=2, pady=2)
 
         ttk.Label(percentage_frame, text="Valuable Customer %:").pack(side="left")
         self.crm_valuable_percentage = ttk.Entry(percentage_frame, width=6)
@@ -669,7 +1315,7 @@ class CrmTab(ttk.Frame):
 
         # Customer Rating Field
         rating_frame = ttk.Frame(val_chk_grid)
-        rating_frame.grid(row=3, column=0, columnspan=2, sticky="w", padx=2, pady=2)
+        rating_frame.grid(row=4, column=0, columnspan=2, sticky="ew", padx=2, pady=2)
 
         ttk.Label(rating_frame, text="Customer Rating:").pack(side="left")
         self.crm_customer_rating = ttk.Entry(rating_frame, width=6)
@@ -678,7 +1324,7 @@ class CrmTab(ttk.Frame):
 
         # Activity Count Field
         activity_frame = ttk.Frame(val_chk_grid)
-        activity_frame.grid(row=4, column=0, columnspan=2, sticky="w", padx=2, pady=2)
+        activity_frame.grid(row=5, column=0, columnspan=2, sticky="ew", padx=2, pady=2)
 
         ttk.Label(activity_frame, text="Activity Count:").pack(side="left")
         self.crm_activity_count = ttk.Entry(activity_frame, width=6, state="readonly")
@@ -687,7 +1333,7 @@ class CrmTab(ttk.Frame):
 
         # Audio Recordings Field
         audio_frame = ttk.Frame(val_chk_grid)
-        audio_frame.grid(row=5, column=0, columnspan=2, sticky="w", padx=2, pady=2)
+        audio_frame.grid(row=6, column=0, columnspan=2, sticky="ew", padx=2, pady=2)
 
         ttk.Label(audio_frame, text="Audio Recordings:").pack(side="left")
         self.audio_listbox = tk.Listbox(audio_frame, width=20, height=2)
@@ -709,34 +1355,35 @@ class CrmTab(ttk.Frame):
         )
         self.btn_play_audio.pack(pady=1)
 
-        # Distributor Field Row
-        dist_subframe = ttk.Frame(val_chk_grid)
-        dist_subframe.grid(row=7, column=0, columnspan=2, sticky="w", padx=2, pady=2)
+        # Mobile Recording Count Field
+        mobile_rec_frame = ttk.Frame(val_chk_grid)
+        mobile_rec_frame.grid(row=7, column=0, columnspan=2, sticky="ew", padx=2, pady=2)
 
-        self.chk_val_distributor = ttk.Checkbutton(
-            dist_subframe,
-            text="Distributor:",
-            variable=self.var_val_distributor,
-            command=self.toggle_distributor_field,
+        ttk.Label(mobile_rec_frame, text="Mobile Recording Count:").pack(side="left")
+        self.crm_mobile_recording_count = ttk.Entry(
+            mobile_rec_frame, width=6, state="readonly"
         )
-        self.chk_val_distributor.pack(side="left")
+        self.crm_mobile_recording_count.pack(side="left", padx=2)
+        ttk.Label(
+            mobile_rec_frame, text="(Auto-increments on recording)", font=("Helvetica", 8)
+        ).pack(side="left")
+
+        # Distributor Field Row (name entry enabled by Distributor checkbox above)
+        dist_subframe = ttk.Frame(val_chk_grid)
+        dist_subframe.grid(row=8, column=0, columnspan=2, sticky="ew", padx=2, pady=2)
+
+        ttk.Label(dist_subframe, text="Distributor Name:").pack(side="left")
 
         self.crm_distributor_name = ttk.Entry(
             dist_subframe, width=14, state="disabled"
         )
         self.crm_distributor_name.pack(side="left", padx=2)
 
-        # Dealer Field Row
+        # Dealer Field Row (name entry enabled by Dealer checkbox above)
         dealer_subframe = ttk.Frame(val_chk_grid)
-        dealer_subframe.grid(row=8, column=0, columnspan=2, sticky="w", padx=2, pady=2)
+        dealer_subframe.grid(row=9, column=0, columnspan=2, sticky="ew", padx=2, pady=2)
 
-        self.chk_val_dealer = ttk.Checkbutton(
-            dealer_subframe,
-            text="Dealer:",
-            variable=self.var_val_dealer,
-            command=self.toggle_dealer_field,
-        )
-        self.chk_val_dealer.pack(side="left")
+        ttk.Label(dealer_subframe, text="Dealer Name:").pack(side="left")
 
         self.crm_dealer_name = ttk.Entry(
             dealer_subframe, width=14, state="disabled"
@@ -771,19 +1418,50 @@ class CrmTab(ttk.Frame):
         self.crm_call_mins.pack(side="left", padx=(2, 0))
         ttk.Label(row_act1, text="m").pack(side="left", padx=(0, 10))
 
-        ttk.Label(row_act1, text="Data Sent:").pack(side="left")
+        # Date of Conversion (default today) — calendar selectable
+        ttk.Label(row_act1, text="Conv. Date:").pack(side="left", padx=(10, 0))
+        if HAS_TKCALENDAR:
+            self.crm_conversion_date = DateEntry(
+                row_act1, width=10, date_pattern="yyyy-mm-dd",
+                background="darkblue", foreground="white",
+            )
+            self.crm_conversion_date.pack(side="left", padx=2)
+        else:
+            self.crm_conversion_date = ttk.Entry(row_act1, width=11)
+            self.crm_conversion_date.insert(0, datetime.date.today().strftime("%Y-%m-%d"))
+            self.crm_conversion_date.pack(side="left", padx=2)
+
+        ttk.Label(row_act1, text="Data Sent:").pack(side="left", padx=(10, 0))
         self.crm_data_sent = ttk.Combobox(
             row_act1, values=["Yes", "No"], width=5, state="readonly"
         )
         self.crm_data_sent.set("No")
         self.crm_data_sent.pack(side="left", padx=2)
 
-        ttk.Label(row_act1, text="Enquiry:").pack(side="left", padx=(8, 0))
+        # Data Type Name (shown when Data Sent = Yes)
+        ttk.Label(row_act1, text="Data Type:").pack(side="left", padx=(8, 0))
+        self.crm_data_type_name = ttk.Entry(row_act1, width=10, state="disabled")
+        self.crm_data_type_name.pack(side="left", padx=2)
+
+        # Enquiry + Enquiry Type shifted to NEXT LINE (own row)
+        row_act1b = ttk.Frame(activity_frame)
+        row_act1b.pack(fill="x", pady=2)
+
+        ttk.Label(row_act1b, text="Enquiry:").pack(side="left")
         self.crm_enquiry = ttk.Combobox(
-            row_act1, values=["Yes", "No"], width=5, state="readonly"
+            row_act1b, values=["Yes", "No"], width=5, state="readonly"
         )
         self.crm_enquiry.set("No")
         self.crm_enquiry.pack(side="left", padx=2)
+
+        # Enquiry Type (shown when Enquiry = Yes)
+        ttk.Label(row_act1b, text="Enquiry Type:").pack(side="left", padx=(8, 0))
+        self.crm_enquiry_type = ttk.Entry(row_act1b, width=16, state="disabled")
+        self.crm_enquiry_type.pack(side="left", padx=2)
+        
+        # Bind events to show/hide conditional fields
+        self.crm_data_sent.bind("<<ComboboxSelected>>", lambda e: self.on_data_sent_change(e))
+        self.crm_enquiry.bind("<<ComboboxSelected>>", lambda e: self.on_enquiry_change(e))
 
         # Meeting Schedule
         row_act2 = ttk.Frame(activity_frame)
@@ -797,9 +1475,54 @@ class CrmTab(ttk.Frame):
             row_act2, text="📅", width=3, command=self.open_datetime_picker
         ).pack(side="left")
 
+        # Next Meeting date+time (selectable) with 15-min alarm popup
+        row_act2b = ttk.Frame(activity_frame)
+        row_act2b.pack(fill="x", pady=2)
+
+        ttk.Label(row_act2b, text="Next Meeting:").pack(side="left")
+        self.crm_next_meeting = ttk.Entry(row_act2b, width=16)
+        self.crm_next_meeting.pack(side="left", padx=2)
+        ttk.Button(
+            row_act2b, text="📅", width=3,
+            command=lambda: self.open_datetime_picker(target="next"),
+        ).pack(side="left")
+        self.crm_next_alarm = ttk.Label(
+            row_act2b, text="🔔 alarm 15 min before",
+            foreground="red", font=("Helvetica", 8, "bold"),
+        )
+        self.crm_next_alarm.pack(side="left", padx=(8, 0))
+
+        # Saturday Alarm Indicator
+        self.crm_saturday_alarm = ttk.Label(
+            row_act2, text="", foreground="red", font=("Helvetica", 9, "bold")
+        )
+        self.crm_saturday_alarm.pack(side="left", padx=(10, 0))
+
+        # Bind meeting time changes to check Saturday alarm
+        self.crm_meeting_time.bind("<KeyRelease>", lambda e: self.check_saturday_alarm())
+
         ttk.Label(row_act2, text="Agenda:").pack(side="left", padx=(8, 0))
         self.crm_meeting_agenda = ttk.Entry(row_act2, width=15)
         self.crm_meeting_agenda.pack(side="left", padx=2)
+
+        # Communication Date — calendar selectable
+        comm_date_row = ttk.Frame(activity_frame)
+        comm_date_row.pack(fill="x", pady=2)
+        ttk.Label(comm_date_row, text="Conversation Date:").pack(side="left")
+        if HAS_TKCALENDAR:
+            self.crm_comm_date = DateEntry(
+                comm_date_row, width=10, date_pattern="yyyy-mm-dd",
+                background="darkblue", foreground="white",
+            )
+            self.crm_comm_date.pack(side="left", padx=2)
+        else:
+            self.crm_comm_date = ttk.Entry(comm_date_row, width=12)
+            self.crm_comm_date.insert(0, datetime.date.today().strftime("%Y-%m-%d"))
+            self.crm_comm_date.pack(side="left", padx=2)
+        ttk.Label(
+            comm_date_row, text="(pick from calendar)",
+            font=("Helvetica", 7), foreground="gray",
+        ).pack(side="left", padx=4)
 
         # Text Notes Areas
         notes_grid = ttk.Frame(activity_frame)
@@ -851,6 +1574,7 @@ class CrmTab(ttk.Frame):
             btn_box, text="🧹 Clear Form", command=self.clear_crm_entries
         ).pack(side="left", padx=2)
 
+        self._load_default_location_values()
         self.load_crm_data()
 
     def show_crm_management(self):
@@ -1395,10 +2119,27 @@ class CrmTab(ttk.Frame):
         saved_filenames = []
         for src_path in self.selected_audio_paths:
             if os.path.exists(src_path):
-                fname = os.path.basename(src_path)
+                # If the file already lives in the customer's folder (loaded
+                # from an existing record), keep it as-is.
+                if os.path.abspath(os.path.dirname(src_path)) == os.path.abspath(target_dir):
+                    saved_filenames.append(os.path.basename(src_path))
+                    continue
+
+                # Store each recording in the customer's folder using a
+                # date-time based filename (YYYYMMDD_HHMMSS).
+                timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+                ext = os.path.splitext(src_path)[1].lower()
+                fname = f"{timestamp}{ext}"
                 dest_path = os.path.join(target_dir, fname)
-                if os.path.abspath(src_path) != os.path.abspath(dest_path):
-                    shutil.copy2(src_path, dest_path)
+
+                # Avoid overwriting if multiple recordings share the same second.
+                counter = 1
+                while os.path.exists(dest_path):
+                    fname = f"{timestamp}_{counter}{ext}"
+                    dest_path = os.path.join(target_dir, fname)
+                    counter += 1
+
+                shutil.copy2(src_path, dest_path)
                 saved_filenames.append(fname)
             else:
                 saved_filenames.append(os.path.basename(src_path))
@@ -1508,6 +2249,42 @@ class CrmTab(ttk.Frame):
             self.crm_dealer_name.delete(0, tk.END)
             self.crm_dealer_name.config(state="disabled")
 
+    def check_saturday_alarm(self):
+        if not hasattr(self, "crm_meeting_time") or not self.crm_meeting_time.winfo_exists():
+            return
+        meeting_time_str = self.crm_meeting_time.get().strip()
+        if not meeting_time_str:
+            try:
+                self.crm_saturday_alarm.config(text="")
+            except Exception:
+                pass
+            return
+        try:
+            parts = meeting_time_str.split()
+            if len(parts) >= 3:
+                date_str = parts[0]
+                date_parts = date_str.split("-")
+                if len(date_parts) == 3:
+                    year, month, day = int(date_parts[0]), int(date_parts[1]), int(date_parts[2])
+                    import calendar
+                    weekday = calendar.weekday(year, month, day)
+                    if weekday == 5:
+                        self.crm_saturday_alarm.config(
+                            text="SATURDAY MEETING - Confirm availability!"
+                        )
+                        return
+            self.crm_saturday_alarm.config(text="")
+        except Exception:
+            try:
+                self.crm_saturday_alarm.config(text="")
+            except Exception:
+                pass
+
+    def on_meeting_time_selected(self, datetime_str):
+        self.crm_meeting_time.delete(0, tk.END)
+        self.crm_meeting_time.insert(0, datetime_str)
+        self.check_saturday_alarm()
+
     def set_call_time_from_str(self, time_str):
         if not time_str:
             self.crm_call_hours.set("00")
@@ -1527,16 +2304,32 @@ class CrmTab(ttk.Frame):
             self.crm_call_hours.set("00")
             self.crm_call_mins.set("00")
 
-    def open_datetime_picker(self):
+    def open_datetime_picker(self, target="meeting"):
+        if target == "next" and hasattr(self, "crm_next_meeting"):
+            DateTimePickerPopup(
+                self.winfo_toplevel(),
+                initial_val=self.crm_next_meeting.get(),
+                on_select_callback=self.set_next_meeting_value,
+            )
+            return
         DateTimePickerPopup(
             self.winfo_toplevel(),
             initial_val=self.crm_meeting_time.get(),
             on_select_callback=self.set_meeting_time_value,
         )
 
+    def set_next_meeting_value(self, formatted_str):
+        if hasattr(self, "crm_next_meeting"):
+            self.crm_next_meeting.delete(0, tk.END)
+            self.crm_next_meeting.insert(0, formatted_str)
+
     def set_meeting_time_value(self, formatted_str):
         self.crm_meeting_time.delete(0, tk.END)
         self.crm_meeting_time.insert(0, formatted_str)
+        try:
+            self.check_saturday_alarm()
+        except Exception:
+            pass
 
     def add_timestamp_to_comm(self):
         if not hasattr(self, 'crm_comm_text') or not self.crm_comm_text.winfo_exists():
@@ -1562,6 +2355,7 @@ class CrmTab(ttk.Frame):
         target_state = (
             "readonly" if state in ["disabled", "readonly"] else "normal"
         )
+        self.location_fields_locked = state in ("disabled", "readonly")
         chk_state = (
             "disabled" if state in ["disabled", "readonly"] else "normal"
         )
@@ -1573,8 +2367,7 @@ class CrmTab(ttk.Frame):
         self.crm_website.config(state=target_state)
         self.crm_contact.config(state=target_state)
         self.crm_address.config(state=target_state)
-        self.crm_state.config(state=target_state)
-        self.crm_district.config(state=target_state)
+        self._refresh_location_dropdown_states()
         self.crm_location.config(state=target_state)
         self.crm_turnover.config(state=target_state)
         self.crm_owner_name.config(state=target_state)
@@ -1632,9 +2425,27 @@ class CrmTab(ttk.Frame):
             return
 
         self.set_identity_fields_state("normal")
+        # Enable activity & communication fields for editing
+        self.crm_call_hours.config(state="normal")
+        self.crm_call_mins.config(state="normal")
+        try:
+            self.crm_conversion_date.config(state="normal")
+        except Exception:
+            pass
+        self.crm_meeting_time.config(state="normal")
+        self.crm_meeting_agenda.config(state="normal")
+        self.crm_comm_text.config(state="normal")
+        self.crm_meeting_outcome_text.config(state="normal")
+        self.crm_notes_text.config(state="normal")
+        # Enable data type name if data sent is Yes
+        if self.crm_data_sent.get() == "Yes":
+            self.crm_data_type_name.config(state="normal")
+        # Enable enquiry type if enquiry is Yes
+        if self.crm_enquiry.get() == "Yes":
+            self.crm_enquiry_type.config(state="normal")
         messagebox.showinfo(
             "Editing Unlocked",
-            "Customer identity and details fields are now editable.",
+            "Customer identity, details, and activity/communication fields are now editable.",
         )
 
     def get_form_data(self):
@@ -1643,6 +2454,7 @@ class CrmTab(ttk.Frame):
             messagebox.showwarning("Warning", "Company Name is required.")
             return None
 
+        self._save_location_preferences()
         contact = self.crm_contact.get().strip()
         if contact and not contact.isdigit():
             messagebox.showwarning(
@@ -1652,6 +2464,7 @@ class CrmTab(ttk.Frame):
             return None
 
         photo_str = self.process_and_save_photos(company)
+        audio_str = self.process_and_save_audio(company)
 
         call_time_str = (
             f"{self.crm_call_hours.get()} hrs {self.crm_call_mins.get()} mins"
@@ -1719,13 +2532,20 @@ class CrmTab(ttk.Frame):
             mobile_recording_count_str,
             self.crm_notes_text.get("1.0", tk.END).strip(),
             call_time_str,
+            self._get_date_str(self.crm_conversion_date) if hasattr(self, "crm_conversion_date") else "",
             self.crm_data_sent.get(),
+            self.crm_data_type_name.get().strip() if hasattr(self, "crm_data_type_name") else "",
             self.crm_enquiry.get(),
+            self.crm_enquiry_type.get().strip() if hasattr(self, "crm_enquiry_type") else "",
             self.crm_comm_text.get("1.0", tk.END).strip(),
+            self._get_date_str(self.crm_comm_date) if hasattr(self, "crm_comm_date") else "",
             self.crm_meeting_time.get().strip(),
+            self.crm_next_meeting.get().strip() if hasattr(self, "crm_next_meeting") else "",
             self.crm_meeting_agenda.get().strip(),
             self.crm_meeting_outcome_text.get("1.0", tk.END).strip(),
             photo_str,
+            audio_str,
+            self.crm_country.get().strip(),
         ]
         return data
 
@@ -1765,8 +2585,14 @@ class CrmTab(ttk.Frame):
         self.crm_website.insert(0, r[4] if len(r) > 4 else "")
         self.crm_contact.insert(0, r[5] if len(r) > 5 else "")
         self.crm_address.insert(0, r[6] if len(r) > 6 else "")
-        self.crm_state.insert(0, r[7] if len(r) > 7 else "")
-        self.crm_district.insert(0, r[8] if len(r) > 8 else "")
+        saved_state = r[7] if len(r) > 7 else ""
+        saved_district = r[8] if len(r) > 8 else ""
+        headers = self.get_crm_headers()
+        country_index = headers.index("country")
+        saved_country = r[country_index] if len(r) > country_index else ""
+        self._set_location_values(
+            saved_country or "India", saved_state, saved_district
+        )
         self.crm_location.insert(0, r[9] if len(r) > 9 else "")
         self.crm_turnover.insert(0, r[10] if len(r) > 10 else "")
         self.crm_owner_name.insert(0, r[11] if len(r) > 11 else "")
@@ -1791,14 +2617,49 @@ class CrmTab(ttk.Frame):
         self.crm_mobile_recording_count.config(state="readonly")
         self.crm_notes_text.insert("1.0", r[19] if len(r) > 19 else "")
         self.set_call_time_from_str(r[20] if len(r) > 20 else "")
-        self.crm_data_sent.set(r[21] if len(r) > 21 and r[21] else "No")
-        self.crm_enquiry.set(r[22] if len(r) > 22 and r[22] else "No")
-        self.crm_comm_text.insert("1.0", r[23] if len(r) > 23 else "")
-        self.crm_meeting_time.insert(0, r[24] if len(r) > 24 else "")
-        self.crm_meeting_agenda.insert(0, r[25] if len(r) > 25 else "")
-        self.crm_meeting_outcome_text.insert("1.0", r[26] if len(r) > 26 else "")
+        # Load conversion date (index 21) — DateEntry-safe
+        conv_date = r[21] if len(r) > 21 and r[21] else ""
+        try:
+            self.crm_conversion_date.delete(0, tk.END)
+            self.crm_conversion_date.insert(
+                0, conv_date if conv_date else datetime.date.today().strftime("%Y-%m-%d")
+            )
+        except Exception:
+            pass
+        self.crm_data_sent.set(r[22] if len(r) > 22 and r[22] else "No")
+        # Load data type name (index 23)
+        data_type = r[23] if len(r) > 23 and r[23] else ""
+        if data_type:
+            self.crm_data_type_name.config(state="normal")
+            self.crm_data_type_name.delete(0, tk.END)
+            self.crm_data_type_name.insert(0, data_type)
+            self.crm_data_type_name.config(state="disabled")
+        self.crm_enquiry.set(r[24] if len(r) > 24 and r[24] else "No")
+        # Load enquiry type (index 25)
+        enquiry_type = r[25] if len(r) > 25 and r[25] else ""
+        if enquiry_type:
+            self.crm_enquiry_type.config(state="normal")
+            self.crm_enquiry_type.delete(0, tk.END)
+            self.crm_enquiry_type.insert(0, enquiry_type)
+            self.crm_enquiry_type.config(state="disabled")
+        self.crm_comm_text.insert("1.0", r[26] if len(r) > 26 else "")
+        # Conversation date (index 27), Meeting time (28), Next meeting (29)
+        try:
+            self.crm_comm_date.delete(0, tk.END)
+            self.crm_comm_date.insert(0, r[27] if len(r) > 27 else "")
+        except Exception:
+            pass
+        self.crm_meeting_time.insert(0, r[28] if len(r) > 28 else "")
+        try:
+            if hasattr(self, "crm_next_meeting"):
+                self.crm_next_meeting.delete(0, tk.END)
+                self.crm_next_meeting.insert(0, r[29] if len(r) > 29 else "")
+        except Exception:
+            pass
+        self.crm_meeting_agenda.insert(0, r[30] if len(r) > 30 else "")
+        self.crm_meeting_outcome_text.insert("1.0", r[31] if len(r) > 31 else "")
 
-        photo_str = r[27] if len(r) > 27 else ""
+        photo_str = r[32] if len(r) > 32 else ""
         if photo_str:
             photo_dir = self.get_company_photos_dir(company_name)
             for fname in photo_str.split("|"):
@@ -1806,6 +2667,15 @@ class CrmTab(ttk.Frame):
                     full_path = os.path.join(photo_dir, fname)
                     self.selected_photo_paths.append(full_path)
                     self.photo_listbox.insert(tk.END, fname)
+
+        audio_str = r[33] if len(r) > 33 else ""
+        if audio_str:
+            audio_dir = self.get_company_audio_dir(company_name)
+            for fname in audio_str.split("|"):
+                if fname:
+                    full_path = os.path.join(audio_dir, fname)
+                    self.selected_audio_paths.append(full_path)
+                    self.audio_listbox.insert(tk.END, fname)
 
         self.set_identity_fields_state("readonly")
 
@@ -1850,6 +2720,12 @@ class CrmTab(ttk.Frame):
 
         self.all_rows[self.selected_row_index] = row_data
         self.save_all_rows_to_csv()
+        # also update company-wise file
+        try:
+            headers = self.get_crm_headers()
+            self.save_company_wise_csv(dict(zip(headers, row_data)))
+        except Exception:
+            pass
         messagebox.showinfo(
             "Updated",
             f"Record for '{row_data[0]}' has been updated successfully!",
@@ -1894,6 +2770,12 @@ class CrmTab(ttk.Frame):
             messagebox.showinfo(
                 "Saved", f"New log entry saved for '{row_data[0]}'!"
             )
+            # also save into company-wise CSV file
+            try:
+                headers = self.get_crm_headers()
+                self.save_company_wise_csv(dict(zip(headers, row_data)))
+            except Exception as e:
+                print(f"Company-wise save failed: {e}")
             self.clear_crm_entries()
             self.load_crm_data()
 
@@ -1927,6 +2809,129 @@ class CrmTab(ttk.Frame):
             self.clear_crm_entries()
             self.load_crm_data()
 
+    def _empty_import_row(self):
+        """Create a CRM row with safe defaults for imported records."""
+        headers = self.get_crm_headers()
+        row = [""] * len(headers)
+        defaults = {
+            "activity_count": "0",
+            "mobile_recording_count": "0",
+            "company_data_sent": "No",
+            "enquiry_received": "No",
+        }
+        for field, value in defaults.items():
+            row[headers.index(field)] = value
+        return row
+
+    def _append_imported_records(self, mapped_records):
+        """Append only new companies and persist them in CRM order."""
+        headers = self.get_crm_headers()
+        existing_keys = {
+            company_file_import.company_key(row[0])
+            for row in self.all_rows
+            if row and company_file_import.company_key(row[0])
+        }
+        added_rows = []
+        skipped_count = 0
+
+        for mapped in mapped_records:
+            company_name = company_file_import.stringify_value(
+                mapped.get("company_name", "")
+            )
+            key = company_file_import.company_key(company_name)
+            if not key or key in existing_keys:
+                skipped_count += 1
+                continue
+
+            row = self._empty_import_row()
+            for field, value in mapped.items():
+                if field in headers:
+                    row[headers.index(field)] = company_file_import.stringify_value(
+                        value
+                    )
+            self.all_rows.append(row)
+            added_rows.append(row)
+            existing_keys.add(key)
+
+        if not added_rows:
+            return 0, skipped_count
+
+        self.save_all_rows_to_csv()
+        for row in added_rows:
+            try:
+                self.save_company_wise_csv(dict(zip(headers, row)))
+            except Exception as exc:
+                print(f"Company-wise import save failed: {exc}")
+
+        if self.mqtt_manager and self.mqtt_manager.is_connected():
+            for row in added_rows:
+                try:
+                    self.mqtt_manager.publish_customer_update(
+                        dict(zip(headers, row)), "upsert"
+                    )
+                except Exception as exc:
+                    print(f"MQTT import sync failed: {exc}")
+
+        self.load_crm_data()
+        self.clear_crm_entries()
+        return len(added_rows), skipped_count
+
+    def import_company_data(self):
+        """Import Excel, CSV, or text-PDF company data by column name."""
+        file_path = filedialog.askopenfilename(
+            title="Import Company Data",
+            filetypes=[
+                (
+                    "Supported files",
+                    "*.xlsx *.xls *.csv *.pdf",
+                ),
+                ("Excel", "*.xlsx *.xls"),
+                ("CSV", "*.csv"),
+                ("PDF", "*.pdf"),
+                ("All files", "*.*"),
+            ],
+        )
+        if not file_path:
+            return
+
+        try:
+            records = company_file_import.read_import_records(file_path)
+            mapped_records = company_file_import.map_records_to_crm(
+                records, self.get_crm_headers()
+            )
+            if not mapped_records:
+                raise ValueError("The selected file contains no data rows.")
+
+            added_count, skipped_count = self._append_imported_records(
+                mapped_records
+            )
+            if added_count:
+                messagebox.showinfo(
+                    "Import Complete",
+                    f"Added {added_count} new company record(s).\n"
+                    f"Skipped {skipped_count} empty or duplicate record(s).",
+                )
+            else:
+                messagebox.showinfo(
+                    "Import Complete",
+                    "No new records were added. All company names were "
+                    "already present or the rows had no company name.",
+                )
+        except PermissionError:
+            messagebox.showerror(
+                "File Lock Error",
+                "Close customers_detailed.csv if it is open in Excel.",
+            )
+        except Exception as exc:
+            messagebox.showerror(
+                "Import Error",
+                f"Could not import the selected file:\n{exc}",
+            )
+
+    def import_csv_data(self):
+        """Backward-compatible alias for older callers."""
+        self.import_company_data()
+
     def save_all_rows_to_csv(self):
         headers = self.get_crm_headers()
         try:
@@ -1948,6 +2953,7 @@ class CrmTab(ttk.Frame):
 
         self.selected_row_index = None
         self.selected_photo_paths = []
+        self.selected_audio_paths = []
         self.form_frame.config(text=" Customer Details & Data Entry ")
 
         self.set_identity_fields_state("normal")
@@ -1959,13 +2965,13 @@ class CrmTab(ttk.Frame):
         self.crm_website.delete(0, tk.END)
         self.crm_contact.delete(0, tk.END)
         self.crm_address.delete(0, tk.END)
-        self.crm_state.delete(0, tk.END)
-        self.crm_district.delete(0, tk.END)
+        self._load_default_location_values()
         self.crm_location.delete(0, tk.END)
         self.crm_turnover.delete(0, tk.END)
         self.crm_owner_name.delete(0, tk.END)
         self.crm_staff_count.delete(0, tk.END)
         self.photo_listbox.delete(0, tk.END)
+        self.audio_listbox.delete(0, tk.END)
 
         self.set_products_from_str("")
         self.set_company_valuation_from_str("")
@@ -1980,18 +2986,116 @@ class CrmTab(ttk.Frame):
 
         self.crm_call_hours.set("00")
         self.crm_call_mins.set("00")
+        try:
+            self.crm_conversion_date.delete(0, tk.END)
+            self.crm_conversion_date.insert(0, datetime.date.today().strftime("%Y-%m-%d"))
+        except Exception:
+            pass
         self.crm_meeting_time.delete(0, tk.END)
+        try:
+            if hasattr(self, "crm_next_meeting"):
+                self.crm_next_meeting.delete(0, tk.END)
+        except Exception:
+            pass
         self.crm_meeting_agenda.delete(0, tk.END)
         self.crm_data_sent.set("No")
+        self.crm_data_type_name.config(state="normal")
+        self.crm_data_type_name.delete(0, tk.END)
+        self.crm_data_type_name.config(state="disabled")
         self.crm_enquiry.set("No")
+        self.crm_enquiry_type.config(state="normal")
+        self.crm_enquiry_type.delete(0, tk.END)
+        self.crm_enquiry_type.config(state="disabled")
         self.crm_comm_text.delete("1.0", tk.END)
         self.crm_meeting_outcome_text.delete("1.0", tk.END)
         self.crm_notes_text.delete("1.0", tk.END)
+        try:
+            self.crm_comm_date.delete(0, tk.END)
+        except Exception:
+            pass
+        self.crm_saturday_alarm.config(text="")
 
     def _convert_row_to_dict(self, row_data):
         """Convert CRM row data to dictionary for MQTT syncing."""
         headers = self.get_crm_headers()
         return dict(zip(headers, row_data))
+
+    def on_gst_entered(self):
+        """Auto-fill Company/Address/State/District/Owner from saved GST record."""
+        if not hasattr(self, "crm_gst") or not self.crm_gst.winfo_exists():
+            return
+        gst = self.crm_gst.get().strip().upper()
+        if not gst:
+            return
+        self.crm_gst.delete(0, tk.END)
+        self.crm_gst.insert(0, gst)
+        if len(gst) != 15:
+            return
+        try:
+            self._reload_all_rows_silent()
+        except Exception:
+            pass
+        headers = self.get_crm_headers()
+        try:
+            gi = headers.index("gst_number")
+        except ValueError:
+            return
+        match = None
+        for r in list(getattr(self, "all_rows", [])):
+            if len(r) > gi and (r[gi] or "").strip().upper() == gst:
+                match = r
+                break
+        if not match:
+            try:
+                from tkinter import messagebox as _mb
+                _mb.showinfo("GST Lookup",
+                    "GST '%s' not found in saved records.\n"
+                    "Fill details manually - it will be saved." % gst)
+            except Exception:
+                pass
+            return
+        d = dict(zip(headers, match))
+        company = (d.get("company_name") or "").strip()
+        if not company:
+            return
+        try:
+            cur_company = self.crm_company.get().strip()
+        except Exception:
+            cur_company = ""
+        if cur_company and cur_company.lower() != company.lower():
+            try:
+                from tkinter import messagebox as _mb2
+                ok = _mb2.askyesno("GST Found",
+                    "Found saved record for:\n%s\n\nFill its details?" % company)
+                if not ok:
+                    return
+            except Exception:
+                pass
+        def _set(entry, val):
+            try:
+                entry.config(state="normal")
+                entry.delete(0, tk.END)
+                entry.insert(0, val or "")
+            except Exception:
+                pass
+        _set(self.crm_company, d.get("company_name", ""))
+        _set(self.crm_address, d.get("address", ""))
+        self._set_location_values(
+            d.get("country") or ("India" if d.get("state") else ""),
+            d.get("state", ""),
+            d.get("district", ""),
+        )
+        _set(self.crm_location, d.get("location", ""))
+        _set(self.crm_owner_name, d.get("owner_name", ""))
+        _set(self.crm_contact_person, d.get("contact_person", ""))
+        _set(self.crm_contact, d.get("contact_number", ""))
+        _set(self.crm_website, d.get("website", ""))
+        try:
+            from tkinter import messagebox as _mb3
+            _mb3.showinfo("GST Auto-Fill",
+                "Filled from saved record:\n%s" % company)
+        except Exception:
+            pass
 
         if self.crm_tree.selection():
             self.crm_tree.selection_remove(self.crm_tree.selection())
@@ -2021,61 +3125,60 @@ class CrmTab(ttk.Frame):
                 "File Error",
                 "Could not load customer records. Close Excel if open.",
             )
+        except Exception as e:
+            messagebox.showerror(
+                "Load Error",
+                f"Could not load customer CRM & lead data:\n{str(e)}",
+            )
+            print(f"Error loading CRM data: {e}")
 
     def populate_tree(self, rows_to_show):
         for item in self.crm_tree.get_children():
             self.crm_tree.delete(item)
 
+        headers = self.get_crm_headers()
+        indices = {name: index for index, name in enumerate(headers)}
+
+        def value(row, field, default=""):
+            index = indices.get(field, -1)
+            return row[index] if 0 <= index < len(row) else default
+
         for r in rows_to_show:
             orig_idx = self.all_rows.index(r)
-            company = r[0] if len(r) > 0 else ""
-            gst_no = r[1] if len(r) > 1 else ""
-            contact_person = r[2] if len(r) > 2 else ""
-            designation = r[3] if len(r) > 3 else ""
-            contact = r[5] if len(r) > 5 else ""
-            state = r[7] if len(r) > 7 else ""
-            district = r[8] if len(r) > 8 else ""
-            location = r[9] if len(r) > 9 else ""
-            owner = r[11] if len(r) > 11 else ""
-            products = r[13] if len(r) > 13 else ""
-            valuable_percentage = r[15] if len(r) > 15 else "0"
-            customer_rating = r[16] if len(r) > 16 else "0"
-            activity_count = r[17] if len(r) > 17 else "0"
-            # Handle "No" or other non-numeric values in activity count
-            if activity_count == "No" or not str(activity_count).strip():
+            state = value(r, "state")
+            country = value(r, "country") or ("India" if state else "")
+            activity_count = value(r, "activity_count", "0")
+            if str(activity_count).strip() in ("", "No"):
                 activity_count = "0"
-            mobile_recording_count = r[18] if len(r) > 18 else "0"
-            # Handle "No" or other non-numeric values in mobile recording count
-            if mobile_recording_count == "No" or not str(mobile_recording_count).strip():
+            mobile_recording_count = value(r, "mobile_recording_count", "0")
+            if str(mobile_recording_count).strip() in ("", "No"):
                 mobile_recording_count = "0"
-            data_sent = r[20] if len(r) > 20 else "No"
-            enquiry = r[21] if len(r) > 21 else "No"
-            call_time = r[19] if len(r) > 19 else ""
-            meeting_time = r[23] if len(r) > 23 else ""
-
             self.crm_tree.insert(
                 "",
                 tk.END,
                 values=(
                     orig_idx + 1,
-                    company,
-                    gst_no,
-                    contact_person,
-                    designation,
-                    contact,
+                    value(r, "company_name"),
+                    value(r, "gst_number"),
+                    value(r, "contact_person"),
+                    value(r, "designation"),
+                    value(r, "contact_number"),
+                    country,
                     state,
-                    district,
-                    location,
-                    owner,
-                    products,
-                    valuable_percentage,
-                    customer_rating,
+                    value(r, "district"),
+                    value(r, "location"),
+                    value(r, "owner_name"),
+                    value(r, "products_selected"),
+                    value(r, "valuable_customer_percentage", "0"),
+                    value(r, "customer_rating", "0"),
                     activity_count,
                     mobile_recording_count,
-                    data_sent,
-                    enquiry,
-                    call_time,
-                    meeting_time,
+                    value(r, "company_data_sent", "No"),
+                    value(r, "enquiry_received", "No"),
+                    value(r, "call_conversion_time"),
+                    value(r, "call_conversion_date"),
+                    value(r, "meeting_schedule_time"),
+                    value(r, "next_meeting_datetime"),
                 ),
             )
 
@@ -2088,21 +3191,7 @@ class CrmTab(ttk.Frame):
         filtered = [
             r
             for r in self.all_rows
-            if (len(r) > 0 and query in r[0].lower())
-            or (len(r) > 1 and query in r[1].lower())
-            or (len(r) > 2 and query in r[2].lower())
-            or (len(r) > 3 and query in r[3].lower())
-            or (len(r) > 5 and query in r[5].lower())
-            or (len(r) > 7 and query in r[7].lower())
-            or (len(r) > 8 and query in r[8].lower())
-            or (len(r) > 9 and query in r[9].lower())
-            or (len(r) > 11 and query in r[11].lower())
-            or (len(r) > 13 and query in r[13].lower())
-            or (len(r) > 14 and query in r[14].lower())
-            or (len(r) > 15 and query in r[15].lower())
-            or (len(r) > 16 and query in r[16].lower())
-            or (len(r) > 17 and query in r[17].lower())
-            or (len(r) > 18 and query in r[18].lower())
+            if any(query in str(cell).casefold() for cell in r)
         ]
         self.populate_tree(filtered)
 

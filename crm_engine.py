@@ -1,6 +1,7 @@
 import sqlite3
 import os
 import config
+from contextlib import closing
 from datetime import datetime
 
 DB_FILE = os.path.join(config.DATA_DIR, "crm_database.db")
@@ -14,7 +15,7 @@ def get_db():
 
 def init_crm_db():
     """Initializes relational tables for the CRM engine."""
-    with get_db() as conn:
+    with closing(get_db()) as conn:
         cursor = conn.cursor()
         
         # Contacts / Leads
@@ -28,6 +29,17 @@ def init_crm_db():
                 status TEXT DEFAULT 'New',
                 lead_score INTEGER DEFAULT 0,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+
+        # Last confirmed CRM form location defaults
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS location_preferences (
+                id INTEGER PRIMARY KEY CHECK (id = 1),
+                country TEXT,
+                state TEXT,
+                district TEXT,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         """)
 
@@ -89,9 +101,55 @@ def init_crm_db():
         conn.commit()
 
 
+def get_location_preferences():
+    """Return the last confirmed Country/State/District selection."""
+    try:
+        with closing(get_db()) as conn:
+            row = conn.execute(
+                """
+                SELECT country, state, district
+                FROM location_preferences
+                WHERE id = 1
+                """
+            ).fetchone()
+    except sqlite3.OperationalError:
+        return {"country": "", "state": "", "district": ""}
+    if row is None:
+        return {"country": "", "state": "", "district": ""}
+    return {
+        "country": row["country"] or "",
+        "state": row["state"] or "",
+        "district": row["district"] or "",
+    }
+
+
+def save_location_preferences(country="", state="", district=""):
+    """Persist one last-confirmed location preference row."""
+    values = (
+        str(country or "").strip(),
+        str(state or "").strip(),
+        str(district or "").strip(),
+    )
+    with closing(get_db()) as conn:
+        conn.execute(
+            """
+            INSERT INTO location_preferences
+                (id, country, state, district, updated_at)
+            VALUES (1, ?, ?, ?, CURRENT_TIMESTAMP)
+            ON CONFLICT(id) DO UPDATE SET
+                country = excluded.country,
+                state = excluded.state,
+                district = excluded.district,
+                updated_at = CURRENT_TIMESTAMP
+            """,
+            values,
+        )
+        conn.commit()
+
+
 # Operations API
 def add_contact(company, contact_person, email, phone, status="New"):
-    with get_db() as conn:
+    with closing(get_db()) as conn:
         cursor = conn.cursor()
         cursor.execute(
             "INSERT INTO contacts (company_name, primary_contact, email, phone, status) VALUES (?, ?, ?, ?, ?)",
@@ -102,7 +160,7 @@ def add_contact(company, contact_person, email, phone, status="New"):
 
 
 def log_interaction(contact_id, interaction_type, summary):
-    with get_db() as conn:
+    with closing(get_db()) as conn:
         conn.execute(
             "INSERT INTO interactions (contact_id, type, summary) VALUES (?, ?, ?)",
             (contact_id, interaction_type, summary)
@@ -111,13 +169,13 @@ def log_interaction(contact_id, interaction_type, summary):
 
 
 def fetch_all_contacts():
-    with get_db() as conn:
+    with closing(get_db()) as conn:
         return conn.execute("SELECT * FROM contacts ORDER BY created_at DESC").fetchall()
 
 
 def fetch_pipeline_metrics():
     """Returns aggregated metrics for dashboard views."""
-    with get_db() as conn:
+    with closing(get_db()) as conn:
         total_value = conn.execute("SELECT SUM(deal_value) FROM deals").fetchone()[0] or 0.0
         active_leads = conn.execute("SELECT COUNT(*) FROM contacts WHERE status != 'Lost'").fetchone()[0]
         pending_tasks = conn.execute("SELECT COUNT(*) FROM tasks WHERE is_completed = 0").fetchone()[0]
@@ -131,7 +189,7 @@ def fetch_pipeline_metrics():
 def add_promotional_material(product_sector, title, material_type, campaign_name="",
                              platform="", url="", attachment_path="", notes=""):
     """Save one marketing asset in the corporate promotion-material library."""
-    with get_db() as conn:
+    with closing(get_db()) as conn:
         cursor = conn.execute(
             """INSERT INTO promotional_materials
                (product_sector, title, material_type, campaign_name, platform, url,
@@ -146,7 +204,7 @@ def add_promotional_material(product_sector, title, material_type, campaign_name
 
 def fetch_promotional_materials(product_sector=None):
     """Return saved marketing assets, optionally limited to a product sector."""
-    with get_db() as conn:
+    with closing(get_db()) as conn:
         if product_sector:
             return conn.execute(
                 "SELECT * FROM promotional_materials WHERE product_sector = ? "
@@ -158,6 +216,6 @@ def fetch_promotional_materials(product_sector=None):
 
 
 def delete_promotional_material(material_id):
-    with get_db() as conn:
+    with closing(get_db()) as conn:
         conn.execute("DELETE FROM promotional_materials WHERE id = ?", (material_id,))
         conn.commit()

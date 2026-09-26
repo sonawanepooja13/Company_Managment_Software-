@@ -247,18 +247,11 @@ class HRRegisterTab(ttk.Frame):
                    command=self.save).pack(side="right", padx=(0, 8))
 
         # ── Records treeview ───────────────────────────────────────────────
-        visible = [
-            "employee_id",
-            "full_name",
-            "department",
-            "designation",
-            "employment_status",
-            "work_location",
-        ] if self.register == "employees" else self.headers[:6]
+        visible = self.headers[:6]
         self.tree = ttk.Treeview(self._list_box, columns=visible,
                                  show="headings", height=7)
         for key in visible:
-            lbl = next((l for l, fk in self.fields if fk == key), key.replace("_", " ").title())
+            lbl = next(l for l, fk in self.fields if fk == key)
             self.tree.heading(key, text=lbl)
             self.tree.column(key, width=180, anchor="w")
 
@@ -445,13 +438,6 @@ class HRRegisterTab(ttk.Frame):
         if not identity or not identity.get().strip():
             messagebox.showwarning("Required Details", "Enter the primary record name or employee ID before saving.", parent=self)
             return
-
-        if self.register == "employees":
-            department = self.vars.get("department")
-            if not department or not department.get().strip():
-                messagebox.showwarning("Required Details", "Department is required before saving the employee record.", parent=self)
-                return
-
         for key in ("created_at", "uploaded_at"):
             if key in self.vars:
                 self.vars[key].set(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
@@ -483,17 +469,9 @@ class HRRegisterTab(ttk.Frame):
     def load_records(self):
         for item in self.tree.get_children():
             self.tree.delete(item)
-        visible_keys = [
-            "employee_id",
-            "full_name",
-            "department",
-            "designation",
-            "employment_status",
-            "work_location",
-        ] if self.register == "employees" else self.headers[:6]
         with open(self.ensure_file(), newline="", encoding="utf-8") as file:
             for row in csv.DictReader(file):
-                self.tree.insert("", "end", values=[row.get(key, "") for key in visible_keys])
+                self.tree.insert("", "end", values=[row.get(key, "") for key in self.headers[:6]])
 
     def _load_selected_record(self, _event=None):
         if self.register != "employees":
@@ -596,131 +574,6 @@ class HRRegisterTab(ttk.Frame):
             messagebox.showerror("Export Failed", str(e), parent=self)
 
 
-class DepartmentAssignmentTab(ttk.Frame):
-    """HR department assignment panel that lets an admin move staff between departments."""
-
-    def __init__(self, parent):
-        super().__init__(parent, padding=16)
-        self.department_var = tk.StringVar()
-        self.available_map = {}
-        self.assigned_map = {}
-
-        ttk.Label(self, text="Department Assignment", font=("Helvetica", 14, "bold")).pack(anchor="w", pady=(0, 8))
-        ttk.Label(self, text="Move employees between the available pool and the selected department using the department combo below.").pack(anchor="w", pady=(0, 12))
-
-        selector = ttk.Frame(self)
-        selector.pack(fill="x", pady=(0, 12))
-        ttk.Label(selector, text="Department:").pack(side="left", padx=(0, 8))
-        department_combo = ttk.Combobox(selector, textvariable=self.department_var, values=list(DEPARTMENTS), state="readonly")
-        department_combo.pack(side="left", fill="x", expand=True)
-        department_combo.set(DEPARTMENTS[0])
-        department_combo.bind("<<ComboboxSelected>>", lambda _event: self.refresh_lists())
-
-        list_area = ttk.Frame(self)
-        list_area.pack(fill="both", expand=True)
-        list_area.columnconfigure(0, weight=1)
-        list_area.columnconfigure(2, weight=1)
-
-        ttk.Label(list_area, text="Available employees").grid(row=0, column=0, sticky="w")
-        ttk.Label(list_area, text="Department members").grid(row=0, column=2, sticky="w")
-
-        self.available_list = tk.Listbox(list_area, height=18, selectmode="extended", exportselection=False)
-        self.available_list.grid(row=1, column=0, sticky="nsew", padx=(0, 10))
-        self.assigned_list = tk.Listbox(list_area, height=18, selectmode="extended", exportselection=False)
-        self.assigned_list.grid(row=1, column=2, sticky="nsew", padx=(10, 0))
-
-        action_area = ttk.Frame(self)
-        action_area.pack(fill="x", pady=(12, 0))
-        ttk.Button(action_area, text="Move →", command=self.move_to_department).pack(side="left", padx=(0, 8))
-        ttk.Button(action_area, text="← Remove", command=self.remove_from_department).pack(side="left", padx=(0, 8))
-        ttk.Button(action_area, text="Save Assignment", command=self.save_assignment).pack(side="left")
-
-        self.available_list.bind("<Double-Button-1>", lambda _event: self.move_to_department())
-        self.assigned_list.bind("<Double-Button-1>", lambda _event: self.remove_from_department())
-
-        self.refresh_lists()
-
-    @staticmethod
-    def _normalize_department_name(value):
-        value = (value or "").strip().lower()
-        return " ".join(part for part in re.split(r"[^a-z0-9]+", value) if part)
-
-    def _employee_rows(self):
-        path = csv_path("employees")
-        if not os.path.exists(path):
-            return []
-        with open(path, newline="", encoding="utf-8") as file:
-            return list(csv.DictReader(file))
-
-    def refresh_lists(self):
-        selected_department = (self.department_var.get() or "").strip()
-        if not selected_department:
-            return
-
-        self.available_map = {}
-        self.assigned_map = {}
-        self.available_list.delete(0, tk.END)
-        self.assigned_list.delete(0, tk.END)
-
-        selected_key = self._normalize_department_name(selected_department)
-        for row in self._employee_rows():
-            employee_id = (row.get("employee_id") or "").strip()
-            full_name = (row.get("full_name") or "").strip() or " ".join(
-                part.strip() for part in (row.get("first_name") or "", row.get("middle_name") or "") if part.strip()
-            )
-            if not employee_id and not full_name:
-                continue
-            label = f"{employee_id} | {full_name}" if employee_id and full_name else (employee_id or full_name)
-            row_department = self._normalize_department_name(row.get("department") or "")
-            if row_department == selected_key:
-                self.assigned_map[label] = employee_id
-                self.assigned_list.insert(tk.END, label)
-            else:
-                self.available_map[label] = employee_id
-                self.available_list.insert(tk.END, label)
-
-    def _update_employee_departments(self, employee_ids, new_department):
-        path = csv_path("employees")
-        if not os.path.exists(path):
-            return
-
-        with open(path, newline="", encoding="utf-8") as file:
-            rows = list(csv.DictReader(file))
-            fieldnames = list(rows[0].keys()) if rows else ["employee_id", "full_name", "department"]
-
-        for row in rows:
-            if (row.get("employee_id") or "").strip() in employee_ids:
-                row["department"] = new_department
-
-        with open(path, "w", newline="", encoding="utf-8") as file:
-            writer = csv.DictWriter(file, fieldnames=fieldnames)
-            writer.writeheader()
-            writer.writerows(rows)
-
-    def move_to_department(self):
-        selected_department = (self.department_var.get() or "").strip()
-        if not selected_department:
-            return
-        selected_labels = [self.available_list.get(index) for index in self.available_list.curselection()]
-        employee_ids = [self.available_map[label] for label in selected_labels if label in self.available_map and self.available_map[label]]
-        if not employee_ids:
-            return
-        self._update_employee_departments(employee_ids, selected_department)
-        self.refresh_lists()
-
-    def remove_from_department(self):
-        selected_labels = [self.assigned_list.get(index) for index in self.assigned_list.curselection()]
-        employee_ids = [self.assigned_map[label] for label in selected_labels if label in self.assigned_map and self.assigned_map[label]]
-        if not employee_ids:
-            return
-        self._update_employee_departments(employee_ids, "")
-        self.refresh_lists()
-
-    def save_assignment(self):
-        self.refresh_lists()
-        messagebox.showinfo("Department Saved", "Department assignments were updated successfully.", parent=self)
-
-
 class HRView(ttk.Frame):
     def __init__(self, parent, user_data=None):
         super().__init__(parent, padding=14)
@@ -814,21 +667,6 @@ class HRView(ttk.Frame):
             btn.configure(style="HR.SidebarActive.TButton")
 
         first_frame = first_btn = None
-
-        department_assignment_frame = DepartmentAssignmentTab(content_area)
-        department_assignment_frame.grid(row=0, column=0, sticky="nsew")
-        department_assignment_frame.grid_remove()
-        tab_frames["Department Assignment"] = department_assignment_frame
-
-        dept_assignment_btn = ttk.Button(
-            sidebar_inner,
-            text=" 🧭  Department Assignment",
-            style="HR.Sidebar.TButton",
-            width=24,
-        )
-        dept_assignment_btn.configure(command=lambda f=department_assignment_frame, b=dept_assignment_btn: show_tab(f, b))
-        dept_assignment_btn.pack(fill="x", padx=4, pady=2)
-        btn_refs.append(dept_assignment_btn)
 
         for title, register, fields in HR_TABS:
             # Content frame

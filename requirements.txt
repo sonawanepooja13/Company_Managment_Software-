@@ -4,3 +4,4 @@ reportlab
 tkcalendar
 Pillow
 pandas
+xlrd

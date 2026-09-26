@@ -22,7 +22,7 @@ import bom_engine
 import panel_manufacturing
 import production_window
 import hr_window
-from outward_window import OutwardWindow
+from outward_window import DOCUMENT_TYPES, OutwardWindow
 from vendor_registration import VendorRegistrationWindow
 import supply_chain_logistics
 import legal_compliance
@@ -643,6 +643,9 @@ class MainApp:
         self.root = root
         self.root.title("Company Manegement Software")
 
+        # Modules read data paths through main_app.config (config package)
+        self.config = config
+
         bom_engine.ensure_files_exist()
         auth_manager.ensure_user_file_exists()
 
@@ -1249,17 +1252,162 @@ class MainApp:
             return
         try:
             self.clear_workspace()
-            self.create_back_header("Sales & Marketing Module", self.build_main_dashboard, "⬅ Back to Dashboard")
+            from tally_navbar import TallyShell
             from sales_marketing_window import SalesMarketingView
-            view = SalesMarketingView(self.content_frame, self)
+            shell = TallyShell(
+                self.content_frame,
+                on_tab=lambda label: self._sales_tally_tab(
+                    shell, getattr(shell, "view", None), label, from_nav=True),
+                on_create=lambda label: self._sales_tally_create(
+                    shell, getattr(shell, "view", None), label),
+            )
+            # view lives INSIDE shell body so header/nav never get cleared
+            view = SalesMarketingView(shell.body, self)
+            view.pack(fill="both", expand=True)
+            shell.view = view
+            # slim utility strip: back to main dashboard + FY echo
+            strip = tk.Frame(shell.body)
+            strip.pack(fill="x", padx=10, pady=(6, 0))
+            tk.Button(strip, text="⬅ Back to Dashboard",
+                      font=("Helvetica", 9), cursor="hand2",
+                      command=self.build_main_dashboard).pack(side="left")
+            tk.Label(strip, textvariable=shell.fy_var,
+                     font=("Helvetica", 9)).pack(side="right")
+            # keep sales view below the strip
+            view.pack_forget()
             view.pack(fill="both", expand=True)
             if category:
+                if category == "B2B Trading":
+                    shell.set_active("Dashboard")
+                elif category == "Customer CRM & Leads":
+                    shell.set_active("Customer / Vendor")
+                elif category == "Saark Product Sector":
+                    shell.set_active("Products / Services")
+                elif category == "Quotation":
+                    shell.set_active("Dashboard")
                 view.show_category_content(category)
+            else:
+                shell.set_active("Dashboard")
 
         except Exception as e:
             messagebox.showerror(
                 "Error Loading View", f"Could not load Sales module:\n{e}"
             )
+
+    def _sales_tally_embed(self, shell, widget_cls, *args, **kwargs):
+        """Show an accounts/outward view inside shell body, hiding sales view."""
+        view = getattr(shell, "view", None)
+        try:
+            if view is not None and view.winfo_exists():
+                view.pack_forget()
+        except Exception:
+            pass
+        shell.clear_body()
+        # back button on top of embedded page
+        tk.Button(shell.body, text="⬅ Back to Sales Dashboard",
+                  command=lambda: self._sales_tally_tab(
+                      shell, getattr(shell, "view", None), "Dashboard"),
+                  font=("Helvetica", 9), cursor="hand2").pack(anchor="w", padx=10, pady=(8, 0))
+        widget = widget_cls(shell.body, *args, **kwargs)
+        widget.pack(fill="both", expand=True, padx=6, pady=6)
+        return widget
+
+    def _sales_tally_show_view(self, shell, view):
+        """Return to the SalesMarketingView inside shell body."""
+        shell.clear_body()
+        view = getattr(shell, "view", None)
+        try:
+            exists = bool(view is not None and view.winfo_exists())
+        except Exception:
+            exists = False
+        if not exists:
+            from sales_marketing_window import SalesMarketingView
+            view = SalesMarketingView(shell.body, self)
+            shell.view = view
+        try:
+            view.pack(fill="both", expand=True)
+        except Exception:
+            pass
+        return view
+
+    def _sales_tally_tab(self, shell, view, label, from_nav=False):
+        try:
+            base = label.replace("\n", " ").strip()
+            if base == "Dashboard":
+                if from_nav:
+                    # The "Dashboard" tab of the Tally nav strip is the home tab,
+                    # so it leaves the Sales module and shows the main Welcome page.
+                    self.build_main_dashboard()
+                    return
+                view = self._sales_tally_show_view(shell, view)
+                try:
+                    view.show_product_category_selector()
+                except Exception:
+                    pass
+            elif base == "Customer / Vendor":
+                view = self._sales_tally_show_view(shell, view)
+                view.show_category_content("Customer CRM & Leads")
+            elif base == "Products / Services":
+                view = self._sales_tally_show_view(shell, view)
+                view.show_category_content("Saark Product Sector")
+            elif base == "Sale Invoice":
+                self._sales_tally_embed(
+                    shell, accounts_finance.SalesIncomeView,
+                    user_data=self.user_data, navigator=self)
+            elif base == "Purchase Invoice":
+                self._sales_tally_embed(
+                    shell, accounts_finance.PurchaseProcurementView,
+                    user_data=self.user_data, navigator=self)
+            elif base == "Payment":
+                self._sales_tally_embed(
+                    shell, accounts_finance.BankCashView,
+                    user_data=self.user_data, navigator=self)
+            elif base == "Expense Income":
+                self._sales_tally_embed(
+                    shell, accounts_finance.ExpensesView,
+                    user_data=self.user_data, navigator=self)
+            elif base == "Other Documents":
+                from outward_window import OutwardWindow
+                self._sales_tally_embed(
+                    shell, OutwardWindow,
+                    on_complete=lambda: self._sales_tally_tab(shell, view, "Dashboard"))
+            elif base == "Report":
+                self._sales_tally_embed(
+                    shell, accounts_finance.FinancialReportsView,
+                    user_data=self.user_data, navigator=self)
+        except Exception as e:
+            messagebox.showerror("Error Loading Tab", f"Could not open {label}:\n{e}")
+
+    def _sales_tally_create(self, shell, view, label):
+        try:
+            if label == "Sale Invoice":
+                shell.select("Sale\nInvoice")
+            elif label == "Purchase Invoice":
+                shell.select("Purchase\nInvoice")
+            elif "Payment" in label:
+                shell.select("Payment")
+            elif label == "Quotation":
+                view = self._sales_tally_show_view(shell, view)
+                shell.set_active("Dashboard")
+                view.show_category_content("Quotation")
+            elif "Customer" in label:
+                shell.select("Customer / Vendor")
+            elif "Product" in label:
+                shell.select("Products / Services")
+            elif label in DOCUMENT_TYPES:
+                # Proforma, Sales Order, Purchase Order, Delivery Challan,
+                # Job Work, Credit Note, Debit Note, Service Request ...
+                self._sales_tally_create_document(shell, view, label)
+        except Exception as e:
+            messagebox.showerror("Error", f"Could not create {label}:\n{e}")
+
+    def _sales_tally_create_document(self, shell, view, document_type):
+        """Open the document entry form from the Create menu with its type preset."""
+        shell.set_active("Other\nDocuments")
+        return self._sales_tally_embed(
+            shell, OutwardWindow,
+            on_complete=lambda: self._sales_tally_tab(shell, view, "Dashboard"),
+            document_type=document_type)
 
     def show_production_view(self):
         if not self.user_has_permission("allow_production", False):

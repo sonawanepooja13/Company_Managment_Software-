@@ -68,10 +68,13 @@ SCRIPT_DIR = DATA_DIR
 # Dedicated folder path for CSV storage (writable)
 CSV_DIR = os.path.join(DATA_DIR, "csv_data")
 HR_DIR = os.path.join(CSV_DIR, "HR")
+# One CSV file per customer holding that customer's quotation records
+QUOTATION_DIR = os.path.join(CSV_DIR, "quotation")
 
-# Ensure the 'csv_data' and 'csv_data/HR' folders exist on startup
+# Ensure the 'csv_data', 'csv_data/HR' and 'csv_data/quotation' folders exist on startup
 os.makedirs(CSV_DIR, exist_ok=True)
 os.makedirs(HR_DIR, exist_ok=True)
+os.makedirs(QUOTATION_DIR, exist_ok=True)
 
 # CSV File Absolute Paths inside 'csv_data'
 PRODUCTS_CSV = os.path.join(CSV_DIR, "products.csv")
@@ -175,4 +178,5 @@ CUSTOMERS_DETAILED_HEADERS = [
     "meeting_schedule_time",
     "meeting_agenda",
     "meeting_completed_details",
+    "country",
 ]

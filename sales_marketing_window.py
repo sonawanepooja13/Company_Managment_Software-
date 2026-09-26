@@ -959,7 +959,10 @@ from tkinter import ttk, filedialog, messagebox, simpledialog
 import csv
 import os
 import webbrowser
+from datetime import date, timedelta
+
 import crm_engine
+import quotation_manager
 
 class SalesMarketingView(ttk.Frame):
     def __init__(self, parent, main_app):
@@ -1139,198 +1142,984 @@ class SalesMarketingView(ttk.Frame):
         except Exception as e:
             messagebox.showerror("Error", f"Could not open Products: {e}")
 
-    def show_quotation_dialog(self):
+    def _add_quotation_window_controls(
+        self, parent, window, normal_geometry, modal=False
+    ):
+        """Add minimize, maximize, and restore controls to a quotation window."""
+        controls = ttk.Frame(parent)
+        controls.pack(side="right")
+        restore_geometry = {"value": normal_geometry}
+        try:
+            transient_master = window.master if window.wm_transient() else None
+        except tk.TclError:
+            transient_master = None
+
+        def release_grab():
+            if not modal:
+                return
+            try:
+                window.grab_release()
+            except tk.TclError:
+                pass
+
+        def restore_grab(event=None):
+            if not modal or (event is not None and event.widget is not window):
+                return
+            try:
+                if window.state() not in ("iconic", "withdrawn"):
+                    window.grab_set()
+            except tk.TclError:
+                pass
+
+        def restore_transient():
+            if transient_master is None:
+                return
+            try:
+                window.transient(transient_master)
+            except tk.TclError:
+                pass
+
+        def minimize_window():
+            release_grab()
+            current_geometry = window.geometry()
+            if current_geometry:
+                restore_geometry["value"] = current_geometry
+            try:
+                # Windows Tkinter does not allow iconify() on transient windows.
+                # Clear the relationship only while the window is minimized.
+                if transient_master is not None:
+                    window.wm_transient("")
+                window.iconify()
+            except tk.TclError:
+                # Keep the control usable even if a Tk build still rejects
+                # iconify(); Restore will use deiconify() to show the window.
+                window.withdraw()
+
+        def restore_window():
+            try:
+                # Deiconify before restoring the owner relationship. This is
+                # required on Windows when the parent is temporarily hidden.
+                if transient_master is not None:
+                    window.wm_transient("")
+                window.deiconify()
+                window.state("normal")
+                window.update_idletasks()
+            except tk.TclError:
+                pass
+            try:
+                if transient_master is not None and transient_master.winfo_ismapped():
+                    window.transient(transient_master)
+            except tk.TclError:
+                pass
+            if restore_geometry["value"]:
+                window.geometry(restore_geometry["value"])
+            try:
+                window.lift()
+            except tk.TclError:
+                pass
+            restore_grab()
+
+        def maximize_window():
+            try:
+                if window.state() == "zoomed":
+                    restore_grab()
+                    return
+                current_geometry = window.geometry()
+                if current_geometry:
+                    restore_geometry["value"] = current_geometry
+                window.state("zoomed")
+            except tk.TclError:
+                # Fallback for platforms that do not support the zoomed state.
+                window.geometry(
+                    f"{window.winfo_screenwidth()}x{window.winfo_screenheight()}+0+0"
+                )
+            restore_grab()
+
+        def handle_unmap(event=None):
+            if event is not None and event.widget is not window:
+                return
+            try:
+                if window.state() in ("iconic", "withdrawn"):
+                    release_grab()
+            except tk.TclError:
+                pass
+
+        # Native title-bar minimize actions must also release and restore the
+        # modal grab; otherwise the quotation form can remain inaccessible.
+        window.bind("<Map>", restore_grab)
+        window.bind("<Unmap>", handle_unmap)
+
+        ttk.Button(
+            controls, text="Minimize", command=minimize_window
+        ).pack(side="right", padx=(6, 0))
+        ttk.Button(
+            controls, text="Maximize", command=maximize_window
+        ).pack(side="right", padx=(6, 0))
+        ttk.Button(
+            controls, text="Restore", command=restore_window
+        ).pack(side="right")
+
+
+    def show_quotation_dialog(self, quotation_no=None):
+        """Create a quotation for a customer (or edit an existing one).
+
+        Quotations are stored customer-wise in csv_data/quotation - one CSV
+        file per customer, one row per quoted item - so the complete quotation
+        history of a customer stays together.
+        """
+        existing = None
+        if quotation_no:
+            existing = quotation_manager.get_quotation(quotation_no)
+            if existing is None:
+                messagebox.showwarning("Edit Quotation",
+                                       f"Quotation {quotation_no} was not found.",
+                                       parent=self.main_app.root)
+                return
         dialog = tk.Toplevel(self.main_app.root)
-        dialog.title("Create New Quotation")
-        dialog.geometry("800x600")
+        dialog.title("Edit Quotation" if existing else "Create New Quotation")
+        dialog.geometry("1320x900")
+        dialog.minsize(1100, 760)
+        dialog.resizable(True, True)
         dialog.transient(self.main_app.root)
         dialog.grab_set()
 
-        main_frame = ttk.Frame(dialog, padding=20)
-        main_frame.pack(fill="both", expand=True)
+        # The quotation form is taller than a small screen, so the form body
+        # scrolls.  The action bar is a sibling of the canvas (see below) and
+        # stays pinned to the bottom, so Save / Print never scroll out of view.
+        dialog.grid_rowconfigure(0, weight=1)
+        dialog.grid_columnconfigure(0, weight=1)
 
-        ttk.Label(
-            main_frame,
-            text="Create New Quotation",
-            font=("Helvetica", 16, "bold")
-        ).pack(pady=(0, 20))
-
-        form_frame = ttk.LabelFrame(main_frame, text="Quotation Details", padding=15)
-        form_frame.pack(fill="x", pady=(0, 15))
-
-        customer_name = tk.StringVar()
-        customer_email = tk.StringVar()
-        customer_phone = tk.StringVar()
-        quotation_date = tk.StringVar()
-        valid_until = tk.StringVar()
-        notes = tk.StringVar()
-
-        def add_field(row, label, variable):
-            ttk.Label(form_frame, text=f"{label}:").grid(
-                row=row, column=0, sticky="w", padx=(0, 10), pady=8
-            )
-            ttk.Entry(form_frame, textvariable=variable, width=40).grid(
-                row=row, column=1, sticky="w", pady=8
-            )
-
-        add_field(0, "Customer Name", customer_name)
-        add_field(1, "Customer Email", customer_email)
-        add_field(2, "Customer Phone", customer_phone)
-        add_field(3, "Quotation Date", quotation_date)
-        add_field(4, "Valid Until", valid_until)
-
-        ttk.Label(form_frame, text="Notes:").grid(
-            row=5, column=0, sticky="nw", padx=(0, 10), pady=8
+        page_canvas = tk.Canvas(dialog, highlightthickness=0, borderwidth=0)
+        page_canvas.grid(row=0, column=0, sticky="nsew")
+        page_scrollbar = ttk.Scrollbar(
+            dialog, orient="vertical", command=page_canvas.yview
         )
-        notes_text = tk.Text(form_frame, height=4, width=50)
-        notes_text.grid(row=5, column=1, sticky="w", pady=8)
+        page_canvas.configure(yscrollcommand=page_scrollbar.set)
+        page_scrollbar.grid(row=0, column=1, sticky="ns")
 
-        items_frame = ttk.LabelFrame(main_frame, text="Quotation Items", padding=15)
-        items_frame.pack(fill="both", expand=True, pady=(0, 15))
+        main_frame = ttk.Frame(page_canvas, padding=16)
+        main_frame_window = page_canvas.create_window(
+            (0, 0), window=main_frame, anchor="nw"
+        )
+        main_frame.bind(
+            "<Configure>",
+            lambda _event: page_canvas.configure(scrollregion=page_canvas.bbox("all")),
+        )
+        page_canvas.bind(
+            "<Configure>",
+            lambda event: page_canvas.itemconfigure(
+                main_frame_window, width=event.width
+            ),
+        )
 
-        columns = ("item", "description", "quantity", "unit_price", "total")
-        items_tree = ttk.Treeview(items_frame, columns=columns, show="headings", height=8)
+        def scroll_quotation_page(event):
+            try:
+                page_canvas.yview_scroll(int(-event.delta / 120), "units")
+            except tk.TclError:
+                pass
 
-        items_tree.heading("item", text="Item")
-        items_tree.heading("description", text="Description")
-        items_tree.heading("quantity", text="Quantity")
-        items_tree.heading("unit_price", text="Unit Price (₹)")
-        items_tree.heading("total", text="Total (₹)")
+        page_canvas.bind(
+            "<Enter>",
+            lambda _event: page_canvas.bind_all("<MouseWheel>", scroll_quotation_page),
+        )
+        page_canvas.bind(
+            "<Leave>", lambda _event: page_canvas.unbind_all("<MouseWheel>")
+        )
 
-        items_tree.column("item", width=100)
-        items_tree.column("description", width=250)
-        items_tree.column("quantity", width=80)
-        items_tree.column("unit_price", width=100)
-        items_tree.column("total", width=100)
+        title_header = ttk.Frame(main_frame)
+        title_header.pack(fill="x", pady=(0, 12))
+        ttk.Label(
+            title_header,
+            text="Edit Quotation" if existing else "Create New Quotation",
+            font=("Helvetica", 16, "bold"),
+        ).pack(side="left")
+        self._add_quotation_window_controls(
+            title_header, dialog, "1320x900", modal=True
+        )
 
-        items_tree.pack(fill="both", expand=True)
+        header = existing or {}
+        customer_name = tk.StringVar(value=header.get("customer_name", ""))
+        customer_contact_person = tk.StringVar(
+            value=header.get("customer_contact_person", "")
+        )
+        customer_email = tk.StringVar(value=header.get("customer_email", ""))
+        customer_phone = tk.StringVar(value=header.get("customer_phone", ""))
+        customer_gstin = tk.StringVar(value=header.get("customer_gstin", ""))
+        customer_address = tk.StringVar(value=header.get("customer_address", ""))
+        customer_type = tk.StringVar(value=header.get("customer_type", "Quotation"))
+        quotation_no = tk.StringVar(
+            value=header.get("quotation_no") or quotation_manager.next_quotation_number()
+        )
+        quotation_date = tk.StringVar(
+            value=header.get("quotation_date") or date.today().isoformat()
+        )
+        valid_until = tk.StringVar(
+            value=header.get("valid_until")
+            or (date.today() + timedelta(days=quotation_manager.DEFAULT_VALIDITY_DAYS)).isoformat()
+        )
+        challan_no = tk.StringVar(value=header.get("challan_no", ""))
+        challan_date = tk.StringVar(value=header.get("challan_date", ""))
+        lr_no = tk.StringVar(value=header.get("lr_no", ""))
+        delivery_mode = tk.StringVar(value=header.get("delivery_mode", ""))
+        rev_charge = tk.StringVar(value=header.get("rev_charge", "No"))
+        ship_to = tk.StringVar(value=header.get("ship_to", ""))
+        distance_for_eway_bill = tk.StringVar(
+            value=header.get("distance_for_eway_bill", "")
+        )
+        place_of_supply = tk.StringVar(value=header.get("place_of_supply", ""))
+        status = tk.StringVar(value=header.get("status") or "Draft")
+        tax_percent = tk.StringVar(
+            value=str(header.get("tax_percent") or f"{quotation_manager.DEFAULT_TAX_PERCENT:g}")
+        )
 
-        scrollbar = ttk.Scrollbar(items_frame, orient="vertical", command=items_tree.yview)
+        def fill_customer_details(_event=None):
+            """Fill the customer card from the saved CRM company record.
+
+            The CRM stores the company tax id in its "GST Number" field and
+            the quotation card shows the very same value as "GSTIN / PAN", so
+            the CRM GST data is copied straight into GSTIN / PAN.  Values are
+            only overwritten when the CRM actually holds one, so anything the
+            user typed by hand is never discarded.
+            """
+            details = quotation_manager.load_customer_details(customer_name.get())
+            if not details:
+                return
+            for key, variable in (
+                ("customer_contact_person", customer_contact_person),
+                ("customer_email", customer_email),
+                ("customer_phone", customer_phone),
+                ("customer_gstin", customer_gstin),
+                ("customer_address", customer_address),
+            ):
+                value = details.get(key, "")
+                if value:
+                    variable.set(value)
+
+        pending_fill = None
+
+        def schedule_customer_fill(*_args):
+            """Re-run the auto-fill shortly after the customer name stops changing."""
+            nonlocal pending_fill
+            if pending_fill is not None:
+                try:
+                    dialog.after_cancel(pending_fill)
+                except Exception:
+                    pass
+            pending_fill = dialog.after(400, fill_customer_details)
+
+        top_cards = ttk.Frame(main_frame)
+        top_cards.pack(fill="x", pady=(0, 12))
+        top_cards.columnconfigure(0, weight=1)
+        top_cards.columnconfigure(1, weight=1)
+
+        customer_card = ttk.LabelFrame(
+            top_cards, text=" Customer Information ", padding=12
+        )
+        customer_card.grid(row=0, column=0, sticky="nsew", padx=(0, 8))
+        customer_card.columnconfigure(1, weight=1)
+
+        quotation_card = ttk.LabelFrame(
+            top_cards, text=" Quotation Detail ", padding=12
+        )
+        quotation_card.grid(row=0, column=1, sticky="nsew")
+        quotation_card.columnconfigure(1, weight=1)
+
+        def add_card_field(parent, row, label, variable, width=26):
+            ttk.Label(parent, text=f"{label}:").grid(
+                row=row, column=0, sticky="w", padx=(0, 8), pady=5
+            )
+            ttk.Entry(parent, textvariable=variable, width=width).grid(
+                row=row, column=1, columnspan=3, sticky="ew", padx=(0, 8), pady=5
+            )
+
+        ttk.Label(customer_card, text="M/S. *:").grid(
+            row=0, column=0, sticky="w", padx=(0, 8), pady=5
+        )
+        customer_combo = ttk.Combobox(
+            customer_card, textvariable=customer_name, width=26,
+            values=quotation_manager.load_customers(),
+        )
+        customer_combo.grid(
+            row=0, column=1, columnspan=3, sticky="ew", padx=(0, 8), pady=5
+        )
+        customer_combo.bind("<<ComboboxSelected>>", fill_customer_details)
+        customer_combo.bind("<Return>", fill_customer_details)
+        customer_combo.bind("<FocusOut>", fill_customer_details)
+        # Also fill when the company name is typed instead of picked, so the
+        # saved CRM GST data reaches GSTIN / PAN either way.
+        customer_name.trace_add("write", schedule_customer_fill)
+        add_card_field(customer_card, 1, "Address", customer_address)
+        add_card_field(customer_card, 2, "Contact Person", customer_contact_person)
+        add_card_field(customer_card, 3, "Phone No", customer_phone)
+        add_card_field(customer_card, 4, "Email", customer_email)
+        add_card_field(customer_card, 5, "GSTIN / PAN", customer_gstin)
+        ttk.Label(customer_card, text="Rev. Charge:").grid(
+            row=6, column=0, sticky="w", padx=(0, 8), pady=5
+        )
+        ttk.Combobox(
+            customer_card, textvariable=rev_charge, values=("No", "Yes"),
+            state="readonly", width=24,
+        ).grid(row=6, column=1, columnspan=3, sticky="ew", padx=(0, 8), pady=5)
+        ttk.Label(customer_card, text="Ship To:").grid(
+            row=7, column=0, sticky="w", padx=(0, 8), pady=5
+        )
+        ttk.Combobox(
+            customer_card, textvariable=ship_to,
+            values=("--", "Same as Customer", "Other"), width=24,
+        ).grid(row=7, column=1, columnspan=3, sticky="ew", padx=(0, 8), pady=5)
+        add_card_field(customer_card, 8, "Distance for e-way bill (in km)", distance_for_eway_bill)
+        add_card_field(customer_card, 9, "Place of Supply *", place_of_supply)
+
+        ttk.Label(quotation_card, text="Type:").grid(
+            row=0, column=0, sticky="w", padx=(0, 8), pady=5
+        )
+        ttk.Combobox(
+            quotation_card, textvariable=customer_type,
+            values=("Quotation", "Sales Quotation", "Service Quotation"),
+            state="readonly", width=24,
+        ).grid(row=0, column=1, columnspan=3, sticky="ew", padx=(0, 8), pady=5)
+        add_card_field(quotation_card, 1, "Quotation No. *", quotation_no, 18)
+        add_card_field(quotation_card, 2, "Quotation Date *", quotation_date, 18)
+        add_card_field(quotation_card, 3, "Challan No.", challan_no, 18)
+        add_card_field(quotation_card, 4, "Challan Date", challan_date, 18)
+        add_card_field(quotation_card, 5, "L.R. No.", lr_no, 18)
+        ttk.Label(quotation_card, text="Delivery:").grid(
+            row=6, column=0, sticky="w", padx=(0, 8), pady=5
+        )
+        ttk.Combobox(
+            quotation_card, textvariable=delivery_mode,
+            values=("Select Delivery Mode", "Door Delivery", "Pickup", "Courier"), width=24,
+        ).grid(row=6, column=1, columnspan=3, sticky="ew", padx=(0, 8), pady=5)
+        add_card_field(quotation_card, 7, "Valid Until", valid_until, 18)
+        ttk.Label(quotation_card, text="Status:").grid(
+            row=8, column=0, sticky="w", padx=(0, 8), pady=5
+        )
+        ttk.Combobox(
+            quotation_card, textvariable=status, state="readonly", width=24,
+            values=list(quotation_manager.STATUSES),
+        ).grid(row=8, column=1, columnspan=3, sticky="ew", padx=(0, 8), pady=5)
+        add_card_field(quotation_card, 9, "Tax %", tax_percent, 18)
+
+        items_frame = ttk.LabelFrame(main_frame, text=" Product Items ", padding=12)
+        items_frame.pack(fill="both", expand=True, pady=(0, 12))
+
+        # Products come from the price list; any custom item can be typed too.
+        product_catalog = quotation_manager.load_products()
+        product_labels = [product["label"] for product in product_catalog]
+        product_choice = tk.StringVar()
+        item_title = tk.StringVar()
+        item_description = tk.StringVar()
+        item_hsn = tk.StringVar()
+        item_capacity = tk.StringVar()
+        item_quantity = tk.StringVar(value="1")
+        item_rate = tk.StringVar(value="0.00")
+        item_discount = tk.StringVar(value="0")
+
+        entry_row = ttk.Frame(items_frame)
+        entry_row.pack(fill="x", pady=(0, 8))
+        entry_row.columnconfigure(1, weight=1)
+        entry_row.columnconfigure(3, weight=1)
+
+        ttk.Label(entry_row, text="Existing Product:").grid(
+            row=0, column=0, sticky="w", padx=(0, 6)
+        )
+        product_combo = ttk.Combobox(entry_row, textvariable=product_choice, values=product_labels)
+        product_combo.grid(row=0, column=1, columnspan=4, sticky="ew", pady=(0, 6))
+
+        ttk.Label(entry_row, text="Item:").grid(row=1, column=0, sticky="w", padx=(0, 6))
+        ttk.Entry(entry_row, textvariable=item_title).grid(
+            row=1, column=1, sticky="ew", padx=(0, 12)
+        )
+        ttk.Label(entry_row, text="Description:").grid(row=1, column=2, sticky="w", padx=(0, 6))
+        ttk.Entry(entry_row, textvariable=item_description).grid(
+            row=1, column=3, sticky="ew", padx=(0, 12)
+        )
+        ttk.Label(entry_row, text="HSN Code:").grid(row=1, column=4, sticky="w", padx=(0, 6))
+        ttk.Entry(entry_row, textvariable=item_hsn, width=16).grid(
+            row=1, column=5, sticky="w"
+        )
+
+        ttk.Label(entry_row, text="Capacity / Unit:").grid(
+            row=2, column=0, sticky="w", padx=(0, 6), pady=(6, 0)
+        )
+        ttk.Entry(entry_row, textvariable=item_capacity, width=16).grid(
+            row=2, column=1, sticky="w", pady=(6, 0)
+        )
+
+        ttk.Label(entry_row, text="Quantity:").grid(
+            row=2, column=2, sticky="w", padx=(0, 6), pady=(6, 0)
+        )
+        ttk.Entry(entry_row, textvariable=item_quantity, width=10).grid(
+            row=2, column=3, sticky="w", pady=(6, 0)
+        )
+        ttk.Label(entry_row, text="Rate (₹):").grid(
+            row=2, column=4, sticky="w", padx=(0, 6), pady=(6, 0)
+        )
+        ttk.Entry(entry_row, textvariable=item_rate, width=14).grid(
+            row=2, column=5, sticky="w", pady=(6, 0)
+        )
+        ttk.Label(entry_row, text="Discount %:").grid(
+            row=3, column=0, sticky="w", padx=(0, 6), pady=(6, 0)
+        )
+        ttk.Entry(entry_row, textvariable=item_discount, width=10).grid(
+            row=3, column=1, sticky="w", pady=(6, 0)
+        )
+        item_buttons = ttk.Frame(entry_row)
+        item_buttons.grid(row=3, column=4, columnspan=2, sticky="e", pady=(6, 0))
+
+        tree_frame = ttk.Frame(items_frame)
+        tree_frame.pack(fill="both", expand=True)
+        columns = ("item", "hsn_code", "description", "capacity_unit", "quantity",
+                   "unit_price", "discount_percent", "amount")
+        items_tree = ttk.Treeview(tree_frame, columns=columns, show="headings", height=8)
+        for key, heading, width in (
+            ("item", "Product / Other Charges", 190),
+            ("hsn_code", "HSN/SAC Code", 90),
+            ("description", "Description", 180),
+            ("capacity_unit", "UOM", 90),
+            ("quantity", "Qty.", 55),
+            ("unit_price", "Price", 85),
+            ("discount_percent", "Discount", 70),
+            ("amount", "Total", 100),
+        ):
+            items_tree.heading(key, text=heading)
+            items_tree.column(
+                key, width=width,
+                anchor="w" if key in ("item", "hsn_code", "description", "capacity_unit") else "center",
+            )
+
+        scrollbar = ttk.Scrollbar(tree_frame, orient="vertical", command=items_tree.yview)
         items_tree.configure(yscrollcommand=scrollbar.set)
+        items_tree.pack(side="left", fill="both", expand=True)
         scrollbar.pack(side="right", fill="y")
 
-        def add_item():
-            item_name = simpledialog.askstring("Add Item", "Enter item name:", parent=dialog)
-            if not item_name:
-                return
-            description = simpledialog.askstring("Add Item", "Enter description:", parent=dialog)
-            if not description:
-                description = ""
-            quantity = simpledialog.askinteger("Add Item", "Enter quantity:", parent=dialog, minvalue=1)
-            if not quantity:
-                return
-            unit_price = simpledialog.askfloat("Add Item", "Enter unit price:", parent=dialog, minvalue=0.0)
-            if unit_price is None:
-                return
+        def collect_items():
+            """Items currently listed in the tree, as dictionaries."""
+            items = []
+            for row_id in items_tree.get_children():
+                values = items_tree.item(row_id, "values")
+                items.append({
+                    "item": values[0] if len(values) > 0 else "",
+                    "hsn_code": values[1] if len(values) > 1 else "",
+                    "description": values[2] if len(values) > 2 else "",
+                    "capacity_unit": values[3] if len(values) > 3 else "",
+                    "quantity": values[4] if len(values) > 4 else "0",
+                    "unit_price": values[5] if len(values) > 5 else "0",
+                    "discount_percent": values[6] if len(values) > 6 else "0",
+                    "amount": values[7] if len(values) > 7 else "0",
+                })
+            return items
 
-            total = quantity * unit_price
-            items_tree.insert("", "end", values=(item_name, description, quantity, f"{unit_price:.2f}", f"{total:.2f}"))
+        def update_totals(*_args):
+            totals = quotation_manager.calculate_totals(
+                collect_items(), tax_percent.get()
+            )
+            subtotal_label.config(text=f"Subtotal: ₹{totals['subtotal']:,.2f}")
+            if totals.get("discount_total"):
+                discount_label.config(
+                    text=f"Discount: -₹{totals['discount_total']:,.2f}"
+                )
+            else:
+                discount_label.config(text="Discount: ₹0.00")
+            tax_label.config(
+                text=f"Tax ({tax_percent.get() or 0}%): ₹{totals['tax_amount']:,.2f}"
+            )
+            grand_total_label.config(
+                text=f"Grand Total: ₹{totals['grand_total']:,.2f}"
+            )
+
+        def use_catalog_product(_event=None):
+            """Fill item / capacity / rate from the selected price-list product."""
+            chosen = product_choice.get().strip()
+            for product in product_catalog:
+                if product["label"] == chosen:
+                    item_title.set(product["item"])
+                    item_capacity.set(product["capacity_unit"])
+                    if product["rate"]:
+                        item_rate.set(f"{product['rate']:.2f}")
+                    break
+
+        def add_item():
+            """Add the item typed above (or picked from the price list) to the tree."""
+            title = item_title.get().strip()
+            if not title and product_choice.get().strip():
+                title = product_choice.get().split("  (Rs")[0].split(" | ")[0].strip()
+                item_title.set(title)
+            if not title:
+                messagebox.showwarning("Add Item", "Enter or select an item first.", parent=dialog)
+                return
+            quantity = quotation_manager.try_float(item_quantity.get(), 0.0)
+            rate = quotation_manager.try_float(item_rate.get(), 0.0)
+            discount = quotation_manager.try_float(item_discount.get(), 0.0)
+            line_amount = quantity * rate * (1.0 - discount / 100.0)
+            items_tree.insert("", "end", values=(
+                title,
+                item_hsn.get().strip(),
+                item_description.get().strip(),
+                item_capacity.get().strip(),
+                f"{quantity:g}",
+                f"{rate:.2f}",
+                f"{discount:g}",
+                f"{line_amount:.2f}",
+            ))
+            for variable, reset in ((item_title, ""), (item_hsn, ""), (item_description, ""),
+                                    (item_capacity, ""),
+                                    (item_quantity, "1"), (item_rate, "0.00"),
+                                    (item_discount, "0")):
+                variable.set(reset)
+            product_choice.set("")
+            update_totals()
 
         def remove_item():
-            selected = items_tree.selection()
-            if selected:
-                items_tree.delete(selected[0])
+            for selected in items_tree.selection():
+                items_tree.delete(selected)
+            update_totals()
 
-        def calculate_grand_total():
-            total = 0.0
-            for item in items_tree.get_children():
-                values = items_tree.item(item, "values")
-                if len(values) > 4:
-                    try:
-                        total += float(values[4])
-                    except ValueError:
-                        pass
-            return total
+        def edit_selected_item():
+            """Load the selected row back into the entry fields for correction."""
+            selection = items_tree.selection()
+            if not selection:
+                messagebox.showwarning("Edit Item", "Select an item row first.", parent=dialog)
+                return
+            values = items_tree.item(selection[0], "values")
+            item_title.set(values[0] if len(values) > 0 else "")
+            item_hsn.set(values[1] if len(values) > 1 else "")
+            item_description.set(values[2] if len(values) > 2 else "")
+            item_capacity.set(values[3] if len(values) > 3 else "")
+            item_quantity.set(values[4] if len(values) > 4 else "1")
+            item_rate.set(values[5] if len(values) > 5 else "0.00")
+            item_discount.set(values[6] if len(values) > 6 else "0")
+            items_tree.delete(selection[0])
+            update_totals()
 
-        item_buttons = ttk.Frame(items_frame)
-        item_buttons.pack(fill="x", pady=(10, 0))
-        ttk.Button(item_buttons, text="Add Item", command=add_item).pack(side="left", padx=5)
-        ttk.Button(item_buttons, text="Remove Selected", command=remove_item).pack(side="left", padx=5)
+        product_combo.bind("<<ComboboxSelected>>", use_catalog_product)
+        ttk.Button(item_buttons, text="Add Item", command=add_item).pack(side="left", padx=4)
+        ttk.Button(item_buttons, text="Remove Selected", command=remove_item).pack(side="left", padx=4)
+        ttk.Button(item_buttons, text="Edit Selected", command=edit_selected_item).pack(side="left", padx=4)
 
-        total_frame = ttk.Frame(main_frame)
-        total_frame.pack(fill="x", pady=(0, 15))
-        grand_total_label = ttk.Label(total_frame, text="Grand Total: ₹0.00", font=("Helvetica", 12, "bold"))
-        grand_total_label.pack(side="right")
+        lower_panels = ttk.Frame(main_frame)
+        lower_panels.pack(fill="both", expand=True, pady=(0, 12))
+        lower_panels.columnconfigure(0, weight=3)
+        lower_panels.columnconfigure(1, weight=2)
 
-        def update_total():
-            grand_total = calculate_grand_total()
-            grand_total_label.config(text=f"Grand Total: ₹{grand_total:.2f}")
+        notes_panel = ttk.LabelFrame(
+            lower_panels, text=" Terms & Condition / Additional Note ", padding=10
+        )
+        notes_panel.grid(row=0, column=0, sticky="nsew", padx=(0, 8))
 
-        items_tree.bind("<<TreeviewInsert>>", lambda e: update_total())
-        items_tree.bind("<<TreeviewDelete>>", lambda e: update_total())
+        totals_panel = ttk.LabelFrame(
+            lower_panels, text=" Quotation Summary ", padding=10
+        )
+        totals_panel.grid(row=0, column=1, sticky="nsew")
 
-        button_frame = ttk.Frame(main_frame)
-        button_frame.pack(fill="x")
+        bank_row = ttk.Frame(notes_panel)
+        bank_row.pack(fill="x", pady=(0, 8))
+        ttk.Label(bank_row, text="Bank:").pack(side="left", padx=(0, 8))
+        bank_name = tk.StringVar(
+            value=(quotation_manager.load_bank_details().get("bank_name") or "")
+        )
+        ttk.Combobox(
+            bank_row, textvariable=bank_name, state="readonly", width=28,
+            values=[bank_name.get()] if bank_name.get() else ["Select Bank"],
+        ).pack(side="left", fill="x", expand=True)
+        ttk.Button(
+            bank_row, text="Edit Bank Details", command=lambda: bank_details_dialog()
+        ).pack(side="right", padx=(8, 0))
 
-        def save_quotation():
+        totals_panel.columnconfigure(1, weight=1)
+        summary_rows = (
+            ("Taxable", "subtotal"),
+            ("Discount", "discount"),
+            ("Total Tax", "tax"),
+            ("Grand Total", "grand"),
+        )
+        summary_labels = {}
+        for row, (label, key) in enumerate(summary_rows):
+            ttk.Label(totals_panel, text=f"{label}:").grid(
+                row=row, column=0, sticky="w", padx=(0, 12), pady=4
+            )
+            value = ttk.Label(totals_panel, text="₹0.00", anchor="e")
+            value.grid(row=row, column=1, sticky="ew", pady=4)
+            summary_labels[key] = value
+
+        grand_total_label = summary_labels["grand"]
+        subtotal_label = summary_labels["subtotal"]
+        discount_label = summary_labels["discount"]
+        tax_label = summary_labels["tax"]
+        tax_percent.trace_add("write", update_totals)
+        update_totals()
+
+        terms_frame = notes_panel
+
+        term_entry_row = ttk.Frame(terms_frame)
+        term_entry_row.pack(fill="x")
+        term_entry_row.columnconfigure(1, weight=1)
+        term_entry_row.columnconfigure(3, weight=2)
+        term_title = tk.StringVar()
+        term_detail = tk.StringVar()
+        ttk.Label(term_entry_row, text="Title:").grid(row=0, column=0, sticky="w", padx=(0, 6))
+        ttk.Entry(term_entry_row, textvariable=term_title).grid(row=0, column=1, sticky="ew", padx=(0, 12))
+        ttk.Label(term_entry_row, text="Detail:").grid(row=0, column=2, sticky="w", padx=(0, 6))
+        ttk.Entry(term_entry_row, textvariable=term_detail).grid(row=0, column=3, sticky="ew", padx=(0, 12))
+        terms_tree = ttk.Treeview(terms_frame, columns=("title", "detail"), show="headings", height=4)
+        terms_tree.heading("title", text="Title")
+        terms_tree.heading("detail", text="Detail")
+        terms_tree.column("title", width=180, anchor="w")
+        terms_tree.column("detail", width=480, anchor="w")
+        terms_tree.pack(fill="x", pady=(8, 4))
+
+        notes_row = ttk.Frame(terms_frame)
+        notes_row.pack(fill="x", pady=(10, 0))
+        ttk.Label(notes_row, text="Document Note / Remarks:").pack(
+            side="left", anchor="nw", padx=(0, 8)
+        )
+        notes_text = tk.Text(notes_row, height=3, width=52)
+        notes_text.pack(side="left", fill="both", expand=True)
+        if header.get("notes"):
+            notes_text.insert("1.0", header.get("notes", ""))
+
+        def collect_terms():
+            terms = []
+            for row_id in terms_tree.get_children():
+                values = terms_tree.item(row_id, "values")
+                title = values[0] if len(values) > 0 else ""
+                detail = values[1] if len(values) > 1 else ""
+                if title.strip() or detail.strip():
+                    terms.append({"title": title.strip(), "detail": detail.strip()})
+            return terms
+
+        def add_term():
+            title = term_title.get().strip()
+            detail = term_detail.get().strip()
+            if not title and not detail:
+                messagebox.showwarning("Add Note", "Enter a Title and/or Detail first.", parent=dialog)
+                return
+            terms_tree.insert("", "end", values=(title, detail))
+            term_title.set("")
+            term_detail.set("")
+
+        def edit_selected_term():
+            selection = terms_tree.selection()
+            if not selection:
+                messagebox.showwarning("Edit Note", "Select a note row first.", parent=dialog)
+                return
+            values = terms_tree.item(selection[0], "values")
+            term_title.set(values[0] if len(values) > 0 else "")
+            term_detail.set(values[1] if len(values) > 1 else "")
+            terms_tree.delete(selection[0])
+
+        def bank_details_dialog():
+            """Add / edit the company bank details printed on every quotation."""
+            saved = quotation_manager.load_bank_details()
+            win = tk.Toplevel(dialog)
+            win.title("Company Bank Details")
+            win.geometry("430x400")
+            win.transient(dialog)
+            win.grab_set()
+            body = ttk.Frame(win, padding=14)
+            body.pack(fill="both", expand=True)
+            ttk.Label(body, text="Bank Details (printed on quotation)",
+                      font=("Helvetica", 12, "bold")).pack(anchor="w", pady=(0, 10))
+            entries = {}
+            for field in quotation_manager.BANK_DETAIL_FIELDS:
+                row = ttk.Frame(body)
+                row.pack(fill="x", pady=3)
+                ttk.Label(row, text=f"{quotation_manager.BANK_DETAIL_LABELS.get(field, field)}:",
+                          width=16, anchor="w").pack(side="left")
+                var = tk.StringVar(value=saved.get(field, ""))
+                ttk.Entry(row, textvariable=var).pack(side="left", fill="x", expand=True)
+                entries[field] = var
+
+            def save_bank():
+                quotation_manager.save_bank_details(
+                    {field: var.get() for field, var in entries.items()}
+                )
+                messagebox.showinfo("Saved", "Bank details saved.", parent=win)
+                win.destroy()
+
+            ttk.Button(body, text="Save Bank Details", command=save_bank).pack(pady=(12, 0))
+
+        def add_previous_term():
+            """Old terms: reuse previously saved Terms / Notes."""
+            previous = quotation_manager.load_terms_library()
+            if not previous:
+                messagebox.showinfo("No Saved Terms",
+                                    "No previously saved Terms / Notes found yet.\n"
+                                    "Add a note with + ADD NOTE and it will be remembered.",
+                                    parent=dialog)
+                return
+            picker = tk.Toplevel(dialog)
+            picker.title("Add Previous Terms / Note")
+            picker.geometry("520x380")
+            picker.transient(dialog)
+            picker.grab_set()
+            body = ttk.Frame(picker, padding=12)
+            body.pack(fill="both", expand=True)
+            ttk.Label(body, text="Previously saved Terms & Conditions / Notes",
+                      font=("Helvetica", 11, "bold")).pack(anchor="w", pady=(0, 8))
+            listbox = tk.Listbox(body, height=12, selectmode="extended")
+            listbox.pack(fill="both", expand=True)
+            for term in previous:
+                listbox.insert("end", f"{term.get('title', '')} — {term.get('detail', '')}")
+
+            def use_selected():
+                for index in listbox.curselection():
+                    term = previous[index]
+                    terms_tree.insert("", "end", values=(term.get("title", ""), term.get("detail", "")))
+                picker.destroy()
+
+            ttk.Button(body, text="Add Selected Note(s)", command=use_selected).pack(pady=(10, 0))
+
+        term_btn_row = ttk.Frame(terms_frame)
+        term_btn_row.pack(fill="x")
+        ttk.Button(term_btn_row, text="+ ADD NOTE", command=add_term).pack(side="left", padx=(0, 6))
+        ttk.Button(term_btn_row, text="Edit Selected", command=edit_selected_term).pack(side="left", padx=(0, 6))
+        ttk.Button(term_btn_row, text="Remove Selected",
+                   command=lambda: [terms_tree.delete(s) for s in terms_tree.selection()]).pack(side="left", padx=(0, 6))
+        ttk.Button(term_btn_row, text="Add Previous Term / Note",
+                   command=lambda: add_previous_term()).pack(side="left", padx=(0, 6))
+        ttk.Button(term_btn_row, text="Add Bank Details",
+                   command=lambda: bank_details_dialog()).pack(side="left")
+
+        def save_quotation(ask_print=True):
+            """Validate the form and store the quotation for its customer."""
+            items = collect_items()
             if not customer_name.get().strip():
                 messagebox.showwarning("Required Field", "Customer name is required.", parent=dialog)
                 return
-
-            items = []
-            for item in items_tree.get_children():
-                values = items_tree.item(item, "values")
-                if len(values) >= 5:
-                    items.append({
-                        "item": values[0],
-                        "description": values[1],
-                        "quantity": values[2],
-                        "unit_price": values[3],
-                        "total": values[4]
-                    })
-
             if not items:
                 messagebox.showwarning("No Items", "Add at least one item to the quotation.", parent=dialog)
                 return
+            terms = collect_terms()
 
-            quotation_data = {
-                "customer_name": customer_name.get().strip(),
-                "customer_email": customer_email.get().strip(),
-                "customer_phone": customer_phone.get().strip(),
-                "quotation_date": quotation_date.get().strip(),
-                "valid_until": valid_until.get().strip(),
-                "notes": notes_text.get("1.0", tk.END).strip(),
-                "items": items,
-                "grand_total": calculate_grand_total()
-            }
+            try:
+                result = quotation_manager.save_quotation(
+                    customer_name=customer_name.get(),
+                    items=items,
+                    customer_email=customer_email.get(),
+                    customer_phone=customer_phone.get(),
+                    customer_gstin=customer_gstin.get(),
+                    customer_address=customer_address.get(),
+                    customer_contact_person=customer_contact_person.get(),
+                    customer_type=customer_type.get(),
+                    challan_no=challan_no.get(),
+                    challan_date=challan_date.get(),
+                    lr_no=lr_no.get(),
+                    delivery_mode=delivery_mode.get(),
+                    rev_charge=rev_charge.get(),
+                    ship_to=ship_to.get(),
+                    distance_for_eway_bill=distance_for_eway_bill.get(),
+                    place_of_supply=place_of_supply.get(),
+                    quotation_date=quotation_date.get(),
+                    valid_until=valid_until.get(),
+                    status=status.get(),
+                    tax_percent=tax_percent.get(),
+                    terms=terms,
+                    notes=notes_text.get("1.0", tk.END).strip(),
+                    quotation_no=quotation_no.get(),
+                    created_by=(self.user_data or {}).get("username", ""),
+                )
+            except Exception as error:
+                messagebox.showerror("Save Failed",
+                                     f"Could not save the quotation:\n{error}", parent=dialog)
+                return
 
-            csv_file = os.path.join(self.main_app.config.CSV_DIR, "quotations.csv")
-            file_exists = os.path.exists(csv_file)
+            def do_print_saved(number):
+                """Create the printable PDF / Excel copy of a saved quotation."""
+                try:
+                    exported = quotation_manager.export_quotation(number)
+                    quotation_manager.open_path(exported["pdf"])
+                except Exception as error:
+                    messagebox.showerror("Print Failed",
+                                         f"Could not create the print copy:\n{error}", parent=dialog)
 
-            import json
-            if file_exists:
-                with open(csv_file, "r", newline="", encoding="utf-8") as f:
-                    reader = csv.reader(f)
-                    next(reader, None)
-                    quotation_num = sum(1 for _ in reader) + 1
-            else:
-                quotation_num = 1
-
-            quotation_id = f"QT-{quotation_num:04d}"
-
-            with open(csv_file, "a", newline="", encoding="utf-8") as f:
-                writer = csv.writer(f)
-                if not file_exists:
-                    writer.writerow(["quotation_id", "customer_name", "customer_email", "customer_phone",
-                                   "quotation_date", "valid_until", "notes", "items_json", "grand_total"])
-
-                writer.writerow([
-                    quotation_id,
-                    quotation_data["customer_name"],
-                    quotation_data["customer_email"],
-                    quotation_data["customer_phone"],
-                    quotation_data["quotation_date"],
-                    quotation_data["valid_until"],
-                    quotation_data["notes"],
-                    json.dumps(quotation_data["items"]),
-                    f"{quotation_data['grand_total']:.2f}"
-                ])
-
-            messagebox.showinfo("Success", f"Quotation {quotation_id} saved successfully!", parent=dialog)
+            messagebox.showinfo(
+                "Quotation Saved",
+                f"Quotation {result['quotation_no']} saved for {customer_name.get().strip()}.\n\n"
+                f"Customer file:\n{result['customer_file']}\n\n"
+                f"Grand Total: ₹{result['grand_total']:,.2f}",
+                parent=dialog,
+            )
+            if ask_print and messagebox.askyesno("Print Quotation",
+                                   "Create the printable PDF / Excel copy now?", parent=dialog):
+                do_print_saved(result["quotation_no"])
+            if not ask_print:
+                do_print_saved(result["quotation_no"])
             dialog.destroy()
 
-        ttk.Button(button_frame, text="Save Quotation", command=save_quotation).pack(side="right", padx=5)
-        ttk.Button(button_frame, text="Cancel", command=dialog.destroy).pack(side="right", padx=5)
+        # Pinned below the scrolling form so these buttons are always on screen.
+        button_frame = ttk.Frame(dialog, padding=(8, 4))
+        button_frame.grid(row=1, column=0, columnspan=2, sticky="ew")
+        ttk.Button(button_frame, text="⬅ Back", command=dialog.destroy).pack(
+            side="left", padx=(0, 8)
+        )
+        ttk.Button(button_frame, text="View Quotations", command=self.show_quotations_list).pack(
+            side="left", padx=4
+        )
+        ttk.Button(button_frame, text="Save & Print", command=lambda: save_quotation(ask_print=False)).pack(
+            side="right", padx=4
+        )
+        ttk.Button(button_frame, text="Save", command=save_quotation).pack(
+            side="right", padx=4
+        )
+        ttk.Button(button_frame, text="Save Draft", command=lambda: save_quotation(ask_print=True)).pack(
+            side="right", padx=4
+        )
+    def show_quotations_list(self):
+        """Quotation register: every saved quotation with status and value.
+
+        The list is built from the customer-wise CSV files in
+        csv_data/quotation by grouping their rows by quotation number.
+        """
+        window = tk.Toplevel(self.main_app.root)
+        window.title("Quotation Register")
+        window.geometry("1020x620")
+        window.minsize(900, 520)
+        window.resizable(True, True)
+        window.transient(self.main_app.root)
+
+        top = ttk.Frame(window, padding=12)
+        top.pack(fill="both", expand=True)
+        title_header = ttk.Frame(top)
+        title_header.pack(fill="x", pady=(0, 8))
+        ttk.Label(
+            title_header, text="Saved Quotations", font=("Helvetica", 14, "bold")
+        ).pack(side="left")
+        self._add_quotation_window_controls(title_header, window, "1020x620")
+
+        filters = ttk.Frame(top)
+        filters.pack(fill="x", pady=(8, 8))
+        ttk.Label(filters, text="Customer:").pack(side="left")
+        customer_filter = tk.StringVar(value="All customers")
+        ttk.Combobox(filters, textvariable=customer_filter, width=30,
+                     values=["All customers"] + quotation_manager.load_customers()).pack(
+            side="left", padx=(4, 14)
+        )
+        ttk.Label(filters, text="Status:").pack(side="left")
+        status_filter = tk.StringVar(value="All")
+        ttk.Combobox(filters, textvariable=status_filter, state="readonly", width=14,
+                     values=["All"] + list(quotation_manager.STATUSES)).pack(side="left", padx=(4, 0))
+
+        table_frame = ttk.Frame(top)
+        table_frame.pack(fill="both", expand=True)
+        columns = ("no", "date", "customer", "valid_until", "items", "total", "status")
+        tree = ttk.Treeview(table_frame, columns=columns, show="headings", height=14)
+        for key, heading, width in (
+            ("no", "Quotation No.", 110),
+            ("date", "Date", 90),
+            ("customer", "Customer", 230),
+            ("valid_until", "Valid Until", 90),
+            ("items", "Items", 60),
+            ("total", "Grand Total (₹)", 120),
+            ("status", "Status", 90),
+        ):
+            tree.heading(key, text=heading)
+            tree.column(key, width=width, anchor="w" if key == "customer" else "center")
+        scrollbar = ttk.Scrollbar(table_frame, orient="vertical", command=tree.yview)
+        tree.configure(yscrollcommand=scrollbar.set)
+        tree.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
+
+        summary_label = ttk.Label(top, text="", font=("Helvetica", 10))
+        summary_label.pack(anchor="w", pady=(6, 0))
+
+        def refresh(*_args):
+            """Reload the table for the selected customer / status filters."""
+            for row_id in tree.get_children():
+                tree.delete(row_id)
+            customer = customer_filter.get()
+            rows = quotation_manager.list_quotations(
+                customer_name="" if customer == "All customers" else customer,
+                status="" if status_filter.get() == "All" else status_filter.get(),
+            )
+            for entry in rows:
+                tree.insert("", "end", iid=entry["quotation_no"], values=(
+                    entry["quotation_no"], entry["quotation_date"], entry["customer_name"],
+                    entry["valid_until"], entry["items"], f"{entry['grand_total']:,.2f}",
+                    entry["status"],
+                ))
+            total = sum(entry["grand_total"] for entry in rows)
+            summary_label.config(text=f"{len(rows)} quotation(s)   |   Total value: ₹{total:,.2f}")
+
+        def selected_number():
+            selection = tree.selection()
+            if not selection:
+                messagebox.showwarning("Select Quotation", "Select a quotation first.", parent=window)
+                return None
+            return selection[0]
+
+        def print_selected():
+            """Create the Excel + PDF copy of the selected quotation."""
+            number = selected_number()
+            if not number:
+                return
+            try:
+                exported = quotation_manager.export_quotation(number)
+            except Exception as error:
+                messagebox.showerror("Print Failed", str(error), parent=window)
+                return
+            quotation_manager.open_path(exported["pdf"])
+            messagebox.showinfo(
+                "Quotation Exported",
+                f"Excel copy:\n{exported['xlsx']}\n\nPDF copy:\n{exported['pdf']}",
+                parent=window,
+            )
+
+        def mark_status(value):
+            number = selected_number()
+            if not number:
+                return
+            quotation_manager.update_status(number, value)
+            refresh()
+
+        def open_customer_file():
+            number = selected_number()
+            if not number:
+                return
+            entry = quotation_manager.get_quotation(number)
+            if entry:
+                quotation_manager.open_path(entry["file"])
+
+        def convert_to_invoice():
+            """Mark the quotation as converted and open the invoice entry."""
+            number = selected_number()
+            if not number:
+                return
+            quotation_manager.update_status(number, "Converted")
+            refresh()
+            if messagebox.askyesno(
+                "Convert to Invoice",
+                f"Quotation {number} is marked as Converted.\n\n"
+                "Open the Sales / Income invoice entry now?",
+                parent=window,
+            ):
+                window.destroy()
+                self.main_app.show_sales_income_page()
+
+        status_row = ttk.Frame(top)
+        status_row.pack(fill="x", pady=(8, 0))
+        ttk.Label(status_row, text="Mark selected as:").pack(side="left", padx=(0, 6))
+        for value in quotation_manager.STATUSES:
+            ttk.Button(status_row, text=value,
+                       command=lambda v=value: mark_status(v)).pack(side="left", padx=3)
+
+        actions = ttk.Frame(top)
+        actions.pack(fill="x", pady=(8, 0))
+        ttk.Button(actions, text="Print / Export Selected",
+                   command=print_selected).pack(side="left", padx=3)
+        ttk.Button(actions, text="Convert to Invoice",
+                   command=convert_to_invoice).pack(side="left", padx=3)
+        ttk.Button(actions, text="Open Customer CSV",
+                   command=open_customer_file).pack(side="left", padx=3)
+        ttk.Button(actions, text="Open Quotation Folder",
+                   command=lambda: quotation_manager.open_path(quotation_manager.QUOTATION_DIR)
+                   ).pack(side="left", padx=3)
+        ttk.Button(actions, text="Refresh", command=refresh).pack(side="left", padx=3)
+        ttk.Button(actions, text="Close", command=window.destroy).pack(side="right", padx=3)
+
+        customer_filter.trace_add("write", refresh)
+        status_filter.trace_add("write", refresh)
+        refresh()
 
     def load_b2b_products_list(self, parent_frame):
         csv_file = os.path.join(
